@@ -68,4 +68,4 @@ EXPOSE 8081
 
 LABEL maintainer="IllumiDesk <hello@illumidesk.com>"
 
-CMD ["python3", "jupyterhub", "-f", "/except/jupyterhub/jupyterhub_config.py"]
+CMD ["python3", "jupyterhub", "-f", "/etc/jupyterhub/jupyterhub_config.py"]
