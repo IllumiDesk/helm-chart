@@ -84,6 +84,3 @@ EXPOSE 8081
 LABEL maintainer="IllumiDesk <hello@illumidesk.com>"
 
 CMD ["jupyterhub", "-f", "/etc/jupyterhub/jupyterhub_config.py"]
-
-COPY jupyterhub_config_base.py /etc/jupyterhub/jupyterhub_config_base.py
-COPY jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py
