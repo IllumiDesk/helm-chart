@@ -24,6 +24,8 @@ The `illumdesk/jupyterhub` images are built as follows:
 
 This command creates requirements.txt with `pip-compile`, builds docker images, and pushes them to the DockerHub registry.
 
+Enter `make help` for additional options.
+
 ### The Hard Way
 
 1. Setup virtualenv:
