@@ -3,29 +3,24 @@ FROM ${BASE_IMAGE}
 
 ARG NB_USER=jovyan
 ARG NB_UID=1000
-ARG HOME=/home/jovyan
+ARG NB_GID=100
 
 ENV NB_USER=$NB_USER
 ENV NB_UID=$NB_UID
-ENV HOME=$HOME
+ENV NB_GID=$NB_GID
+ENV HOME=/home/$NB_USER
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
     --uid "${NB_UID}" \
-    --home ${HOME} \
+    --gid "${NB_GID}" \
+    --home "${HOME}" \
     --force-badname \
     "${NB_USER}"
-
-# always make sure pip is up to date!
-RUN python3.8 -m pip install --no-cache --upgrade setuptools pip
-
-WORKDIR /tmp/
-COPY requirements.txt /tmp/requirements.txt
-RUN python3 -m pip install -r /tmp/requirements.txt
 
 WORKDIR /srv/jupyterhub
 
 # So we can actually write a db file here
-RUN chown "${NB_USER}":"${NB_USER}" /srv/jupyterhub
+RUN chown -R "${NB_UID}":"${NB_GID}" /srv/jupyterhub
 
-USER "${NB_USER}"
+USER "${NB_UID}"

@@ -49,16 +49,28 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
+RUN locale-gen en_US.UTF-8
+
 ENV SHELL=/bin/bash \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8
+    LANGUAGE=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
 
 # always make sure pip is up to date!
 RUN python3.8 -m pip install --no-cache --upgrade setuptools pip
 
+# install chp
+RUN npm install -g configurable-http-proxy@^4.2.0 \
+ && rm -rf ~/.npm
+
 # install the wheels we built in the first stage
 COPY --from=builder /src/jupyterhub/wheelhouse /tmp/wheelhouse
 RUN python3.8 -m pip install --no-cache /tmp/wheelhouse/*
+
+# add additional packages used with k8s
+WORKDIR /tmp/
+COPY requirements.txt /tmp/requirements.txt
+RUN python3 -m pip install -r /tmp/requirements.txt
 
 RUN mkdir -p /srv/jupyterhub/
 WORKDIR /srv/jupyterhub/
@@ -68,4 +80,4 @@ EXPOSE 8081
 
 LABEL maintainer="IllumiDesk <hello@illumidesk.com>"
 
-CMD ["python3", "jupyterhub", "-f", "/etc/jupyterhub/jupyterhub_config.py"]
+CMD ["jupyterhub", "-f", "/etc/jupyterhub/jupyterhub_config.py"]
