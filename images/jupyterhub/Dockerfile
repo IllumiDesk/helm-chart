@@ -49,7 +49,10 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN locale-gen en_US.UTF-8
+RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment \
+ && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+ && echo "LANG=en_US.UTF-8" > /etc/locale.conf \
+ && locale-gen en_US.UTF-8
 
 ENV SHELL=/bin/bash \
     LANG=en_US.UTF-8 \
@@ -81,3 +84,6 @@ EXPOSE 8081
 LABEL maintainer="IllumiDesk <hello@illumidesk.com>"
 
 CMD ["jupyterhub", "-f", "/etc/jupyterhub/jupyterhub_config.py"]
+
+COPY jupyterhub_config_base.py /etc/jupyterhub/jupyterhub_config_base.py
+COPY jupyterhub_config.py /etc/jupyterhub/jupyterhub_config.py

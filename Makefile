@@ -28,11 +28,11 @@ venv:
 pip-compile: venv
 	$(VENV_BIN)/pip-compile images/jupyterhub/requirements.in
 
-build-jhub: pip-compile
+build-jhubs: pip-compile
 	@docker build -t illumidesk/jupyterhub:py3.8 images/jupyterhub/.
 	@docker build -t illumidesk/k8s-jhub:py3.8 -f images/jupyterhub/Dockerfile.k8 images/jupyterhub/.
 
-build-push-jhubs: build-jhub
+build-push-jhubs: build-jhubs
 	@docker push illumidesk/jupyterhub:py3.8
 	@docker push illumidesk/k8s-jhub:py3.8
 

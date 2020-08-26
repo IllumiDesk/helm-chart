@@ -1,6 +1,8 @@
 ARG BASE_IMAGE=illumidesk/jupyterhub:py3.8
 FROM ${BASE_IMAGE}
 
+USER root
+
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG NB_GID=100
@@ -20,7 +22,12 @@ RUN adduser --disabled-password \
 
 WORKDIR /srv/jupyterhub
 
-# So we can actually write a db file here
-RUN chown -R "${NB_UID}":"${NB_GID}" /srv/jupyterhub
+# Copy a script that we will use to update permissions
+COPY fix-permissions /usr/local/bin/fix-permissions
+RUN chmod a+rx /usr/local/bin/fix-permissions
+
+# Allows user with membership to NB_GID to write data
+RUN fix-permissions /srv/jupyterhub \
+ && fix-permissions /etc/jupyterhub
 
 USER "${NB_UID}"
