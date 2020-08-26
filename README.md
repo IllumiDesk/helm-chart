@@ -51,10 +51,10 @@ Enter `make help` for additional options.
       images/jupyterhub/.
 ```
 
-3. Build the JupyterHub Kubernetes image (illumidesk/k8s-jhub:py3.8):
+3. Build the JupyterHub Kubernetes image (illumidesk/k8s-hub:py3.8):
 
 ```bash
-    docker build -t illumidesk/k8s-jhub:py3.8 -f \
+    docker build -t illumidesk/k8s-hub:py3.8 -f \
       images/jupyterhub/Dockerfile.k8s \
       images/jupyterhub/.
 ```
@@ -63,5 +63,5 @@ Enter `make help` for additional options.
 
 ```bash
     docker push illumidesk/jupyterhub:py3.8
-    docker push illumidesk/k8s-jhub:py3.8
+    docker push illumidesk/k8s-hub:py3.8
 ```

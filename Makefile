@@ -26,7 +26,7 @@ pip-compile: venv ## create requirements.txt using pip-compile (uses requirement
 
 build-jhubs: pip-compile ## build jupyterhub images
 	@docker build -t illumidesk/jupyterhub:py3.8 images/jupyterhub/.
-	@docker build -t illumidesk/k8s-jhub:py3.8 -f images/jupyterhub/Dockerfile.k8 images/jupyterhub/.
+	@docker build -t illumidesk/k8s-hub:py3.8 -f images/jupyterhub/Dockerfile.k8 images/jupyterhub/.
 
 push-jhubs: pip-compile ## push jupyterhub images to dockerhub (requires login)
 	@docker push illumidesk/jupyterhub:py3.8
