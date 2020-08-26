@@ -20,8 +20,6 @@ RUN adduser --disabled-password \
     --force-badname \
     "${NB_USER}"
 
-WORKDIR /srv/jupyterhub
-
 # Copy a script that we will use to update permissions
 COPY fix-permissions /usr/local/bin/fix-permissions
 RUN chmod a+rx /usr/local/bin/fix-permissions
@@ -29,5 +27,7 @@ RUN chmod a+rx /usr/local/bin/fix-permissions
 # Allows user with membership to NB_GID to write data
 RUN fix-permissions /srv/jupyterhub \
  && fix-permissions /etc/jupyterhub
+
+WORKDIR /srv/jupyterhub
 
 USER "${NB_UID}"

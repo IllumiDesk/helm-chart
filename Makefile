@@ -30,11 +30,11 @@ build-jhubs: pip-compile ## build jupyterhub images
 
 push-jhubs: pip-compile ## push jupyterhub images to dockerhub (requires login)
 	@docker push illumidesk/jupyterhub:py3.8
-	@docker push illumidesk/k8s-jhub:py3.8
+	@docker push illumidesk/k8s-hub:py3.8
 
 build-push-jhubs: build-jhubs ## build and push jupyterhub images
 	@docker push illumidesk/jupyterhub:py3.8
-	@docker push illumidesk/k8s-jhub:py3.8
+	@docker push illumidesk/k8s-hub:py3.8
 
 clean:
 	find . -name '*.pyc' -exec rm -f {} +
