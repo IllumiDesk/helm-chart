@@ -81,7 +81,7 @@ c.JupyterHub.base_url = base_url
 c.JupyterHub.redirect_to_server = True
 
 # Support for SameSite cookies
-c.JupyterHub.tornado_settings = {'cookie_options': {'SameSite': 'None', 'Secure': True}}
+# c.JupyterHub.tornado_settings = {'cookie_options': {'SameSite': 'None', 'Secure': True}}
 
 ##########################################
 # END JUPYTERHUB APPLICATION
