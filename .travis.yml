@@ -1,0 +1,22 @@
+  
+dist: bionic
+language: python
+python: 3.8
+
+install:
+- curl -L https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+- pip install chartpress==0.6
+
+script:
+- chartpress
+- git diff
+
+deploy:
+  - provider: script
+    script: bash deploy.sh
+    on:
+      # Only deploy when pushing to main branch or a git tag
+      condition: '"$TRAVIS_TAG" != "" || "$TRAVIS_BRANCH" == "main"'
+      # Without all_branches: true, the condition will only be evaluated for the
+      # main branch and tags.
+      all_branches: true

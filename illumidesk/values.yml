@@ -26,7 +26,6 @@ jupyterhub:
         userPlaceholder:
         enabled: true
         replicas: 2
-
     traefik:
         service:
         # Not meant to be exposed to the public directly with this setup
