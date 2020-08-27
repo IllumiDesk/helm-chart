@@ -1,8 +1,0 @@
-  
-# The chartpress CLI configuration reference is available at
-# https://github.com/jupyterhub/chartpress#configuration.
-charts:
-    - name: illumidesk
-      repo:
-        git: illumidesk/helm-chart
-        published: https://illumidesk.github.io/helm-chart
