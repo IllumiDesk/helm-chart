@@ -1,6 +1,6 @@
 apiVersion: v2
 name: illumidesk
-version: 0.0.1-set.by.chartpress
+version: 0.0.1-n016.hebe045b
 description: An extention of the JupyterHub chart with additional IllumiDesk resources
 dependencies:
   - name: jupyterhub

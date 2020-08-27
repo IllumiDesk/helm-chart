@@ -1,24 +1,65 @@
+[![Build Status](https://travis-ci.com/IllumiDesk/helm-chart.svg?branch=main)](https://travis-ci.com/IllumiDesk/helm-chart)
+
 # IllumiDesk Helm Chart
 
-IllumiDesk helm chart for Kubernetes setup
+## Overview
 
-## Build Base JupyterHub Images
+Use this [helm chart](https://helm.sh/docs/topics/charts/) to install IllumiDesk on AWS EKS. This chart depends on the [jupyterhub](https://zero-to-jupyterhub.readthedocs.io/en/latest/).
 
-### Requirements
+This setup pulls images defined in the `illumidesk/values.yaml` file from `DockerHub`. To push new versions of these images or to change the image's tag(s) (useful for testing), then follow the instructions in the [build images section](#build-images).  
 
-- Docker
-- Python (nice-to-have v3.8)
+## Requirements
 
-### Overview
+- [helm >= v3](https://github.com/kubernetes/helm)
+- (Optional) [Docker](https://docs.docker.com/get-docker/)
+- (Optional) [Python 3.6+](https://www.python.org/downloads/)
 
-The `illumdesk/jupyterhub` images are built as follows:
 
-- Base `illumidesk/jupyterhub:py3.8`: standard Jupyterhub image that builds from [source](https://github.com/jupyterhub/jupyterhub) using python3.8 and installs additional packages with pip.
-- Sets user to `NB_USER=jovyan`, `NB_UID=1000`, and `NB_GID=100` and runs the JupyterHub service with this user.
+## Installation
 
-> `Python 3.8` is used handle samesite cookie requirements and improved support for async.
+1. Add the IllumiDesk chart repository:
 
-### Quick Build/Push
+```bash
+    helm repo add illumidesk https://illumidesk.github.io/helm-chart/
+    helm repo update
+```
+
+2. Install IllumiDesk:
+
+```shell
+    helm install illumidesk/illumidesk --version=<version> --name=<release name> --namespace=<namespace> -f /path/to/custom/values.yaml
+```
+
+3. Apply changes:
+
+```bash
+    helm upgrade <release name> pangeo/pangeo -f /path/to/custom/values.yaml
+```
+
+## Cleanup
+
+```bash
+    helm delete <release name> --purge
+```
+
+## Images
+
+### Singleuser Images
+
+By default this chart sets the `singleuser` image to [illumidesk/base-notebook](https://hub.docker.com/r/illumidesk/base-notebook). However, any image maintained in the [illumidesk/docker-stacks](https://github.com/illumidesk/docker-stacks) repo is compatible with this chart.
+
+The `illumidesk/docker-stacks` images are based off of the `jupyterh/docker-stacks` conventions. You can therefore use any of the images in the `jupyterh/docker-stacks` repo which are [also available in dockerhub](https://hub.docker.com/u/jupyter).
+
+To set an alternate image for end-users, update the `singleuser.image` key in the `illumidesk/values.yaml` file.
+
+### JupyterHub Images
+
+There are two Dockerfiles to create two version of the JupyterHub image (`illumidesk/jupyterhub`):
+
+- `illumidesk/jupyterhub`: standard JupyterHub image that uses Python 3.8 and installs the illumidesk package. The illumidesk package contains customized authenticators and spawners.
+- `illumidesk/k8s-hub`: inherits from the above image and defines the `NB_USER`, `NB_UID`, and `NB_GID` to run the container.
+
+#### Quick Build/Push
 
     make build-push-jhubs
 
@@ -65,3 +106,7 @@ Enter `make help` for additional options.
     docker push illumidesk/jupyterhub:py3.8
     docker push illumidesk/k8s-hub:py3.8
 ```
+
+5. Update `jupyterhub.image.name` with image name. The image name should include the full image namespace and tag.
+
+6. Install IllumiDesk with `helm` as inatructed in the first section.

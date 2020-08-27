@@ -9,24 +9,24 @@ jupyterhub:
 # See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
 
     singleuser:
-        image:
+      image:
         name: illumidesk/base-notebook:latest
         tag: 2020.08.27
-        defaultUrl: "/tree"
+      defaultUrl: "/tree"
     prePuller:
-        hook:
+      hook:
         enabled: false
     # optimizations: see https://zero-to-jupyterhub.readthedocs.io/en/latest/optimization.html?highlight=scheduling#optimizations
     scheduling:
-        userScheduler:
+      userScheduler:
         enabled: true
         replicas: 2
-        podPriority:
+      podPriority:
         enabled: true
-        userPlaceholder:
+      userPlaceholder:
         enabled: true
         replicas: 2
     traefik:
-        service:
+      service:
         # Not meant to be exposed to the public directly with this setup
         type: ClusterIP
