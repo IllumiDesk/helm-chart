@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/IllumiDesk/helm-chart.svg?branch=main)](https://travis-ci.com/IllumiDesk/helm-chart)
-
 # IllumiDesk Helm Chart
+
+:warning: Draft Status :warning:
 
 ## Overview
 
