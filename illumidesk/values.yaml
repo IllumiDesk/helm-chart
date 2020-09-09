@@ -7,26 +7,59 @@ rbac:
 jupyterhub:
 # Helm config for jupyterhub goes here
 # See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
-
-    singleuser:
+    hub:
       image:
-        name: illumidesk/base-notebook:latest
-        tag: 2020.08.27
-      defaultUrl: "/tree"
-    prePuller:
-      hook:
+        name: illumidesk/k8s-hub
+        tag: latest
+      shutdownOnLogout: true
+    proxy:
+      https:
         enabled: false
-    # optimizations: see https://zero-to-jupyterhub.readthedocs.io/en/latest/optimization.html?highlight=scheduling#optimizations
-    scheduling:
-      userScheduler:
-        enabled: true
-        replicas: 2
-      podPriority:
-        enabled: true
-      userPlaceholder:
-        enabled: true
-        replicas: 2
-    traefik:
+      secretToken: ''
       service:
-        # Not meant to be exposed to the public directly with this setup
+        ports:
+          nodePort: 8080
         type: ClusterIP
+    singleuser:
+      cmd: start-singleuser.sh
+      extraEnv:
+        CHOWN_HOME: 'yes'
+        Editor: vim
+      fsGid: 0
+      uid: 0
+      image:
+        name: illumidesk/base-notebook
+        tag: latest
+    # singleuser:
+    #   image:
+    #     name: illumidesk/base-notebook:latest
+    #     tag: 2020.08.27
+    #   defaultUrl: "/tree"
+    # prePuller:
+    #   hook:
+    #     enabled: false
+    # # optimizations: see https://zero-to-jupyterhub.readthedocs.io/en/latest/optimization.html?highlight=scheduling#optimizations
+    # scheduling:
+    #   userScheduler:
+    #     enabled: true
+    #     replicas: 2
+    #   podPriority:
+    #     enabled: true
+    #   userPlaceholder:
+    #     enabled: true
+    #     replicas: 2
+    # traefik:
+    #   service:
+    #     # Not meant to be exposed to the public directly with this setup
+    #     type: ClusterIP
+awsAccessKey: ''
+awsSecretToken: ''
+clusterName: cluster
+clusterVPC: vpc-XXXXXXXXXXXXX
+awsRegion: us-east-2
+host: jhub.example.com
+subnets: subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX
+ingressTags: Environment=dev,Team=test
+domainFilter: example.com
+txtOwnerID: illumidesk
+controllerName: alb-ingress-controller

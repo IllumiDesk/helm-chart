@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# EKS and helm related 
+cluster/*.pub
+cluster/*.pem
+*.lock
+charts/

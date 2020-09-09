@@ -2,10 +2,11 @@ apiVersion: v2
 name: illumidesk
 version: 0.0.1-n016.hebe045b
 description: An extention of the JupyterHub chart with additional IllumiDesk resources
+icon: https://configs.illumidesk.com/images/illumidesk-80.png
 dependencies:
   - name: jupyterhub
     version: "0.9.1"
-    repository: 'https://jupyterhub.github.io/helm-chart/'
+    repository: https://jupyterhub.github.io/helm-chart/
     import-values:
       - child: rbac
         parent: rbac

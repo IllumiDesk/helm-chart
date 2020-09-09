@@ -1,0 +1,42 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ClusterName
+  region: us-east-2
+
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: alb-ingress-controller
+      namespace: kube-system
+      labels: {app.kubernetes.io/name: "alb-ingress-controller" }
+    attachPolicyARNs: 
+    - arn:aws:iam::XXXXXXXXXX:policy/ALBIngressControllerIAMPolicy
+  - metadata:
+      name: external-dns
+      labels: {app.kubernetes.io/name: "external-dns" }
+    attachPolicyARNs: 
+      - arn:aws:iam::XXXXXXXXX:policy/AllowExternalDNSUpdates
+managedNodeGroups:
+  - name: ng-2
+    labels: {role: child-node }
+    instanceType: t3.medium
+    minSize: 1
+    maxSize: 4
+    desiredCapacity: 2
+    volumeSize: 80
+    ssh:
+      allow: true
+      publicKeyPath: /path/to/Public/key.pub
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
+        autoScaler: true
+        externalDNS: true
+        albIngress: true
+        ebs: true
+        efs: true
+
+
