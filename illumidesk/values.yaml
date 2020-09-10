@@ -30,6 +30,13 @@ jupyterhub:
       image:
         name: illumidesk/base-notebook
         tag: latest
+      cmd: start-singleuser.sh
+      storage:
+        static:
+          pvcName: ''
+          subPath: home/{username}
+        type: static
+      uid: 0
     # singleuser:
     #   image:
     #     name: illumidesk/base-notebook:latest
@@ -61,5 +68,7 @@ host: jhub.example.com
 subnets: subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX
 ingressTags: Environment=dev,Team=test
 domainFilter: example.com
-txtOwnerID: illumidesk
+txtOwnerID: xxxxxx
 controllerName: alb-ingress-controller
+efs: fs-xxxxxx.amazon.aws.com
+

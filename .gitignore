@@ -131,5 +131,7 @@ dmypy.json
 # EKS and helm related 
 cluster/*.pub
 cluster/*.pem
+cluster/cluster-abhi.yaml
 *.lock
 charts/
+test/

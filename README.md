@@ -152,7 +152,8 @@ Enter `make help` for additional options.
       | subnets     | subnets that are part of your cluster vpc. At least 2 required            |
       | domainFilter     | your aws route 53 hosted zonezone              |
       | txtOwnerID     | identifies externalDNS instance            |
+      | efs     | efs file system url           |
 5. Using your values yaml file create the helm chart in your helm chart namespace 
     * `helm upgrade --install $RELEASE ./illumidesk/ --namespace $NAMESPACE --values path/to/file/values.yaml`
-5. Once complete, verify the url 
+6. Once complete, verify the url 
    * `dig jhub.example.com`

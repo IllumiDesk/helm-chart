@@ -2,8 +2,8 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: ClusterName
-  region: us-east-2
+  name: ClusterConfig
+  region: region
 
 iam:
   withOIDC: true
@@ -18,7 +18,7 @@ iam:
       name: external-dns
       labels: {app.kubernetes.io/name: "external-dns" }
     attachPolicyARNs: 
-      - arn:aws:iam::XXXXXXXXX:policy/AllowExternalDNSUpdates
+      - arn:aws:iam::XXXXXXXXXX:policy/AllowExternalDNSUpdates
 managedNodeGroups:
   - name: ng-2
     labels: {role: child-node }
@@ -29,7 +29,7 @@ managedNodeGroups:
     volumeSize: 80
     ssh:
       allow: true
-      publicKeyPath: /path/to/Public/key.pub
+      publicKeyPath: path/to/file.pub
     iam:
       withAddonPolicies:
         imageBuilder: true
