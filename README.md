@@ -157,3 +157,4 @@ Enter `make help` for additional options.
     * `helm upgrade --install $RELEASE ./illumidesk/ --namespace $NAMESPACE --values path/to/file/values.yaml`
 6. Once complete, verify the url 
    * `dig jhub.example.com`
+7. Run `df -HT`in your notebook container to view your mount targets 
