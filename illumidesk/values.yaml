@@ -71,4 +71,5 @@ domainFilter: example.com
 txtOwnerID: xxxxxx
 controllerName: alb-ingress-controller
 efs: fs-xxxxxx.amazon.aws.com
+certificate_arn: arn:aws:acm:us-east-2:XXXXXXXXXXXXX:certificate/XXXX-XXXX-XXXXX-XXX-XXXXX
 
