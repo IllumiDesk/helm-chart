@@ -11,30 +11,123 @@ This setup pulls images defined in the `illumidesk/values.yaml` file from `Docke
 ## Requirements
 
 - [helm >= v3](https://github.com/kubernetes/helm)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+- [Amazon EKS vended KUBECTL](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
+- [EKSCTL](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
 - (Optional) [Docker](https://docs.docker.com/get-docker/)
 - (Optional) [Python 3.6+](https://www.python.org/downloads/)
+  
+## Assumptions
 
+1. Install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+   * Steps
+     1. ```curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"```
+     2. ```sudo installer -pkg AWSCLIV2.pkg -target /```
+     3. Test the version: ```aws --version```
+        * AWS Cli version should be 2.0.46 or later
+2. Access Key has been setup 
+   * Steps
+     1. Login to aws console go to the IAM Service
+        * Services->IAM->Users
+     2. Select your username and click the security credentials tab
+     3. Click the **Create access key** and download the excel file consisting of your **AWS Access Key ID** and **AWS Secret Access Key**   
+3. A key pair has been created
+4. Install and configure [EKSCTL](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html) based on your OS 
+   * Verify it works: ```eksctl version```
+   * The output should show eksctl version 0.27.0
+5. Install and configure [Amazon EKS vended KUBECTL](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html) based on your OS 
+   *  Verify the Kubectl version
+      *  ```kubectl version --short --client```
+      *  The output should show an kubectl version is 1.17
+6. Install and configure [HELM 3](https://github.com/kubernetes/helm) based on your OS
+   * Verify it works: ```helm version --client --short```
+   * View existing charts: ```helm list```
+7. Create EFS System
+   1. Get the vpc using the following command
+       * ```aws eks describe-cluster --name cluster_name --query "cluster.resourcesVpcConfig.vpcId" --output text```
+   2. get the CIDR of VPC using this command
+       * ```aws ec2 describe-vpcs --vpc-ids vpc-XXXXXXXXXs --query "Vpcs[].CidrBlock" --output text```
+   3. In console or CLI create a file system EFS for your cluster vpc
+   4. Under once created add mount targets for the public cluster subnets for each availablity zone
+   5. For each mount target select the ```eks-cluster-sg-$clustername``` security group to allow nfs access. 
+      * NOTE: SG will have the following description
+        * ```eks-cluster-sg-{clusterName}-#########```
+        * ```EKS created security group applied to ENI that is attached to EKS Control Plane master nodes, as well as any managed workloads.``` 
 
-## Installation
+## Setup your EKS Cluster 
 
-1. Add the IllumiDesk chart repository:
+1. Use ```aws configure``` to configure aws CLI 
+   * configure the following:
+     * | Key                   | Description                      |
+       | --------------------- | -------------------------------- |
+       | AWS Access Key ID     | AWS key for account              |
+       | AWS Secret Access Key | AWS Secret token to use aws cli  |
+       | Default region name   | main region for aws resources    |
+       | Default output format | output format of aws commands    |
+       
 
-```bash
-    helm repo add illumidesk https://illumidesk.github.io/helm-chart/
-    helm repo update
-```
+2. Create IAM polices for your ALB Ingress Controller and External DNS. 
+   *  Create **IAM policy** using aws cli for alb ingress policy
+      * `aws iam create-policy \
+       --policy-name ALBIngressControllerIAMPolicy \
+       --policy-document file://IAM/alb-policy.json`
+   * Create **IAM policy** using aws cli for external dns policy
+       * `aws iam create-policy \
+           --policy-name AllowExternalDNSUpdates \
+           --policy-document file://IAM/dns-policy.json` 
+3.  Open _**cluster/custer.yaml**_ and update the following:
+    *   Attached ARN policies for the **alb-ingress-controller** and **external-dns**
+        *   format: ```arn:aws:iam::XXXXXXXXX:policy/AllowExternalDNSUpdates```
+    *   Public Key Path of public key used in your aws environment
+        *   [AWS KEY Pair Guide ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html)
+        *   Steps:
+            1.  Create a key pair and output it into the pem file 
+                *  ```aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem```
+            2.  Generate the public key(pub) from the private key(pem)
+                * ```ssh-keygen -y -f MyKeyPair.pem > MyKeyPair.pub```
+            3.  Update the permisson of your pub file to only give read acess to the owner of the file
+                * ```chmod 400 MyKeyPair.pub```  
+            4. Pass the path to the public key file into cluster.yaml as the value for the **publicKeyPath**
+    *   Name and AWS Region of your eks cluster
+4.  Create the eks cluster
+    * ```eksctl create cluster -f cluster/cluster.yaml```
+    * This command will create the following:
+      * The EKS Cluster
+      * EKS Cluster role which is used to create aws resources for the kubernetes clusters
+      * Managed Node Groups that consists of EC2 Instances that are your worker nodes
+      * VPC, Public and private subnets
+      * Security groups for the control plane master nodes, load balancer, and communication between all nodes in the cluster
+      * IAM Roles for Service Accounts that allow cluster operators to map aws IAM roles to Kubernetes Service Account
+        * Current Service Accounts mapped:
+          * **alb-ingress-controller**
+          * **external-dns**
+        * NOTE: Use command below to show Roles created by EKSCTL with OIDC
+          * ```eksctl get iamserviceaccount --cluster cluster_name```
 
-2. Install IllumiDesk:
+## Installation of Illumidesk Helm Chart 
 
-```shell
-    helm install illumidesk/illumidesk --version=<version> --name=<release name> --namespace=<namespace> -f /path/to/custom/values.yaml
-```
-
-3. Apply changes:
-
-```bash
-    helm upgrade <release name> pangeo/pangeo -f /path/to/custom/values.yaml
-```
+1. Verify that helm exists: ```helm list```
+2. Create a namespace for your helm chart
+   * ```kubectl create namespace $NAMESPACE```
+3. Create a values yaml file locally and pass the chart values that you would like to override
+    * You must override the following:
+    * | Key         | Description                                      | Command Line to get value  |
+      | ----------- | ------------------------------------------------ | -------------------------- |
+      |   awsAccessKey     | Access Key created for your account       | ```aws configure get aws_access_key_id``` |
+      | awsSecretToken     | Secret token provided by aws              | ```aws configure get aws_secret_access_key``` |
+      | secretToken     | Secret token for proxy generated by oppenssl           | ```openssl rand -hex 32```    |
+      | clusterName     | name of EKS cluster created from eksctl            | ```eksctl get cluster ``` |
+      | clusterVPC     | VPC ID of vpc generated by eksctl for your cluster         | ```aws eks describe-cluster --name cluster_name --query "cluster.resourcesVpcConfig.vpcId" --output text```
+      | awsRegion     | aws region where your cluster is located              | ```aws configure region```
+      | subnets     | subnets that are part of your cluster vpc. At least 2 required            | ```aws ec2 describe-subnets --filter "Name=vpc-id,Values=vpc-xxxxxxxxxxxx" "Name=tag:Name,Values=*Public*"  --query "Subnets[*].SubnetId"``` |
+      | domainFilter     | your aws route 53 hosted zonezone              | `aws route53 list-hosted-zones --query "HostedZones[*].Name"`|
+      | txtOwnerID     | identifies externalDNS instance            | set to a unique value that doesn't change during the lifetime of your cluster |
+      | efs     | efs file system url           | ```Go to console->EFS, Find the file system whose mounted targets are in the same vpc as the cluster``` |
+4. Using your values yaml file create the helm chart in your helm chart namespace 
+    * ```helm upgrade --install $RELEASE ./illumidesk/ --namespace $NAMESPACE --values path/to/file/values.yaml```
+5. Once complete, verify the url 
+   * ```dig jhub.example.com```
+6. Run ```df -HT```in your notebook container to view your mount targets 
 
 ## Cleanup
 
@@ -111,117 +204,7 @@ Enter `make help` for additional options.
 
 6. Install IllumiDesk with ```helm``` as inatructed in the first section.
 
-# Helm Setup
 
-## Assumptions
 
-1. Install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-   * Steps
-     1. ```curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"```
-     2. ```sudo installer -pkg AWSCLIV2.pkg -target /```
-     3. Test the version: ```aws --version```
-        * AWS Cli version should be 2.0.46 or later
-2. Access Key has been setup 
-   * Steps
-     1. Login to aws console go to the IAM Service
-        * Services->IAM->Users
-     2. Select your username and click the security credentials tab
-     3. Click the **Create access key** and download the excel file consisting of your **AWS Access Key ID** and **AWS Secret Access Key**   
-3. Create a key pair 
-4. Install and configure [EKSCTL](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html) based on your OS 
-   * Verify it works: ```eksctl version```
-   * The output should show eksctl version 0.27.0
-5. Install and configure [Amazon EKS vended KUBECTL](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html) based on your OS 
-   *  Verify the Kubectl version
-      *  ```kubectl version --short --client```
-      *  The output should show an kubectl version is 1.17
-6. Install and configure [HELM 3](https://helm.sh/docs/intro/install/#helm) based on your OS
-   * Verify it works: ```helm version --client --short```
-   * View existing charts: ```helm list```
-7. Create EFS System
-   1. Get the vpc using the following command
-       * ```aws eks describe-cluster --name cluster_name --query "cluster.resourcesVpcConfig.vpcId" --output text```
-   2. get the CIDR of VPC using this command
-       * ```aws ec2 describe-vpcs --vpc-ids vpc-XXXXXXXXXs --query "Vpcs[].CidrBlock" --output text```
-   3. In console or CLI create a file system EFS for your cluster vpc
-   4. Under once created add mount targets for the public cluster subnets for each availablity zone
-   5. For each mount target select the ```eks-cluster-sg-$clustername``` security group to allow nfs access. 
-      * NOTE: SG will have the following description
-        * ```eks-cluster-sg-{clusterName}-#########```
-        * ```EKS created security group applied to ENI that is attached to EKS Control Plane master nodes, as well as any managed workloads.``` 
-8 Create a Hosted Zone in Route53
-    * ```aws route53 create-hosted-zone --name _example.com_ --caller-reference _timestamp_```
-    * NOTE: The caller-reference is a unique identifier that identifies CreateHostedZone requests. It is usually a timestamp but can be anything
-## Setup Cluster
-1. Use ```aws configure``` to configure aws CLI 
-   * configure the following:
-     * | Key                   | Description                      |
-       | --------------------- | -------------------------------- |
-       | AWS Access Key ID     | AWS key for account              |
-       | AWS Secret Access Key | AWS Secret token to use aws cli  |
-       | Default region name   | main region for aws resources    |
-       | Default output format | output format of aws commands    |
-       
 
-2. Create IAM polices for your ALB Ingress Controller and External DNS. 
-   *  Create **IAM policy** using aws cli for alb ingress policy
-      * `aws iam create-policy \
-       --policy-name ALBIngressControllerIAMPolicy \
-       --policy-document file://IAM/alb-policy.json`
-   * Create **IAM policy** using aws cli for external dns policy
-       * `aws iam create-policy \
-           --policy-name AllowExternalDNSUpdates \
-           --policy-document file://IAM/dns-policy.json` 
-3.  Open _**cluster/custer.yaml**_ and update the following:
-    *   Attached ARN policies for the **alb-ingress-controller** and **external-dns**
-        *   format: ```arn:aws:iam::XXXXXXXXX:policy/AllowExternalDNSUpdates```
-    *   Public Key Path of public key used in your aws environment
-        *   [AWS KEY Pair Guide ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html)
-        *   Steps:
-            1.  Create a key pair and output it into the pem file 
-                *  ```aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem```
-            3.  Generate the public key(pub) from the private key(pem)
-                * ```ssh-keygen -y -f MyKeyPair.pem > MyKeyPair.pub```
-            4.  Update the permisson of your pub file to only give read acess to the owner of the file
-                * ```chmod 400 MyKeyPair.pub```  
-            5. Pass the path to the public key file into cluster.yaml as the value for the **publicKeyPath**
-    *   Name and AWS Region of your eks cluster
-4.  Create the eks cluster
-    * ```eksctl create cluster -f cluster/cluster.yaml```
-    * This command will create the following:
-      * The EKS Cluster
-      * EKS Cluster role which is used to create aws resources for the kubernetes clusters
-      * Managed Node Groups that consists of EC2 Instances that are your worker nodes
-      * VPC, Public and private subnets
-      * Security groups for the control plane master nodes, load balancer, and communication between all nodes in the cluster
-      * IAM Roles for Service Accounts that allow cluster operators to map aws IAM roles to Kubernetes Service Account
-        * Current Service Accounts mapped:
-          * **alb-ingress-controller**
-          * **external-dns**
-        * NOTE: Use command below to show Roles created by EKSCTL with OIDC
-          * ```eksctl get iamserviceaccount --cluster cluster_name```
 
-## Helm Chart setup
-
-1. Verify that helm exists: ```helm list```
-2. Create a namespace for your helm chart
-   * ```kubectl create namespace $NAMESPACE```
-3. Create a values yaml file locally and pass the chart values that you would like to override
-    * You must override the following:
-    * | Key         | Description                                      | Command Line to get value  |
-      | ----------- | ------------------------------------------------ | -------------------------- |
-      |   awsAccessKey     | Access Key created for your account       | ```aws configure get aws_access_key_id``` |
-      | awsSecretToken     | Secret token provided by aws              | ```aws configure get aws_secret_access_key``` |
-      | secretToken     | Secret token for proxy generated by oppenssl           | ```openssl rand -hex 32```    |
-      | clusterName     | name of EKS cluster created from eksctl            | ```eksctl get cluster ``` |
-      | clusterVPC     | VPC ID of vpc generated by eksctl for your cluster         | ```aws eks describe-cluster --name cluster_name --query "cluster.resourcesVpcConfig.vpcId" --output text```
-      | awsRegion     | aws region where your cluster is located              | ```aws configure region```
-      | subnets     | subnets that are part of your cluster vpc. At least 2 required            | ```aws ec2 describe-subnets --filter "Name=vpc-id,Values=vpc-xxxxxxxxxxxx" "Name=tag:Name,Values=*Public*"  --query "Subnets[*].SubnetId"``` |
-      | domainFilter     | your aws route 53 hosted zonezone              | `aws route53 list-hosted-zones --query "HostedZones[*].Name"`|
-      | txtOwnerID     | identifies externalDNS instance            | set to a unique value that doesn't change during the lifetime of your cluster |
-      | efs     | efs file system url           | ```Go to console->EFS, Find the file system whose mounted targets are in the same vpc as the cluster``` |
-4. Using your values yaml file create the helm chart in your helm chart namespace 
-    * ```helm upgrade --install $RELEASE ./illumidesk/ --namespace $NAMESPACE --values path/to/file/values.yaml```
-5. Once complete, verify the url 
-   * ```dig jhub.example.com```
-6. Run ```df -HT```in your notebook container to view your mount targets 
