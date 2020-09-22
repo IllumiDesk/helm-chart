@@ -1,3 +1,5 @@
+{{ if .Values.illumidesk.enabled }}
+
 
 apiVersion: v1
 kind: ServiceAccount
@@ -54,7 +56,6 @@ spec:
     metadata:
       labels:
         app: external-dns
-        
     spec:
 
       securityContext:
@@ -73,4 +74,4 @@ spec:
         - --aws-zone-type=public # only look at public hosted zones (valid values are public, private or no value for both)
         - --registry=txt
         - --txt-owner-id= {{ .Values.txtOwnerID }}
-
+{{ end }}

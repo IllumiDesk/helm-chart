@@ -1,7 +1,7 @@
 # Application Load Balancer (ALB) Ingress Controller Deployment Manifest.
 # This manifest details sensible defaults for deploying an ALB Ingress Controller.
 # GitHub: https://github.com/kubernetes-sigs/aws-alb-ingress-controller
-
+{{ if .Values.illumidesk.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,10 +37,10 @@ spec:
             # Name of your cluster. Used when naming resources created
             # by the ALB Ingress Controller, providing distinction between
             # clusters.
-            - --cluster-name={{ .Values.clusterName }}
+            - --cluster-name={{ .Values.illumidesk.clusterName }}
             # AWS VPC ID this ingress controller will use to create AWS resources.
             # If unspecified, it will be discovered from ec2metadata.
-            - --aws-vpc-id={{ .Values.clusterVPC }}
+            - --aws-vpc-id={{ .Values.illumidesk.clusterVPC }}
 
 
 
@@ -49,7 +49,7 @@ spec:
             # AWS region this ingress controller will operate in.
             # If unspecified, it will be discovered from ec2metadata.
             # kube of regions: http://docs.aws.amazon.com/general/latest/gr/rande.html#vpc_region
-            - --aws-region={{ .Values.awsRegion }}
+            - --aws-region={{ .Values.illumidesk.awsRegion }}
 
             # Enables logging on all outbound requests sent to the AWS API.
             # If logging is desired, set to true.
@@ -83,3 +83,4 @@ spec:
           # Repository location of the ALB Ingress Controller.
           image: docker.io/amazon/aws-alb-ingress-controller:v1.1.8
       serviceAccountName: alb-ingress-controller
+{{ end }}

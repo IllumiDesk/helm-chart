@@ -59,17 +59,19 @@ jupyterhub:
     #   service:
     #     # Not meant to be exposed to the public directly with this setup
     #     type: ClusterIP
-awsAccessKey: ''
-awsSecretToken: ''
-clusterName: cluster
-clusterVPC: vpc-XXXXXXXXXXXXX
-awsRegion: us-east-2
-host: jhub.example.com
-subnets: subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX
-ingressTags: Environment=dev,Team=test
-domainFilter: example.com
-txtOwnerID: xxxxxx
-controllerName: alb-ingress-controller
-efs: fs-xxxxxx.amazon.aws.com
-certificate_arn: arn:aws:acm:us-east-2:XXXXXXXXXXXXX:certificate/XXXX-XXXX-XXXXX-XXX-XXXXX
+illumidesk:
+  enabled: false
+  awsAccessKey: ''
+  awsSecretToken: ''
+  clusterName: cluster
+  clusterVPC: vpc-XXXXXXXXXXXXX
+  awsRegion: us-east-2
+  host: jhub.example.com
+  subnets: subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX
+  ingressTags: Environment=dev,Team=test
+  domainFilter: example.com
+  txtOwnerID: xxxxxx
+  controllerName: alb-ingress-controller
+  efs: fs-xxxxxx.amazon.aws.com
+  certificate_arn: arn:aws:acm:us-east-2:XXXXXXXXXXXXX:certificate/XXXX-XXXX-XXXXX-XXX-XXXXX
 
