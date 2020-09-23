@@ -17,8 +17,8 @@ jupyterhub:
         enabled: false
       secretToken: ''
       service:
-        ports:
-          nodePort: 8080
+        # ports:
+        #   nodePort: 8080
         type: ClusterIP
     singleuser:
       cmd: start-singleuser.sh
@@ -31,12 +31,12 @@ jupyterhub:
         name: illumidesk/base-notebook
         tag: latest
       cmd: start-singleuser.sh
-      storage:
-        static:
-          pvcName: ''
-          subPath: home/{username}
-        type: static
-      uid: 0
+      # storage:
+      #   static:
+      #     pvcName: ''
+      #     subPath: home/{username}
+      #   type: static
+      #uid: 0
     # singleuser:
     #   image:
     #     name: illumidesk/base-notebook:latest
@@ -69,9 +69,13 @@ illumidesk:
   host: jhub.example.com
   subnets: subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX
   ingressTags: Environment=dev,Team=test
+  controllerName: alb-ingress-controller
+  certificate_arn: arn:aws:acm:us-east-2:XXXXXXXXXXXXX:certificate/XXXX-XXXX-XXXXX-XXX-XXXXX
+allowDNS: 
+  enabled: false
   domainFilter: example.com
   txtOwnerID: xxxxxx
-  controllerName: alb-ingress-controller
-  efs: fs-xxxxxx.amazon.aws.com
-  certificate_arn: arn:aws:acm:us-east-2:XXXXXXXXXXXXX:certificate/XXXX-XXXX-XXXXX-XXX-XXXXX
+allowEFS: 
+  enabled: false
+  efs: fs-xxxxxx.efs.us-east-2.amazon.aws.com
 

@@ -1,4 +1,4 @@
-{{ if .Values.illumidesk.enabled }}
+{{ if .Values.allowDNS.enabled }}
 
 
 apiVersion: v1

@@ -1,4 +1,4 @@
-{{ if .Values.illumidesk.enabled }}
+{{ if .Values.allowEFS.enabled }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -12,5 +12,5 @@ spec:
   resources:
     requests:
       storage: 11Gi
-      
+
 {{ end }}

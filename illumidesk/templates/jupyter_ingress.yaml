@@ -14,19 +14,17 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.illumidesk.certificate_arn}}
 spec:
-  # tls:
-  # - hosts:
-  #   - {{ .Values.host }}
+
   rules:
-  - host: {{ .Values.host }}
+  - host: {{ .Values.illumidesk.host }}
     http:
       paths:
       - path: /*
         backend:
-          serviceName: proxy-public
-          servicePort: 80
-      - path: /*
-        backend:
           serviceName: ssl-redirect
           servicePort: use-annotation
+      - path: /*
+        backend:
+          serviceName: proxy-public
+          servicePort: 80
 {{ end }}
