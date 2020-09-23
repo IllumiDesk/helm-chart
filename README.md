@@ -110,6 +110,7 @@ This setup pulls images defined in the `illumidesk/values.yaml` file from `Docke
 2. Create a namespace for your helm chart
    * ```kubectl create namespace $NAMESPACE```
 3. Create a values yaml file locally and pass the chart values that you would like to override
+    * 
     * You must override the following:
     * | Key         | Description                                      | Command Line to get value  |
       | ----------- | ------------------------------------------------ | -------------------------- |

@@ -1,0 +1,50 @@
+# IllumiDesk configuration values
+# --------------------
+# Create and use roles and service accounts on an RBAC enabled cluster.
+rbac:
+    enabled: true
+  
+jupyterhub:
+
+  proxy:
+    secretToken: ''
+    service:
+      type: LoadBalancer
+  # use this if you are going to allow efs enabled
+  # singleuser:
+  #   extraEnv:
+  #     CHOWN_HOME: 'yes'
+  #     Editor: vim
+  #   fsGid: 0
+  #   uid: 0
+  #   image:
+  #     name: illumidesk/base-notebook
+  #     tag: latest
+  #   cmd: start-singleuser.sh
+  #   storage:
+  #     type: static
+  #     static:
+  #       pvcName: jhub-shared-volume
+  #       subPath: home/{username}
+
+albIngressController:
+  enabled: false
+  awsAccessKey: ''
+  awsSecretToken: ''
+  clusterName: ''
+  clusterVPC: ''
+  awsRegion: ''
+  host: ''
+  subnets: []
+  ingressTags: {}
+  controllerName: ''
+  certificate_arn: '' 
+allowExternalDNS: 
+  enabled: false
+  domainFilter: ''
+  txtOwnerID: ''
+allowEFS: 
+  enabled: false
+  efs: ''
+  orgName: ''
+

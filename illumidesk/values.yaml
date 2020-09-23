@@ -31,51 +31,12 @@ jupyterhub:
         name: illumidesk/base-notebook
         tag: latest
       cmd: start-singleuser.sh
-      # storage:
-      #   static:
-      #     pvcName: ''
-      #     subPath: home/{username}
-      #   type: static
-      #uid: 0
-    # singleuser:
-    #   image:
-    #     name: illumidesk/base-notebook:latest
-    #     tag: 2020.08.27
-    #   defaultUrl: "/tree"
-    # prePuller:
-    #   hook:
-    #     enabled: false
-    # # optimizations: see https://zero-to-jupyterhub.readthedocs.io/en/latest/optimization.html?highlight=scheduling#optimizations
-    # scheduling:
-    #   userScheduler:
-    #     enabled: true
-    #     replicas: 2
-    #   podPriority:
-    #     enabled: true
-    #   userPlaceholder:
-    #     enabled: true
-    #     replicas: 2
-    # traefik:
-    #   service:
-    #     # Not meant to be exposed to the public directly with this setup
-    #     type: ClusterIP
-illumidesk:
+
+albIngressController:
   enabled: false
-  awsAccessKey: ''
-  awsSecretToken: ''
-  clusterName: cluster
-  clusterVPC: vpc-XXXXXXXXXXXXX
-  awsRegion: us-east-2
-  host: jhub.example.com
-  subnets: subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX,subnet-XXXXXXXXXXXXX
-  ingressTags: Environment=dev,Team=test
-  controllerName: alb-ingress-controller
-  certificate_arn: arn:aws:acm:us-east-2:XXXXXXXXXXXXX:certificate/XXXX-XXXX-XXXXX-XXX-XXXXX
-allowDNS: 
+allowExternalDNS: 
   enabled: false
-  domainFilter: example.com
-  txtOwnerID: xxxxxx
 allowEFS: 
   enabled: false
-  efs: fs-xxxxxx.efs.us-east-2.amazon.aws.com
+
 

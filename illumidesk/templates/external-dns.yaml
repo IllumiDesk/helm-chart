@@ -1,4 +1,4 @@
-{{ if .Values.allowDNS.enabled }}
+{{ if .Values.allowExternalDNS.enabled }}
 
 
 apiVersion: v1

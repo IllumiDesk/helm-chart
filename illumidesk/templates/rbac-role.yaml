@@ -1,4 +1,4 @@
-{{ if .Values.illumidesk.enabled }}
+{{ if .Values.albIngressController.enabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

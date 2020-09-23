@@ -13,7 +13,7 @@ spec:
   storageClassName: ""
   nfs:
     server: {{ .Values.allowEFS.efs }}
-    path: "/"
+    path: printf "/mnt/efs/fs1/%s" .Values.allowEFS.orgName
 
 {{ end }}
 

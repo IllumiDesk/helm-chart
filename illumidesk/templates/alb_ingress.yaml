@@ -1,4 +1,4 @@
-{{ if .Values.illumidesk.enabled }}
+{{ if .Values.albIngressController.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -8,15 +8,15 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/subnets: {{ .Values.illumidesk.subnets }}
-    alb.ingress.kubernetes.io/tags: {{ .Values.illumidesk.ingressTags }}
+    alb.ingress.kubernetes.io/subnets: {{ .Values.albIngressController.subnets }}
+    alb.ingress.kubernetes.io/tags: {{ .Values.albIngressController.ingressTags }}
     alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.illumidesk.certificate_arn}}
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.albIngressController.certificate_arn}}
 spec:
 
   rules:
-  - host: {{ .Values.illumidesk.host }}
+  - host: {{ .Values.albIngressController.host }}
     http:
       paths:
       - path: /*
