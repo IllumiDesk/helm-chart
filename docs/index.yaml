@@ -1,0 +1,23 @@
+apiVersion: v1
+entries:
+  illumidesk:
+  - apiVersion: v2
+    created: "2020-09-25T00:20:47.741555-04:00"
+    dependencies:
+    - import-values:
+      - child: rbac
+        parent: rbac
+      name: jupyterhub
+      repository: https://jupyterhub.github.io/helm-chart/
+      version: 0.9.1
+    description: An extention of the JupyterHub chart with additional IllumiDesk resources
+    digest: d3729e8ffe39feba47a85275416d78013abf0ada8f0f9a28b42afdc23f2710c2
+    icon: https://configs.illumidesk.com/images/illumidesk-80.png
+    maintainers:
+    - email: hello@illumidesk.com
+      name: IllumiDesk Team
+    name: illumidesk
+    urls:
+    - illumidesk-0.0.1-n016.hebe045b.tgz
+    version: 0.0.1-n016.hebe045b
+generated: "2020-09-25T00:20:47.73199-04:00"
