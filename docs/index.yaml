@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   illumidesk:
   - apiVersion: v2
-    created: "2020-09-24T23:58:41.260068-04:00"
+    created: "2020-09-25T00:20:47.741555-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -18,6 +18,6 @@ entries:
       name: IllumiDesk Team
     name: illumidesk
     urls:
-    - https://github.com/Abhi94N/helm-chart/tree/gh-pages/illumidesk-0.0.1-n016.hebe045b.tgz
+    - illumidesk-0.0.1-n016.hebe045b.tgz
     version: 0.0.1-n016.hebe045b
-generated: "2020-09-24T23:58:41.249279-04:00"
+generated: "2020-09-25T00:20:47.73199-04:00"
