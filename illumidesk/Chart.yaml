@@ -11,7 +11,7 @@ dependencies:
       - child: rbac
         parent: rbac
   - name: postgresql
-    version: "9.8.4"
+    version: "9.8.6"
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   # - name: nfs-server-provisioner

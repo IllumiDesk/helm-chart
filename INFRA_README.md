@@ -156,9 +156,8 @@ For the external dns deployment you need to create an IRSA the External DNS
 
 * For Application Load Balancer, you must have specified the host in your values file
     *  Verify the dns has propgates your domain
-
+           
             $ dig $HOST 
-
     * Open up your browser and paste the value for your host
 
 
