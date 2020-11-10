@@ -2,15 +2,14 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{.Release.Name }}-shared-volume
+  name: {{.Release.Name }}-shared-pvc
   namespace: {{ .Release.Namespace }}
 spec:
-  volumeName: {{.Release.Name }}-shared-volume
+  volumeName: {{.Release.Name }}-shared-pv
   storageClassName: ""
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 11Gi
-
 {{ end }}
