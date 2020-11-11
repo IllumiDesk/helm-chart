@@ -100,7 +100,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: grader-setup-container
-          image: netoisc/grader-setup-app:latest
+          image: illumidesk/grader-setup-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
@@ -110,31 +110,30 @@ spec:
             - name: POSTGRES_NBGRADER_HOST
               value: {{ .Values.graderSetupService.postgresNBGraderHost }}
             - name: POSTGRES_NBGRADER_USER
-              value: {{ .Values.graderSetupService.postgresNBGraderUser }}
+              value: {{ .Values.graderSetupService.postgresNBGraderUser | default "postgres" }}
             - name: POSTGRES_NBGRADER_PASSWORD
-              value: {{ .Values.graderSetupService.postgresNBGraderPassword }}
-            #TODO: need to add to config
+              value: {{ .Values.graderSetupService.postgresNBGraderPassword | default "illumidesk" }}
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
             - name: ILLUMIDESK_K8S_NAMESPACE
-              value: {{.Release.Namespace }}
+              value: {{ .Release.Namespace }}
             - name: GRADER_PVC
-              value: {{.Release.Name }}-grader-pvc
+              value: grader-pvc-{{ .Release.Name }}
             - name: GRADER_SHARED_PVC
-              value: {{.Release.Name }}-shared-pvc
+              value: shared-pvc-{{ .Release.Name }}
           volumeMounts:
-            - name: {{.Release.Name }}-grader-pv
+            - name: grader-pv-{{ .Release.Name }}
               mountPath: /illumidesk-courses
               subPath: illumidesk-courses
-            - name: {{.Release.Name }}-shared-pv
+            - name: shared-pv-{{ .Release.Name }}
               mountPath: /illumidesk-nb-exchange
       serviceAccountName: illumidesk-account
       volumes:
-        - name: {{.Release.Name }}-shared-pv
+        - name: shared-pv-{{.Release.Name }}
           persistentVolumeClaim:
-            claimName: {{.Release.Name }}-shared-pvc
-        - name: {{.Release.Name }}-grader-pv
+            claimName: shared-pvc-{{ .Release.Name }}
+        - name: grader-pv-{{ .Release.Name }}
           persistentVolumeClaim:
-            claimName: {{.Release.Name }}-grader-pvc
+            claimName: grader-pvc-{{ .Release.Name }}
 
 {{ end }}

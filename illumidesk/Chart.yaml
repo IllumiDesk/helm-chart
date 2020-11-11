@@ -1,6 +1,7 @@
 apiVersion: v2
 name: illumidesk
-version: 0.0.1-n016.hebe045b
+version: 0.1.0
+appVersion: 0.1.0
 description: An extention of the JupyterHub chart with additional IllumiDesk resources
 icon: https://configs.illumidesk.com/images/illumidesk-80.png
 dependencies:

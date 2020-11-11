@@ -2,10 +2,10 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{.Release.Name }}-grader-pvc
+  name: grader-pvc-{{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  volumeName: {{.Release.Name }}-grader-pv
+  volumeName: grader-pv-{{ .Release.Name }}
   storageClassName: ""
   accessModes:
     - ReadWriteMany
