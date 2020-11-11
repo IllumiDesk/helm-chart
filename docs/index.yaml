@@ -2,21 +2,24 @@ apiVersion: v1
 entries:
   illumidesk:
   - apiVersion: v2
-    appVersion: illumidesk
-    created: "2020-10-22T18:57:09.705749-04:00"
+    created: "2020-11-11T02:09:16.406718-05:00"
     dependencies:
     - import-values:
       - child: rbac
         parent: rbac
       name: jupyterhub
       repository: https://jupyterhub.github.io/helm-chart/
-      version: 0.9.1
+      version: 0.10.2
     - condition: postgresql.enabled
       name: postgresql
       repository: https://charts.bitnami.com/bitnami
-      version: 9.8.4
+      version: 9.8.6
+    - condition: datadog.enabled
+      name: datadog
+      repository: https://helm.datadoghq.com
+      version: 2.4.29
     description: An extention of the JupyterHub chart with additional IllumiDesk resources
-    digest: d224b37c673b07ec377095833fc63757879461fae41f7f013a2d2677e013f52f
+    digest: 9f0846df827a6e6e093d8b2ac4ec21f4cefb51a9d7ea9ab1fb94804aba55be09
     icon: https://configs.illumidesk.com/images/illumidesk-80.png
     maintainers:
     - email: hello@illumidesk.com
@@ -25,4 +28,4 @@ entries:
     urls:
     - illumidesk-0.0.1.tgz
     version: 0.0.1
-generated: "2020-10-22T18:57:09.679798-04:00"
+generated: "2020-11-11T02:09:16.374953-05:00"

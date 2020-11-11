@@ -1,3 +1,5 @@
+{{ if .Values.graderSetupService.enabled }}
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -7,10 +9,10 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: grader-setup-service
+  name: grader-setup-service-{{ .Release.Name }}
   labels:
     app: illumidesk
-    component: grader-setup-service
+    component: grader-setup-service-{{ .Release.Name }}
 rules:
   - apiGroups:
      - ""
@@ -46,31 +48,19 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: grader-setup-service
+  name: grader-setup-service-{{ .Release.Name }}
   labels:
     app: illumidesk
-    component: grader-setup-service
+    component: grader-setup-service-{{ .Release.Name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: grader-setup-service
+  name: grader-setup-service-{{ .Release.Name }}
 subjects:
   - kind: ServiceAccount
     name: illumidesk-account
     namespace: {{ .Release.Namespace }}
-# ---
-# kind: PersistentVolumeClaim
-# apiVersion: v1
-# metadata:
-#   name: grader-setup-pvc
-#   namespace: {{ .Release.Namespace }}
-# spec:
-#   storageClassName: local-path
-#   accessModes:
-#     - ReadWriteOnce
-#   resources:
-#     requests:
-#       storage: 1Gi
+
 ---
 apiVersion: v1
 kind: Service
@@ -116,13 +106,13 @@ spec:
             - containerPort: 8000
           env:
             - name: GRADER_IMAGE_NAME
-              value: 'illumidesk/flatiron-grader:latest'
+              value: {{ .Values.graderSetupService.graderImage }}
             - name: POSTGRES_NBGRADER_HOST
-              value: {{ .Values.graderSetupService.postgresNBgraderHost }}
+              value: {{ .Values.graderSetupService.postgresNBGraderHost }}
             - name: POSTGRES_NBGRADER_USER
-              value: {{ .Values.graderSetupService.postgresNBgraderUser }}
+              value: {{ .Values.graderSetupService.postgresNBGraderUser }}
             - name: POSTGRES_NBGRADER_PASSWORD
-              value: {{ .Values.graderSetupService.postgresNBgraderPassword }}
+              value: {{ .Values.graderSetupService.postgresNBGraderPassword }}
             #TODO: need to add to config
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
@@ -146,4 +136,5 @@ spec:
         - name: {{.Release.Name }}-grader-pv
           persistentVolumeClaim:
             claimName: {{.Release.Name }}-grader-pvc
-           
+
+{{ end }}

@@ -13,6 +13,7 @@ metadata:
   # namespace scope, see --watch-namespace.
   namespace: {{ .Release.Namespace }}
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: alb-ingress-controller
