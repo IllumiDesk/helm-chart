@@ -32,6 +32,9 @@ rules:
 - apiGroups: [""]
   resources: ["nodes"]
   verbs: ["list"]
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["get","watch","list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -71,15 +74,15 @@ spec:
       serviceAccountName: external-dns
       containers:
       - name: external-dns
-        image: bitnami/external-dns:0.7.1
+        image: k8s.gcr.io/external-dns/external-dns:v0.7.3 
         args:
         - --source=service
         - --source=ingress
         - --domain-filter={{ .Values.allowExternalDNS.domainFilter | default "illumidesk.com" }} # will make ExternalDNS see only the hosted zones matching provided domain, omit to process all available hosted zones
         - --provider=aws
         - --policy=upsert-only # would prevent ExternalDNS from deleting any records, omit to enable full synchronization
-        - --aws-zone-type=public # only look at public hosted zones (valid values are public, private or no value for both)
+        - --aws-zone-type={{ .Values.allowExternalDNS.zone | default "public" }} # only look at public hosted zones (valid values are public, private or no value for both)
         - --registry=txt
         - --interval=30s
-        - --txt-owner-id= {{ .Values.allowExternalDNS.txtOwnerID | default "illumidesk" }}
+        - --txt-owner-id={{ .Values.allowExternalDNS.txtOwnerID | default "illumidesk" }}
 {{ end }}
