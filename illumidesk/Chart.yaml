@@ -1,7 +1,7 @@
 apiVersion: v2
 name: illumidesk
-version: 0.1.0
-appVersion: 0.1.0
+version: 0.1.1
+appVersion: 0.1.1
 description: An extention of the JupyterHub chart with additional IllumiDesk resources
 icon: https://configs.illumidesk.com/images/illumidesk-80.png
 dependencies:
@@ -12,7 +12,7 @@ dependencies:
       - child: rbac
         parent: rbac
   - name: postgresql
-    version: "9.8.6"
+    version: "10.1.3"
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: datadog
