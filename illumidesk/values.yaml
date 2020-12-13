@@ -68,5 +68,10 @@ allowExternalDNS:
 nginxIngressController:
   enabled: false
   host: 'test'
+allowNFS:
+  enabled: false
+graderSetupService:
+  enabled: false
+
 
 
