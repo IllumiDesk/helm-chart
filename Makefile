@@ -6,6 +6,8 @@ VENV_NAME?=venv
 VENV_BIN=$(shell pwd)/${VENV_NAME}/bin
 VENV_ACTIVATE=. ${VENV_BIN}/activate
 
+DOCKER_JUPYTERHUB_TAG=0.9.1
+
 PYTHON=${VENV_BIN}/python3
 
 help:
@@ -25,16 +27,13 @@ pip-compile: venv ## create requirements.txt using pip-compile (uses requirement
 	$(VENV_BIN)/pip-compile images/jupyterhub/requirements.in
 
 build-jhubs: pip-compile ## build jupyterhub images
-	@docker build -t illumidesk/jupyterhub:py3.8 images/jupyterhub/.
-	@docker build -t illumidesk/k8s-hub:py3.8 -f images/jupyterhub/Dockerfile.k8 images/jupyterhub/.
+	@docker build -t illumidesk/k8s-hub:$(DOCKER_JUPYTERHUB_TAG) images/jupyterhub/.
 
 push-jhubs: pip-compile ## push jupyterhub images to dockerhub (requires login)
-	@docker push illumidesk/jupyterhub:py3.8
-	@docker push illumidesk/k8s-hub:py3.8
+	@docker push illumidesk/k8s-hub:$(DOCKER_JUPYTERHUB_TAG)
 
 build-push-jhubs: build-jhubs ## build and push jupyterhub images
-	@docker push illumidesk/jupyterhub:py3.8
-	@docker push illumidesk/k8s-hub:py3.8
+	@docker push illumidesk/k8s-hub:$(DOCKER_JUPYTERHUB_TAG)
 
 clean:
 	find . -name '*.pyc' -exec rm -f {} +

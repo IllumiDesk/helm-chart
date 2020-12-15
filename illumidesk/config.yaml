@@ -1,0 +1,50 @@
+# IllumiDesk configuration values
+# --------------------
+# Create and use roles and service accounts on an RBAC enabled cluster.
+rbac:
+  enabled: true
+  
+jupyterhub:
+# Helm config for jupyterhub goes here
+# See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
+  hub:
+    image:
+      name: illumidesk/k8s-hub
+      tag: latest
+    shutdownOnLogout: true
+  proxy:
+    https:
+      enabled: false
+    secretToken: '1231231231312313123123123123123123123123123123123123123123123'
+    service:
+      # ports:
+      #   nodePort: 8080
+      type: ClusterIP
+  singleuser:
+    cmd: start-singleuser.sh
+    extraEnv:
+      CHOWN_HOME: 'yes'
+      Editor: vim
+    fsGid: 100
+    uid: 1000
+    image:
+      name: illumidesk/base-notebook
+      tag: latest
+    cmd: start-singleuser.sh
+  ingress:
+    enabled: true
+    hosts:
+      - greg.illumidesk.com
+
+alb_ingress_controller:
+  enabled: false
+  enable_irsa: false
+allow_external_dns: 
+  enabled: false
+  enable_irsa: false
+allow_efs: 
+  enabled: false
+
+nginx_ingress_controller:
+  eksctl: false
+  enabled: false
