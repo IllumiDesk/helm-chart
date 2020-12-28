@@ -100,7 +100,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: grader-setup-container
-          image: illumidesk/grader-setup-app:latest
+          image: {{ .Values.graderSetupService.graderSetupImage }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

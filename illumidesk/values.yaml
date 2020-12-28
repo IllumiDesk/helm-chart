@@ -74,3 +74,5 @@ allowNFS:
 
 graderSetupService:
   enabled: false
+  graderSetupImage: illumidesk/grader-setup-app:latest
+  graderImage: illumidesk/illumidesk-grader:latest

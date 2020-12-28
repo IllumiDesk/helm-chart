@@ -2,8 +2,36 @@ apiVersion: v1
 entries:
   illumidesk:
   - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2020-12-28T16:19:54.841883-05:00"
+    dependencies:
+    - import-values:
+      - child: rbac
+        parent: rbac
+      name: jupyterhub
+      repository: https://jupyterhub.github.io/helm-chart/
+      version: 0.9.1
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.1.3
+    - condition: datadog.enabled
+      name: datadog
+      repository: https://helm.datadoghq.com
+      version: 2.4.29
+    description: An extention of the JupyterHub chart with additional IllumiDesk resources
+    digest: d6149d2d196a6beca04a05256e07b5d90dd1b1d247a5413c05c94c135fb0e5aa
+    icon: https://configs.illumidesk.com/images/illumidesk-80.png
+    maintainers:
+    - email: hello@illumidesk.com
+      name: IllumiDesk Team
+    name: illumidesk
+    urls:
+    - illumidesk-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
     appVersion: 0.10.0
-    created: "2020-12-13T19:35:47.576339-05:00"
+    created: "2020-12-28T16:19:54.821748-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -31,7 +59,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2020-12-13T19:35:47.556559-05:00"
+    created: "2020-12-28T16:19:54.801794-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -59,7 +87,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2020-12-13T19:35:47.541258-05:00"
+    created: "2020-12-28T16:19:54.777574-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -87,7 +115,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2020-12-13T19:35:47.51412-05:00"
+    created: "2020-12-28T16:19:54.754744-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -114,7 +142,7 @@ entries:
     - illumidesk-0.1.0.tgz
     version: 0.1.0
   - apiVersion: v2
-    created: "2020-12-13T19:35:47.49537-05:00"
+    created: "2020-12-28T16:19:54.735377-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -140,4 +168,4 @@ entries:
     urls:
     - illumidesk-0.0.1.tgz
     version: 0.0.1
-generated: "2020-12-13T19:35:47.467438-05:00"
+generated: "2020-12-28T16:19:54.706159-05:00"
