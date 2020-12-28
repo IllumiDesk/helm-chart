@@ -2,7 +2,7 @@
 # --------------------
 # Create and use roles and service accounts on an RBAC enabled cluster.
 rbac:
-    enabled: true
+  enabled: true
   
 jupyterhub:
 # Helm config for jupyterhub goes here
@@ -37,6 +37,7 @@ jupyterhub:
       name: illumidesk/illumidesk-notebook
       tag: latest
       pullPolicy: Always
+
 postgresql:
   enabled: false
 
@@ -56,22 +57,20 @@ datadog:
       metricsProvider:
         enabled: true
 
-
-
-
 albIngressController:
   enabled: false
   enableIRSA: false
+
 allowExternalDNS: 
   enabled: false
   enableIRSA: false
+
 nginxIngressController:
   enabled: false
   host: 'test'
+
 allowNFS:
   enabled: false
+
 graderSetupService:
   enabled: false
-
-
-

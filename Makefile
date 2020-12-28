@@ -26,13 +26,13 @@ venv: ## make virtual environment and install dev requirements
 pip-compile: venv ## create requirements.txt using pip-compile (uses requirements.in as source)
 	$(VENV_BIN)/pip-compile images/jupyterhub/requirements.in
 
-build-jhubs: pip-compile ## build jupyterhub images
+build: pip-compile ## build jupyterhub images
 	@docker build -t illumidesk/k8s-hub:$(DOCKER_JUPYTERHUB_TAG) images/jupyterhub/.
 
-push-jhubs: pip-compile ## push jupyterhub images to dockerhub (requires login)
+push: pip-compile ## push jupyterhub images to dockerhub (requires login)
 	@docker push illumidesk/k8s-hub:$(DOCKER_JUPYTERHUB_TAG)
 
-build-push-jhubs: build-jhubs ## build and push jupyterhub images
+build-push: build ## build and push jupyterhub images
 	@docker push illumidesk/k8s-hub:$(DOCKER_JUPYTERHUB_TAG)
 
 clean:

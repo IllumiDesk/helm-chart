@@ -1,5 +1,3 @@
-FROM jupyter/base-notebook:b2562c469cdd AS builder
-
 FROM jupyterhub/k8s-hub:0.9.1
 
 # ensure pip is up to date
