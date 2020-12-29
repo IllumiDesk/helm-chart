@@ -3,7 +3,7 @@ entries:
   illumidesk:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2020-12-28T16:19:54.841883-05:00"
+    created: "2020-12-28T23:05:46.832481-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -20,7 +20,7 @@ entries:
       repository: https://helm.datadoghq.com
       version: 2.4.29
     description: An extention of the JupyterHub chart with additional IllumiDesk resources
-    digest: d6149d2d196a6beca04a05256e07b5d90dd1b1d247a5413c05c94c135fb0e5aa
+    digest: b3edaad8ebc27dedde4a8988705ebc0df2c63936280902fba812741d8f665de7
     icon: https://configs.illumidesk.com/images/illumidesk-80.png
     maintainers:
     - email: hello@illumidesk.com
@@ -31,7 +31,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 0.10.0
-    created: "2020-12-28T16:19:54.821748-05:00"
+    created: "2020-12-28T23:05:46.811221-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -59,7 +59,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2020-12-28T16:19:54.801794-05:00"
+    created: "2020-12-28T23:05:46.787273-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -87,7 +87,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2020-12-28T16:19:54.777574-05:00"
+    created: "2020-12-28T23:05:46.763742-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -115,7 +115,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2020-12-28T16:19:54.754744-05:00"
+    created: "2020-12-28T23:05:46.736979-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -142,7 +142,7 @@ entries:
     - illumidesk-0.1.0.tgz
     version: 0.1.0
   - apiVersion: v2
-    created: "2020-12-28T16:19:54.735377-05:00"
+    created: "2020-12-28T23:05:46.703504-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -168,4 +168,4 @@ entries:
     urls:
     - illumidesk-0.0.1.tgz
     version: 0.0.1
-generated: "2020-12-28T16:19:54.706159-05:00"
+generated: "2020-12-28T23:05:46.664511-05:00"
