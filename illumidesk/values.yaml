@@ -10,8 +10,6 @@ jupyterhub:
   hub:
     extraConfig:
       logoConfig: |
-        import urllib.request
-        urllib.request.urlretrieve("https://configs.illumidesk.com/images/illumidesk-80.png", "/srv/jupyterhub/illumidesk-80.png")
         c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
     image:
       name: illumidesk/k8s-hub
