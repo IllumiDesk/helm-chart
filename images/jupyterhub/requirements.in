@@ -1,2 +1,5 @@
 ## IllumiDesk package
 https://github.com/IllumiDesk/illumidesk/archive/v1.0.0.zip
+
+## Aditional authenticators
+jupyterhub-samlauthenticator==0.0.9
