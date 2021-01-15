@@ -1,9 +1,9 @@
 #use this
-{{ if .Values.nginxIngressController.enabled }}
+{{ if .Values.nginxIngress.enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ingress-jhub
+  name: ingress-{{ .Release.Name }}
   namespace:  {{ .Release.Namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -13,7 +13,7 @@ spec:
   #     - apple.illumidesk.com
   #   secretName: testsecret-tls
   rules:
-  - host: {{.Values.nginxIngressController.host}}
+  - host: {{.Values.nginxIngress.host}}
     http:
       paths:
         - path: /

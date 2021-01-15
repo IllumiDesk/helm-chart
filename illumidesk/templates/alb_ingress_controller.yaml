@@ -11,7 +11,7 @@ metadata:
   # Namespace the ALB Ingress Controller should run in. Does not impact which
   # namespaces it's able to resolve ingress resource for. For limiting ingress
   # namespace scope, see --watch-namespace.
-  namespace: {{ .Release.Namespace }}
+  namespace: kube-system
 spec:
   replicas: 1
   selector:
@@ -27,7 +27,7 @@ spec:
           args:
             # Limit the namespace where this ALB Ingress Controller deployment will
             # resolve ingress resources. If left commented, all namespaces are used.
-            - --watch-namespace={{ .Release.Namespace }}
+
 
             # Setting the ingress-class flag below ensures that only ingress resources with the
             # annotation kubernetes.io/ingress.class: "alb" are respected by the controller. You may
@@ -67,13 +67,13 @@ spec:
              - name: AWS_ACCESS_KEY_ID
                valueFrom: 
                 secretKeyRef:
-                  name: secrets-{{ .Release.Name }}
+                  name: secrets-alb-ingress-controller
                   key: AWS_ACCESS_KEY_ID
 
              - name: AWS_SECRET_ACCESS_KEY
                valueFrom: 
                 secretKeyRef:
-                  name: secrets-{{ .Release.Name }}
+                  name: secrets-alb-ingress-controller
                   key: AWS_SECRET_ACCESS_KEY
                   
 

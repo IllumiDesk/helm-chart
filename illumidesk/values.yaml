@@ -59,6 +59,9 @@ albIngressController:
   enabled: false
   enableIRSA: false
 
+albIngress:
+  enabled: false
+
 allowExternalDNS: 
   enabled: false
   enableIRSA: false
