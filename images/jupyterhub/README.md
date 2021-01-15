@@ -1,8 +1,8 @@
-# IllumiDesk Grader Setup Service
+# IllumiDesk's JupyterHub
 
 ## Overview
 
-Grader setup service built as a docker image meant for deployment with IllumiDesk's Kubernetes-based
+JupyterHub built as a docker image meant for deployment with IllumiDesk's Kubernetes-based
 stack.
 
 ## Local Development
@@ -13,7 +13,7 @@ for testing.
 ### Build Docker Image
 
 ```bash
-docker build --build-arg ILLUMIDESK_VERSION=1.0.0 illumidesk/grader-setup-app:latest
+docker build --build-arg BASE_IMAGE=jupyterhub/k8s-hub:0.9.1 illumidesk/jupyterhub:latest
 ```
 
 ### Run the Image
@@ -21,10 +21,10 @@ docker build --build-arg ILLUMIDESK_VERSION=1.0.0 illumidesk/grader-setup-app:la
 Run the image locally with docker:
 
 ```bash
-docker run -it --rm -p 8000:8000 illumidesk/grader-notebook-app:latest
+docker run -it --rm -p 80:80 illumidesk/jupyterhub:latest
 ```
 
-Then navigate to http://localhost:8000.
+Then navigate to http://localhost/.
 
 ### Update Dependencies
 

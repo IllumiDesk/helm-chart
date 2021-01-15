@@ -1,4 +1,5 @@
-FROM python:3.8
+ARG BASE_IMAGE=python:3.8
+FROM "${BASE_IMAGE}"
 
 RUN apt-get update \
  && apt-get upgrade -y \
