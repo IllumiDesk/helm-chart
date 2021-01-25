@@ -244,3 +244,6 @@ Enter `make help` for additional options.
 6. Update `jupyterhub.image.name` with image name. The image name should include the full image namespace and tag.
 
 7. Install IllumiDesk with ```helm``` as inatructed in the first section.
+
+
+
