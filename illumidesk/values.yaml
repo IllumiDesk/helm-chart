@@ -12,8 +12,8 @@ jupyterhub:
       logoConfig: |
         c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
     image:
-      name: illumidesk/k8s-hub
-      tag: latest
+      name: illumidesk/jupyterhub
+      tag: k8s-latest
       pullPolicy: Always
     shutdownOnLogout: true
   proxy:
@@ -33,7 +33,7 @@ jupyterhub:
     uid: 0
     image:
       name: illumidesk/illumidesk-notebook
-      tag: latest
+      tag: 1.1.0
       pullPolicy: Always
 
 postgresql:
@@ -76,4 +76,4 @@ allowNFS:
 graderSetupService:
   enabled: false
   graderSetupImage: illumidesk/grader-setup-app:latest
-  graderImage: illumidesk/illumidesk-grader:latest
+  graderImage: illumidesk/grader-notebook:1.1.0
