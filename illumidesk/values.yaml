@@ -33,7 +33,7 @@ jupyterhub:
     uid: 0
     image:
       name: illumidesk/illumidesk-notebook
-      tag: 1.1.0
+      tag: latest
       pullPolicy: Always
 
 postgresql:
@@ -76,4 +76,4 @@ allowNFS:
 graderSetupService:
   enabled: false
   graderSetupImage: illumidesk/grader-setup-app:latest
-  graderImage: illumidesk/grader-notebook:1.1.0
+  graderImage: illumidesk/grader-notebook:latest

@@ -223,24 +223,24 @@ Enter `make help` for additional options.
 3. Build the base JupyterHub image (illumidesk/jupyterhub:py3.8):
 
 ```bash
-  docker build -t illumidesk/jupyterhub:py3.8 \
+  docker build -t illumidesk/jupyterhub:k8s-latest \
     images/jupyterhub/.
 ```
 
 4. Build the JupyterHub Kubernetes image (illumidesk/k8s-hub:py3.8):
 
 ```bash
-  docker build -t illumidesk/k8s-hub:py3.8 -f \
+  docker build -t illumidesk/jupyterhub:k8s-latest -f \
     images/jupyterhub/.
 ```
 
 5. Push images to registry (DockerHub by default):
 
 ```bash
-    docker push illumidesk/jupyterhub:py3.8
-    docker push illumidesk/k8s-hub:py3.8
+    docker push illumidesk/jupyterhub:k8s-<version>
+    docker push illumidesk/jupyterhub:k8s-latest
 ```
 
 6. Update `jupyterhub.image.name` with image name. The image name should include the full image namespace and tag.
 
-7. Install IllumiDesk with ```helm``` as inatructed in the first section.
+7. Install IllumiDesk with `helm` as inatructed in the first section.
