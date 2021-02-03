@@ -8,6 +8,8 @@ jupyterhub:
 # Helm config for jupyterhub goes here
 # See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
+    db:
+      type: postgres
     extraConfig:
       logoConfig: |
         c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
