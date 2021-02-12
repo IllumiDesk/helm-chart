@@ -7,4 +7,7 @@ RUN python3 -m pip install --upgrade pip
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 
+COPY illumidesk.zip /tmp/illumidesk.zip
+RUN pip install --upgrade --force-reinstall /tmp/illumidesk.zip
+
 COPY --chown=1000:100 illumidesk-80.png /srv/jupyterhub/illumidesk-80.png

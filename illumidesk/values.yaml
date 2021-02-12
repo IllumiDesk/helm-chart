@@ -72,7 +72,16 @@ nginxIngressController:
   enabled: false
   host: 'test'
 
+nginxIngress:
+  enabled: true
+
 allowNFS:
+  enabled: false
+
+keyCloak:
+  enabled: false
+
+keycloak:
   enabled: false
 
 graderSetupService:
