@@ -21,4 +21,8 @@ spec:
           backend:
             serviceName: proxy-public
             servicePort: 80
+        - path: /auth
+          backend:
+            serviceName: keycloak
+            servicePort: 8080
 {{ end }}
