@@ -39,7 +39,7 @@ metadata:
 data:
   http-snippet: |
     server {
-      listen 2443;
+      listen 2443 proxy_protocol;
       return 308 https://$host$request_uri;
     }
   proxy-real-ip-cidr: {{ .Values.nginxIngressController.vpcCIDR }}

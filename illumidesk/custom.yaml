@@ -1,0 +1,234 @@
+jupyterhub:
+  debug:
+    enabled: true
+  proxy:
+    secretToken: 'xxx-yyy-zzz'
+  singleuser:
+    storage:
+      type: "static"
+      static:
+        pvcName: "shared-pvc-illumidesk-staging"
+        subPath: 'illumidesk-staging/home/{username}'
+      extraVolumeMounts:
+        - name: home
+          mountPath: /srv/nbgrader/exchange
+          subPath: illumidesk-staging/exchange/
+    defaultUrl: "/tree"
+    image:
+      name: illumidesk/illumidesk-notebook
+      tag: 'latest'
+      pullPolicy: Always
+  deploymentStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  auth:
+    type: custom
+    state:
+      enabled: true
+      cryptoKey: 'xxx-yyy-zzz'
+    admin:
+      access: true
+      users:
+        - admin
+    custom:
+      className: 'illumidesk.authenticators.authenticator.LTI13Authenticator'
+  hub:
+    image:
+      name: illumidesk/jupyterhub
+      tag: k8s-beta.12
+      pullPolicy: Always
+    shutdownOnLogout: true
+    extraEnv:
+      JUPYTERHUB_API_TOKEN: ''
+      JUPYTERHUB_API_URL: http://hub:8081/hub/api
+      OAUTH_CLIENT_ID: ''
+      OAUTH_CLIENT_SECRET: ''
+      OAUTH_CALLBACK_URL: ''
+      OAUTH2_AUTHORIZE_URL: ''
+      OAUTH2_TOKEN_URL: ''
+      GENERICAUTH_LOGIN_SERVICE_NAME: ''
+      GENERICAUTH_USERDATA_URL: ''
+      GENERICAUTH_USERDATA_METHOD: ''
+      GENERICAUTH_USERNAME_KEY: ''
+      POSTGRES_NBGRADER_USER: postgres
+      POSTGRES_NBGRADER_PASSWORD: ''
+      POSTGRES_NBGRADER_HOST: ''
+      ORGANIZATION_NAME: illumidesk-staging
+      ILLUMIDESK_MNT_ROOT: '/illumidesk-courses'
+      POSTGRES_JUPYTERHUB_USER: postgres
+      POSTGRES_JUPYTERHUB_PASSWORD: ''
+      POSTGRES_JUPYTERHUB_HOST: ''
+      POSTGRES_JUPYTERHUB_DB: illumidesk
+      POSTGRES_JUPYTERHUB_PORT: '5432'
+    extraConfig:
+      logoConfig: |
+        c.JupyterHub.logo_file = '/usr/local/share/jupyterhub/static/images/illumidesk-80.png'
+      illumidesk.py: |
+        import os
+
+        from oauthenticator.generic import GenericOAuthenticator
+        # Set log level
+        c.Application.log_level = 'DEBUG'
+
+        # Header settings for iFrame and SameSite
+        c.JupyterHub.tornado_settings = {
+            "headers": {"Content-Security-Policy": "frame-ancestors 'self' *"},
+            "cookie_options": {"SameSite": "None", "Secure": True},
+        }
+
+        c.JupyterHub.allow_root = True
+        c.JupyterHub.allow_origin = '*'
+
+        # Set the authenticator
+        c.JupyterHub.authenticator_class = GenericOAuthenticator
+
+        c.Authenticator.admin_users = {'admin'}
+        c.Authenticator.auto_login = True
+        c.Authenticator.allowed_users = {'greg', 'abhi',}
+
+        # Verify TLS certificates.
+        if os.environ.get('OAUTH2_TLS_VERIFY') == 'True':
+            c.OAuthenticator.tls_verify = True
+        else:
+            c.OAuthenticator.tls_verify = False
+
+        # OAuthenticator settings for OAuth2
+        c.OAuthenticator.client_id = os.environ.get('OAUTH_CLIENT_ID')
+        c.OAuthenticator.client_secret = os.environ.get('OAUTH_CLIENT_SECRET')
+        c.OAuthenticator.oauth_callback_url = os.environ.get('OAUTH_CALLBACK_URL') or 'http://localhost:8000/hub/oauth_callback'
+        c.OAuthenticator.authorize_url = os.environ.get('OAUTH2_AUTHORIZE_URL') or f'http://localhost:8080/auth/realms/illumidesk-realm/protocol/openid-connect/auth'
+        c.OAuthenticator.token_url = os.environ.get('OAUTH2_TOKEN_URL') or f'http://localhost:8080/auth/realms/illumidesk-realm/protocol/openid-connect/token'
+        c.OAuthenticator.enable_auth_state = True
+
+        # Login service name
+        c.GenericOAuthenticator.login_service = os.environ.get('GENERICAUTH_LOGIN_SERVICE_NAME') or 'Keycloak'
+        # TODO: clarify scopes
+        c.GenericOAuthenticator.scope = ['email', 'read_api', 'read_user', 'openid', 'profile']
+        c.GenericOAuthenticator.userdata_url = os.environ.get('GENERICAUTH_USERDATA_URL') or 'http://localhost:8080/auth/realms/illumidesk-realm/protocol/openid-connect/userinfo'
+        c.GenericOAuthenticator.userdata_method = os.environ.get('GENERICAUTH_USERDATA_METHOD') or 'GET'
+        c.GenericOAuthenticator.userdata_params = { 'state': 'state' }
+        c.GenericOAuthenticator.username_key = os.environ.get('GENERICAUTH_USERNAME_KEY') or 'preferred_username'
+        
+        c.Authenticator.post_auth_hook = setup_course_hook
+        def userdata_hook(spawner, auth_state):
+            if not auth_state:
+                raise ValueError('auth_state not enabled.')
+            spawner.log.debug('auth_state_hook set with %s role' % auth_state['user_role'])
+            user_role = auth_state['user_role']
+            # set spawner environment
+            spawner.environment['USER_ROLE'] = user_role
+            spawner.log.debug('Assigned USER_ROLE env var to %s' % spawner.environment['USER_ROLE'])
+        c.Spawner.auth_state_hook = userdata_hook
+
+      illumideskSecurity: |
+        c.JupyterHub.tornado_settings = {
+          "headers": {"Content-Security-Policy": "frame-ancestors 'self' *"},
+          "cookie_options": {"SameSite": "None", "Secure": True},
+        }
+
+      privateKey: |
+        import os
+        from os import chmod
+        from Crypto.PublicKey import RSA
+        key_path = os.environ.get('LTI13_PRIVATE_KEY') or '/srv/jupyterhub/rsa_private.key'
+        key = RSA.generate(2048)
+        with open(key_path, 'wb') as content_file:
+          content_file.write(key.exportKey('PEM'))
+        chmod(key_path, 0o600)
+
+      illumideskServices: |
+        import requests
+        import os 
+        c.JupyterHub.services.append({
+          'name': 'announcement',
+          'admin': True,
+          'url': 'http://0.0.0.0:8889',
+          'api_token': 'dbd8cc4866eff335ab70ebd8337827663c1ab7319b7eb3c3453a9ad20002a0a0'})
+        # load extra grader services launched from grader-setup service
+        services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(os.environ.get('ORGANIZATION_NAME')))
+        services_resp = services_resp.json()
+        c.JupyterHub.load_groups.update(services_resp['groups'])
+        c.JupyterHub.services.extend(services_resp['services'])
+
+albIngressController:
+  enabled: false
+  enableIRSA: false
+  awsAccessKey: <aws_accessk_key_id>
+  awsSecretToken: <aws_accessk_key_id>
+  clusterName: illumidesk-staging
+  clusterVPC: <vpc_id>
+  awsRegion: <aws_region>
+
+albIngress:
+  enabled: false
+  host: illumidesk-staging.illumidesk.com
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/subnets: <aws_subnet_id>
+      alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
+      alb.ingress.kubernetes.io/group.name: staging
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:<aws_region>:<aws_account>:certificate/<aws_certificate_arn>
+
+allowNFS:
+  enabled: true
+  server: <aws_efs_id>.efs.<aws_region>.amazonaws.com
+  path: /
+
+allowExternalDNS:
+  enabled: false
+  enableIRSA: false
+  domainFilter: illumidesk.com
+  txtOwnerID: illumidesk
+
+nginxIngressController:
+  enabled: true
+  vpcCIDR: 192.168.0.0/16
+  certificateArn: arn:aws:acm:<aws_region>:<aws_account>:certificate/<aws_certificate_arn>
+  backend_protocol: http
+
+nginxIngress:
+  enabled: true
+  host: ''
+
+datadog:
+  enabled: false
+  datadog:
+    apiKey: ''
+    site: datadoghq.com
+    clusterName: ''
+    clusterAgent:
+      enabled: true
+      token: ''
+      metricsProvider:
+        enabled: true
+
+postgresql:
+  enabled: true
+  postgresqlUsername: postgres
+  postgresqlPostgresPassword: password
+  postgresqlPassword: password
+  postgresqlDatabase: illumidesk
+
+graderSetupService:
+  enabled: true
+  graderImage: 'illumidesk/grader-notebook:latest'
+  graderSetupImage: 'illumidesk/grader-setup-app:latest'
+  postgresNBGraderHost: ''
+  postgresNBGraderUser: 'postgres'
+  postgresNBGraderPassword: 'postgres'
+
+keyCloak:
+  enabled: true
+  db_schema: ''
+  db_user: ''
+  db_database: ''
+  db_addr: ''
+  db_vendor: 'postgres'
+  keycloak_user: 'admin'
+  keycloak_password: 'admin'
+  db_password: 'password'

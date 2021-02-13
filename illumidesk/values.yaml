@@ -3,10 +3,32 @@
 # Create and use roles and service accounts on an RBAC enabled cluster.
 rbac:
   enabled: true
-  
+
+albIngressController:
+  enabled: false
+  enableIRSA: false
+  awsAccessKey: <aws_accessk_key_id>
+  awsSecretToken: <aws_accessk_key_id>
+  clusterName: illumidesk-staging
+  clusterVPC: <vpc_id>
+  awsRegion: <aws_region>
+
+albIngress:
+  enabled: false
+  host: illumidesk-staging.illumidesk.com
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/subnets: <aws_subnet_id>
+      alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
+      alb.ingress.kubernetes.io/group.name: staging
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:<aws_region>:<aws_account>:certificate/<aws_certificate_arn>
+
+# Helm config for JupyterHub
+# ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
 jupyterhub:
-# Helm config for jupyterhub goes here
-# See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
     db:
       type: postgres
@@ -21,6 +43,7 @@ jupyterhub:
   proxy:
     https:
       enabled: true
+    # Create a secret token with: openssl rand -hex 32
     secretToken: ''
     service:
       # ports:
@@ -38,9 +61,6 @@ jupyterhub:
       tag: latest
       pullPolicy: Always
 
-postgresql:
-  enabled: false
-
 datadog:
   enabled: false
   targetSystem: "linux"
@@ -57,34 +77,68 @@ datadog:
       metricsProvider:
         enabled: true
 
-albIngressController:
-  enabled: false
-  enableIRSA: false
-
-albIngress:
-  enabled: false
-
 allowExternalDNS: 
   enabled: false
   enableIRSA: false
 
 nginxIngressController:
-  enabled: false
-  host: 'test'
+  enabled: true
+  vpcCIDR: 192.168.0.0/16
+  certificateArn: arn:aws:acm:<aws_region>:<aws_account>:certificate/<aws_certificate_arn>
+  backend_protocol: http
 
 nginxIngress:
   enabled: true
+  host: ''
 
 allowNFS:
   enabled: false
 
-keyCloak:
-  enabled: false
-
-keycloak:
-  enabled: false
-
 graderSetupService:
-  enabled: false
-  graderSetupImage: illumidesk/grader-setup-app:latest
-  graderImage: illumidesk/grader-notebook:latest
+  enabled: true
+  graderImage: 'illumidesk/grader-notebook:latest'
+  graderSetupImage: 'illumidesk/grader-setup-app:latest'
+  postgresNBGraderHost: ''
+  postgresNBGraderUser: 'postgres'
+  postgresNBGraderPassword: 'postgres'
+
+##
+## SSO solution with Keycloak
+## ref: https://raw.githubusercontent.com/keycloak/keycloak-quickstarts/latest/kubernetes-examples/keycloak.yaml
+##
+keyCloak:
+  enabled: true
+  db_database: ''
+  db_schema: ''
+  db_user: 'postgres'
+  db_password: 'password'
+  db_addr: ''
+  db_vendor: 'postgres'
+  keycloak_user: 'admin'
+  keycloak_password: 'admin'
+
+##
+## PostgreSQL chart configuration
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+##
+postgresql:
+  ## Whether to deploy a postgresql server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
+  ##
+  enabled: true
+  ## PostgreSQL user (has superuser privileges if username is `postgres`)
+  ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  postgresqlUsername: postgres
+  ## PostgreSQL password
+  ## Defaults to a random 10-character alphanumeric string if not set
+  ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  postgresqlPassword: password
+  ## Database name to create
+  ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run
+  ##
+  postgresqlDatabase: illumidesk
+  ## PostgreSQL data Persistent Volume Storage Class
+  ##
+  persistence:
+    enabled: true
