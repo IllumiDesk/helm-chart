@@ -1,7 +1,5 @@
 chart-dirs:
-  - docs
-chart-repos:
-  - illumidesk=https://charts.illumidesk.com/docs
+  - illumidesk
 check-version-increment: true
 debug: true
 remote: origin
