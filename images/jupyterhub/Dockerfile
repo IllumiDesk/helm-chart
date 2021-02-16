@@ -19,7 +19,7 @@ USER "${NB_UID}"
 WORKDIR /tmp
 RUN wget "https://github.com/IllumiDesk/illumidesk/archive/v${ILLUMIDESK_VERSION}.zip" -O /tmp/illumidesk.zip \
  && unzip /tmp/illumidesk.zip \
- && python3 -m pip install --upgrade --force-reinstall /tmp/illumidesk-1.0.0/src/illumidesk/.
+ && python3 -m pip install --upgrade --force-reinstall "/tmp/illumidesk-${ILLUMIDESK_VERSION}/src/illumidesk/."
 
 COPY --chown=1000:100 illumidesk-80.png /srv/jupyterhub/illumidesk-80.png
 
