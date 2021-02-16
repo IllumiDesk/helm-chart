@@ -16,7 +16,7 @@ RUN python -m pip install --upgrade pip \
  && pip install -r /tmp/requirements.txt
 
 # illumidesk package release
-ARG ILLUMIDESK_VERSION=1.0.0
+ARG ILLUMIDESK_VERSION=1.1.1
 
 # fetch and unpack illumidesk package
 RUN wget "https://github.com/IllumiDesk/illumidesk/archive/v${ILLUMIDESK_VERSION}.zip" \
