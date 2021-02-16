@@ -1,7 +1,6 @@
 chart-repos:
-  - jupyterhub=https://jupyterhub.github.io/helm-chart/
-  - postgresql=https://charts.bitnami.com/bitnami
-  - datadog=https://helm.datadoghq.com
+  - illumidesk=https://github.com/illumidesk/helm-chart/tree/main/docs
+target-branch: main
 check-version-increment: true
 debug: true
 remote: upstream
