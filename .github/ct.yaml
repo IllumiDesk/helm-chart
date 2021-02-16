@@ -1,0 +1,10 @@
+chart-repos:
+  - jupyterhub=https://jupyterhub.github.io/helm-chart/
+  - postgresql=https://charts.bitnami.com/bitnami
+  - datadog=https://helm.datadoghq.com
+check-version-increment: true
+debug: true
+remote: upstream
+validate-chart-schema: true
+validate-maintainers: false
+validate-yaml: true
