@@ -102,8 +102,6 @@ traitlets==5.0.5
     # via
     #   jupyter-telemetry
     #   jupyterhub
-https://github.com/IllumiDesk/illumidesk/archive/v1.0.0.zip
-    # via -r requirements.in
 urllib3==1.26.2
     # via requests
 
