@@ -1,8 +1,8 @@
 chart-dirs:
-  - illumidesk
+  - charts
 check-version-increment: true
 debug: true
-remote: origin
+remote: upstream
 validate-chart-schema: true
 validate-maintainers: false
 validate-yaml: true
