@@ -50,15 +50,14 @@ For example:
 hostAliases: []
 ```
 
-## Dependency Updates
+### Locking dependencies
 
-This setup uses a standard helm chart lock file `Chart.lock` to freeze dependencies (sub-charts). To update the `Chart.lock` file after updating a depency run the following command to update the `Chart.lock` file as well:
+The IllumiDesk helm-chart depends on several sub charts. Use the following commands to ensure the sub charts are locked to specific versions:
 
 ```bash
-helm dependency update
+cd charts/illumidesk
+helm dependency build
 ```
-
-> **NOTE**: you may have to run the above command with `sudo` since a temporary folder is created during the update process.
 
 ### PR Approval and Release Process
 
