@@ -1,9 +1,7 @@
 chart-repos:
   - illumidesk=https://github.com/illumidesk/helm-chart/tree/main/docs
 target-branch: main
-check-version-increment: true
 debug: true
 remote: upstream
 validate-chart-schema: true
-validate-maintainers: false
 validate-yaml: true

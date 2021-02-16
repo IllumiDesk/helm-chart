@@ -18,7 +18,7 @@ When submitting a PR make sure that it:
 - Any change to a chart requires a version bump following [semver](https://semver.org/) principles. Update the Pull Request with a new helm package version using the `helm package` command. For example:
 
 ```bash
-helm package illumidesk/ -d docs/ --version 1.0.1
+helm package charts/illumidesk/ -d docs/ --version 1.2.3
 ```
 
 ### Documentation Requirements
