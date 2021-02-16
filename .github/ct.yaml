@@ -1,5 +1,5 @@
 chart-repos:
-  - illumidesk=https://github.com/illumidesk/helm-chart/tree/main/docs
+  - illumidesk=https://charts.illumidesk.com/docs
 target-branch: main
 debug: true
 remote: upstream
