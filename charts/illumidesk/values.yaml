@@ -3,7 +3,7 @@
 # Create and use roles and service accounts on an RBAC enabled cluster.
 rbac:
   enabled: true
-  
+
 jupyterhub:
 # Helm config for jupyterhub goes here
 # See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
@@ -64,7 +64,7 @@ albIngressController:
 albIngress:
   enabled: false
 
-allowExternalDNS: 
+allowExternalDNS:
   enabled: false
   enableIRSA: false
 
@@ -79,9 +79,6 @@ allowNFS:
   enabled: false
 
 keyCloak:
-  enabled: false
-
-keycloak:
   enabled: false
 
 graderSetupService:

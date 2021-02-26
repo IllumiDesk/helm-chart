@@ -1,7 +1,11 @@
 chart-repos:
-  - illumidesk=https://charts.illumidesk.com/docs
+  - illumidesk=https://illumidesk.github.io/helm-chart
+  - jupyterhub=https://jupyterhub.github.io/helm-chart/
+  - bitnami=https://charts.bitnami.com/bitnami
+  - datadoghq=https://helm.datadoghq.com
 target-branch: main
 debug: true
 remote: upstream
 validate-chart-schema: true
 validate-yaml: true
+validate-maintainers: false
