@@ -50,6 +50,16 @@ For example:
 hostAliases: []
 ```
 
+## Dependency Updates
+
+This setup uses a standard helm chart lock file `Chart.lock` to freeze dependencies (sub-charts). To update the `Chart.lock` file after updating a depency run the following command to update the `Chart.lock` file as well:
+
+```bash
+helm dependency update
+```
+
+> **NOTE**: you may have to run the above command with `sudo` since a temporary folder is created during the update process.
+
 ### PR Approval and Release Process
 
 1. Changes are automatically linted and tested using the [`ct` tool](https://github.com/helm/chart-testing) as a [GitHub action](https://github.com/helm/chart-testing-action). Those tests are based on `helm install`, `helm lint` and `helm test` commands and provide quick feedback about the changes in the PR. For those tests, the chart is installed on top of [kind](https://github.com/kubernetes-sigs/kind) and this step is not blocking (as opposed to 3rd step).
