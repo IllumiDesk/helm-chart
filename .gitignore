@@ -133,20 +133,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# EKS related 
-cluster/*
-*.lock
-test/*
-IAM/*
-TLDR.gif
-
-
-scripts/*
-illumidesk/charts/
-illumidesk/kots/*
-illumidesk/kots/deps
-illumidesk/kots/manifests/*.tgz
-illumidesk/.helmignore
-test/
-kots/
