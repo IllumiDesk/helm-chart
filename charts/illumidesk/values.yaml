@@ -4,6 +4,14 @@
 rbac:
   enabled: true
 
+## String to partially override illumidesk.fullname template (will maintain the release name)
+##
+# nameOverride:
+
+## String to fully override illumidesk.fullname template
+##
+# fullnameOverride:
+
 jupyterhub:
 # Helm config for jupyterhub goes here
 # See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
