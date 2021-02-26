@@ -1,6 +1,9 @@
 # Ignore custom config
 custom-config.yaml
 
+# Ignore pytest cache
+.pytest_cache/
+
 # Ignore packaged charts
 *.tgz
 
