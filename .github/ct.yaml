@@ -3,9 +3,10 @@ chart-repos:
   - jupyterhub=https://jupyterhub.github.io/helm-chart/
   - bitnami=https://charts.bitnami.com/bitnami
   - datadoghq=https://helm.datadoghq.com
-target-branch: main
+chart-dirs:
+  - charts/illumidesk
 debug: true
-remote: upstream
+remote: origin
 validate-chart-schema: true
 validate-yaml: true
 validate-maintainers: false
