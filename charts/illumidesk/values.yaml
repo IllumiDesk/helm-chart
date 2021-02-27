@@ -1,8 +1,5 @@
 # IllumiDesk configuration values
 # --------------------
-# Create and use roles and service accounts on an RBAC enabled cluster.
-rbac:
-  enabled: true
 
 ## String to partially override illumidesk.fullname template (will maintain the release name)
 ##
@@ -12,84 +9,202 @@ rbac:
 ##
 # fullnameOverride:
 
-jupyterhub:
-# Helm config for jupyterhub goes here
-# See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
-  hub:
-    db:
-      type: postgres
-    extraConfig:
-      logoConfig: |
-        c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
-    image:
-      name: illumidesk/jupyterhub
-      tag: k8s-latest
-      pullPolicy: Always
-    shutdownOnLogout: true
-  proxy:
-    https:
-      enabled: true
-    secretToken: ''
-    service:
-      # ports:
-      #   nodePort: 8080
-      type: ClusterIP
-  singleuser:
-    cmd: start-singleuser.sh
-    extraEnv:
-      CHOWN_HOME: 'yes'
-      Editor: vim
-    fsGid: 0
-    uid: 0
-    image:
-      name: illumidesk/illumidesk-notebook
-      tag: latest
-      pullPolicy: Always
-
-postgresql:
-  enabled: false
-
-datadog:
-  enabled: false
-  targetSystem: "linux"
-  datadog:
-    apiKey: ''
-    site: ''
-    clusterName: ''
-    logs:
-      enabled: true
-      containerCollectAll: true
-    clusterAgent:
-      enabled: true
-      token: ''
-      metricsProvider:
-        enabled: true
-
-albIngressController:
-  enabled: false
-  enableIRSA: false
-
-albIngress:
-  enabled: false
-
-allowExternalDNS:
-  enabled: false
-  enableIRSA: false
-
-nginxIngressController:
-  enabled: false
-  host: 'test'
-
-nginxIngress:
+## Create and use roles and service accounts with Role Based Access Control (RBAC).
+##
+rbac:
+  # Enables or disables 
   enabled: true
 
+## JupyterHub configuration
+## ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
+##
+jupyterhub:
+  # JupyterHub's application settings
+  # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
+  hub:
+    # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
+    # require additional PVC configuration settings.
+    # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-db
+    db:
+      # Database type
+      # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-db-type
+      type: postgres
+    # Extra configuration options
+    # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-extraconfig
+    extraConfig:
+      # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
+      logoConfig: |
+        c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"\
+    # The JupyterHub docker image
+    # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-image
+    image:
+      # The JupyterHub image namespace. If the docker registry should be specified if using something other than
+      # DockerHub (docker.io).
+      name: illumidesk/jupyterhub
+      # The JupyterHub image tag
+      tag: k8s-latest
+      # Whether or not to always pull the image from the registry.
+      pullPolicy: Always
+    # Shuts down the end-user server (pod) when the user logs out.
+    shutdownOnLogout: true
+  # Settings for the JupyterHub proxy service. The proxy service is used to route users to their
+  # pods and, if enabled, has the option to provide TLS termination. 
+  proxy:
+    # TLS termination
+    https:
+      # Enables or disables TLS termination with the proxy
+      enabled: true
+    # Required proxy's secret token. Should be created before installing services with the helm chart.
+    # You can create a secure 32 character token from your terminal with: openssl rand -hex 32
+    secretToken: ''
+    # Configuration of the proxy-public service
+    # https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#proxy-service
+    service:
+      # The JupyterHub proxy service type. The sub-chart defaults to "LoadBalancer". However, the IllumiDesk
+      # chart configures separate LoadBalancer that then connects to the JupyterHub proxy via ClusterIP or NodePort.
+      type: ClusterIP
+  # Single user server
+  singleuser:
+    # Default container command inherited from the jupyter/docker-stacks base image.
+    # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/start-singleuser.sh
+    cmd: start-singleuser.sh
+    # Single user server extra environment variables
+    # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#singleuser-extraenv
+    extraEnv:
+      # If yes, Instructs the startup script to change the $NB_USER home directory owner and group to the
+      # current value of $NB_UID and $NB_GID.
+      CHOWN_HOME: 'yes'
+      # The default editor for user's environment
+      Editor: vim
+    # The GID the hub process should be using when touching any volumes mounted.
+    fsGid: 1000
+    # The UID the hub process should be running as.
+    uid: 1000
+    # The single user notebook image. If using a registry other than DockerHub (docker.io), prepend the
+    # registry's domain to the namespace. For example: quay.io/illumidesk/illumidesk-notebook.
+    image:
+      # The singleuser image namespace
+      name: illumidesk/illumidesk-notebook
+      # The singleuser image tag
+      tag: latest
+      # Specify whether or not to alwasy pull the singleuser image. This is useful for when the singleuser
+      # image is updated using the same image tag, for example, the latest alias.
+      pullPolicy: Always
+
+## Postgres setup
+## ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+##
+postgresql:
+  # Enables or disables postgres
+  enabled: false
+
+## DatadogHQ Agent
+## https://github.com/DataDog/helm-charts/tree/master/charts/datadog
+## 
+datadog:
+  # Enables or disables the Datadog agent
+  enabled: false
+  # Datadog's configuration settings
+  datadog:
+    # API key for the DatadogHQ account
+    apiKey: ''
+    # Customer's site
+    site: ''
+    # The Kubernetes cluster name
+    clusterName: ''
+    # Logs configuration
+    logs:
+      # Enables or disables log collection
+      enabled: true
+      # If true, collects all logs from running containers.
+      containerCollectAll: true
+    # Datadog's cluster agent which acts as a proxy between Datadog's API and
+    # node-based agents.
+    # ref: https://docs.datadoghq.com/agent/cluster_agent/
+    clusterAgent:
+      # Enables or disables the cluster agent
+      enabled: true
+      token: ''
+      # Metrics enables autoscaling workloads based off of Datadog metrics
+      # ref: https://docs.datadoghq.com/agent/cluster_agent/external_metrics/
+      metricsProvider:
+        # Enables or disables external metrics with Datadog.
+        enabled: true
+
+## Application Load Balancer (ALB) ingress controller
+## ref: https://github.com/kubernetes-sigs/aws-load-balancer-controller
+##
+albIngressController:
+  # Enables or disables the aws-alb-ingress-controller
+  enabled: false
+  # Enables or disables the IAM role for service accounts. This option must be set to true
+  # if the AWS ALB Ingress Controller is enabled, otherwise the aws-ingress-controller pod
+  # won't have sufficient priviledges to create the ALB.
+  # ref: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
+  enableIRSA: false
+
+
+albIngress:
+  # Enables or disables the aws-alb-ingress-controller
+  enabled: false
+
+## External DNS Service
+## ref: https://github.com/bitnami/charts/tree/master/bitnami/external-dns
+##
+allowExternalDNS:
+  # Enables or disables the external dns service.
+  enabled: false
+  # Enables or disables the IAM role for service accounts. If the external dns service
+  # is enabled with AWS, then this must be set to true (enabled) so that the external-dns
+  # pod has sufficient permissions to update DNS records with Route 53.
+  # ref: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
+  enableIRSA: false
+
+## Ingress Nginx controller
+## ref: https://github.com/kubernetes/ingress-nginx
+##
+nginxIngressController:
+  # Enables or disables the nginx-ingress controller. The nginx-ingress contoller
+  # is set up with AWS annotations by default. It also specifies the use of the "nlb"
+  # load balancer type.
+  enabled: false
+
+## Ingress resource
+##
+nginxIngress:
+  # Enables or disables the ingress resource. By default, the ingress resource root path
+  # is associated to the proxy-public endpoing from the JupyterHub public facing service endpoint.
+  enabled: true
+  # The sub-domain that is used with the illumidesk.com address. For example, 'test' would create the
+  # test.illumidesk.com host name for the ingress resource.
+  host: 'test'
+
+## NFS service used to persist files for personal workspaces and to provide a shared file
+## system used for the grader's exchange directory (release/fetch/submit folders).
+##
 allowNFS:
   enabled: false
 
+## Keycloak service (used for Authentication)
+##
 keyCloak:
+  # Enables or disables the keycloak service. If disabled, then ensure the
+  # JupyterHub authenticator is not using Keycloak with the GenericOAuthenticator
+  # class.
   enabled: false
 
+## Grader setup service
+##
 graderSetupService:
+  # Enables or disables the grader setup service
   enabled: false
+  # The docker image to use for the grader setup service. If a registry other than
+  # DockerHub is required (defaults to docker.io) the include the registy identifier
+  # before the image name. For example:
+  # k8s.gcr.io/<org-name>/<image-name:tag-name>
   graderSetupImage: illumidesk/grader-setup-app:latest
+  # The docker image for the shared grader notebook. If a registry other than
+  # DockerHub is required (defaults to docker.io) the include the registy identifier
+  # before the image name. For example:
+  # k8s.gcr.io/<org-name>/<image-name:tag-name>
   graderImage: illumidesk/grader-notebook:latest
