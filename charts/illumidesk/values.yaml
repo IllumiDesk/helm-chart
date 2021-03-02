@@ -12,7 +12,7 @@
 ## Create and use roles and service accounts with Role Based Access Control (RBAC).
 ##
 rbac:
-  # Enables or disables 
+  # Enables or disables
   enabled: true
 
 ## JupyterHub configuration
@@ -34,7 +34,7 @@ jupyterhub:
     extraConfig:
       # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
       logoConfig: |
-        c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"\
+        c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
     # The JupyterHub docker image
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-image
     image:
@@ -48,7 +48,7 @@ jupyterhub:
     # Shuts down the end-user server (pod) when the user logs out.
     shutdownOnLogout: true
   # Settings for the JupyterHub proxy service. The proxy service is used to route users to their
-  # pods and, if enabled, has the option to provide TLS termination. 
+  # pods and, if enabled, has the option to provide TLS termination.
   proxy:
     # TLS termination
     https:
@@ -100,7 +100,7 @@ postgresql:
 
 ## DatadogHQ Agent
 ## https://github.com/DataDog/helm-charts/tree/master/charts/datadog
-## 
+##
 datadog:
   # Enables or disables the Datadog agent
   enabled: false
