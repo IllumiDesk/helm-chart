@@ -65,3 +65,25 @@ helm dependency build
 2. Changes are manually reviewed by IllumiDesk team members.
 3. Once the changes are accepted, the PR is tested (if needed) into the IllumiDesk CI pipeline, the chart is installed and tested (verification and functional tests) on top of different k8s platforms.
 4. When the PR passes all tests, the PR is merged by the reviewer(s) in the GitHub `main` branch.
+
+### Tips and Tricks
+
+You can use the `quay.io/helmpack/chart-testing:latest` image to run `ct` commands before creating a Pull Request. Use the following command to run the ct-lint job, for example:
+
+```bash
+docker run --rm -ti -v $(pwd):/workdir --workdir /workdir --detach --network host --name ct quay.io/helmpack/chart-testing:latest sh
+```
+
+Then, from the command prompt, enter:
+
+```bash
+ct lint --config .github/ct.yaml
+```
+
+These command will:
+
+- Run the `ct` container that includes all required dependencies
+- Mount the current location to a `/workdir` path within the container
+- Name the running container as `ct`
+- Run the container in detached mode
+- Run the `ct lint` command as it runs with the GitHub action specification
