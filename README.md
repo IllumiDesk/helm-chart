@@ -23,7 +23,7 @@ This setup pulls images defined in the `illumidesk/values.yaml` file from `Docke
 
 ## Installing the chart
 
-Create a copy of _**example-config/values.yaml.example**_ file and update it with your setup. 
+Create a copy of _**example-config/values.yaml.example**_ file and update it with your setup.
 
 > NOTE: to get a token use  `openssl rand -hex 32`:
 
@@ -89,6 +89,8 @@ Here is an example of a basic load balancer setup setup:
 
 ## Configuration
 
+Note: Please follow instructions to install the [Cert Manager]('https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.yaml') if you are using the ALB Ingress Controller.
+
 The following tables lists the configurable parameters of the chart and their default values.
 
 | Parameter                                                                  | Description                                                                                                                              | Default                                                                             |
@@ -146,7 +148,7 @@ The following tables lists the configurable parameters of the chart and their de
 
 ## Validate the Helm Chart
 
-- For nodeport you will need to use your one of your node ips and also the port you defined in your values file. 
+- For nodeport you will need to use your one of your node ips and also the port you defined in your values file.
   - Open up your browser and use the **NODE_IP:NODE_PORT**
   - Use the following command to list out your nodes:
 
@@ -154,7 +156,7 @@ The following tables lists the configurable parameters of the chart and their de
    kubectl get nodes -o wide
 ```
 
-- For load balancer you will need to get the external IP for proxy-public 
+- For load balancer you will need to get the external IP for proxy-public
   - Use this command to view your services and then paste the loadbalancer dns that is is the external ip of proxy-public
 
 ```bash
