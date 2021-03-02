@@ -16,17 +16,6 @@ jupyterhub:
 # Helm config for jupyterhub goes here
 # See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
-    auth:
-      type: custom
-      state:
-        enabled: true
-        cryptoKey: 'dbd8cc4866eff335ab70ebd8337827663c1ab7319b7eb3c3453a9ad20002a0a0'
-      admin:
-        access: true
-        users:
-          - admin
-      custom:
-        className: 'illumidesk.authenticators.authenticator.LTI13Authenticator'
     db:
       type: postgres
     extraConfig:
