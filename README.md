@@ -89,7 +89,7 @@ Here is an example of a basic load balancer setup setup:
 
 ## Configuration
 
-Note: Please follow instructions to install the [Cert Manager]('https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.yaml') if you are using the ALB Ingress Controller.
+> Note: Please follow instructions to install the [Cert Manager]('https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.yaml') if you are using the ALB Ingress Controller.
 
 The following tables lists the configurable parameters of the chart and their default values.
 
