@@ -3,7 +3,7 @@ entries:
   illumidesk:
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-03-04T10:53:52.7248758-05:00"
+    created: "2021-03-04T13:52:45.2434437-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -20,7 +20,7 @@ entries:
       repository: https://helm.datadoghq.com
       version: 2.4.29
     description: An extention of the JupyterHub chart with additional IllumiDesk resources
-    digest: 06dd9209682d459b1e388bc3ca64dca57610303aa5672698f36903f1e50ac492
+    digest: f2b41c88e69a809f7fd385fc4dc5dca09e1c09b06270bca2fa1f8713f2d032fa
     icon: https://configs.illumidesk.com/images/illumidesk-80.png
     maintainers:
     - email: hello@illumidesk.com
@@ -31,7 +31,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-03-04T10:53:52.7149891-05:00"
+    created: "2021-03-04T13:52:45.2348052-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -59,7 +59,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-03-04T10:53:52.7064962-05:00"
+    created: "2021-03-04T13:52:45.2257759-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -87,7 +87,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-03-04T10:53:52.6979991-05:00"
+    created: "2021-03-04T13:52:45.2167683-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -115,7 +115,7 @@ entries:
     version: 0.6.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-03-04T10:53:52.6902734-05:00"
+    created: "2021-03-04T13:52:45.2085578-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -143,7 +143,7 @@ entries:
     version: 0.5.2
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-03-04T10:53:52.6817504-05:00"
+    created: "2021-03-04T13:52:45.1999702-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -171,7 +171,7 @@ entries:
     version: 0.5.1
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2021-03-04T10:53:52.673066-05:00"
+    created: "2021-03-04T13:52:45.1904251-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -199,7 +199,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-03-04T10:53:52.6644605-05:00"
+    created: "2021-03-04T13:52:45.1823512-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -227,7 +227,7 @@ entries:
     version: 0.4.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-03-04T10:53:52.6557773-05:00"
+    created: "2021-03-04T13:52:45.1743054-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -255,7 +255,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 0.10.0
-    created: "2021-03-04T10:53:52.6474126-05:00"
+    created: "2021-03-04T13:52:45.1665517-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -283,7 +283,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2021-03-04T10:53:52.639357-05:00"
+    created: "2021-03-04T13:52:45.1572441-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -311,7 +311,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2021-03-04T10:53:52.6302491-05:00"
+    created: "2021-03-04T13:52:45.1488682-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -339,7 +339,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-03-04T10:53:52.6220299-05:00"
+    created: "2021-03-04T13:52:45.1400895-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -366,7 +366,7 @@ entries:
     - illumidesk-0.1.0.tgz
     version: 0.1.0
   - apiVersion: v2
-    created: "2021-03-04T10:53:52.6114889-05:00"
+    created: "2021-03-04T13:52:45.1314097-05:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -392,4 +392,4 @@ entries:
     urls:
     - illumidesk-0.0.1.tgz
     version: 0.0.1
-generated: "2021-03-04T10:53:52.60132-05:00"
+generated: "2021-03-04T13:52:45.1218659-05:00"
