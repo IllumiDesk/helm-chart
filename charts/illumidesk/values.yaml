@@ -95,8 +95,16 @@ jupyterhub:
 ## ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 ##
 postgresql:
-  # Enables or disables postgres
+  # Enables or disables an in cluster postgres 
   enabled: false
+  # Provide Postgresql username
+  postgresqlUsername: postgres
+  # Provide Postgresql password if username is not defined, the default username will have this password
+  postgresqlPostgresPassword: ''
+  # Provide Postgresql password
+  postgresqlPassword: ''
+  # Provide in cluster database name 
+  postgresqlDatabase: 'illumidesk'
 
 ## DatadogHQ Agent
 ## https://github.com/DataDog/helm-charts/tree/master/charts/datadog
@@ -234,7 +242,6 @@ keyCloak:
   keycloak_user: admin
   # password for keycloak service
   keycloak_password: admin
-  
 
 ## Grader setup service
 ##
