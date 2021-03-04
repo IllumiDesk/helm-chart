@@ -152,7 +152,6 @@ albIngressController:
   #Specify the aws region that your cluster is deployed to
   awsRegion: ''
 
-
 albIngress:
   # Enables or disables the aws-alb-ingress-controller
   enabled: false
@@ -164,7 +163,6 @@ albIngress:
   # ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.1/examples/echo_server/#deploy-ingress-for-echoserver
   ingress:
     annotations: {}
-  
 
 ## External DNS Service
 ## ref: https://github.com/bitnami/charts/tree/master/bitnami/external-dns
