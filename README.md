@@ -23,44 +23,9 @@ This setup pulls images defined in the `illumidesk/values.yaml` file from `Docke
 
 ## Installing the chart
 
-Create a copy of _**example-config/values.yaml.example**_ file and update it with your setup.
+Create _**config.yaml**_ file and update it with your setup.
 
 > NOTE: to get a token use  `openssl rand -hex 32`:
-
-Here is an example of a basic load balancer setup setup:
-
-```yaml
-  jupyterhub:
-    proxy:
-    secretToken: your_token
-    service:
-    type: LoadBalancer
-  albIngressController:
-  enabled: false
-  allowExternalDNS: 
-  enabled: false
-  allowNFS: 
-  enabled: false
-```
-
-- Here is another example of a basic setup using nodeport
-
-```yaml
-  jupyterhub:
-    proxy:
-      secretToken: your_token
-      service:
-      type: NodePort
-      nodePorts:
-        http: 30791
-        https: 30792
-  albIngressController:
-    enabled: false
-  allowExternalDNS:
-    enabled: false
-  allowNFS:
-    enabled: false
-```
 
 - Add Illumidesk repository to HELM:
 
@@ -81,6 +46,13 @@ Here is an example of a basic load balancer setup setup:
     --values my-custom-config.yaml
 ```
 
+- Install a release wtihout  _**config.yaml**_ file
+
+```bash
+kubernetes create namespace test
+helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX ../helm-chart/charts/illumidesk/ -n test
+```
+
 ## Uninstall the Chart
 
 ```bash
@@ -89,7 +61,11 @@ Here is an example of a basic load balancer setup setup:
 
 ## Configuration
 
-> Note: Please follow instructions to install the [Cert Manager]('https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.yaml') if you are using the ALB Ingress Controller.
+> Note: Please follow instructions to install the [Cert Manager]('https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.yaml') if you are using the ALB or Nginx Ingress Controller
+
+> Note: Please follow instructions to setup [external dns]('https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.1/examples/echo_server/#setup-external-dns-to-manage-dns-automatically'), if you plan to use this resource
+
+> Note: Please follow reference guides in the values.yaml in order to properly configure the resource during a deployment
 
 The following tables lists the configurable parameters of the chart and their default values.
 
@@ -100,8 +76,7 @@ The following tables lists the configurable parameters of the chart and their de
 | jupyterhub.proxy.service.type                                              | Kubernetes service to use to access jupyterhub                                                                                           | LoadBalancer                                                                        |
 | albIngressController.enabled                                               | allows creation of aws application load balancer                                                                                         | FALSE                                                                               |
 | albIngressController.enableIRSA                                            | allow passing of IAM role arn if you are not using eksctl                                                                                | FALSE                                                                               |
-| albIngressController.awsAccessKey                                          | AWS Access Key used to authenticate with aws API                                                                                         | XXXXXXXXXXXXXXXXXXXX (AWS Access Key)                                               |
-| albIngressController.awsSecretToken                                        | AWS Secret Token used to authenticate with aws API                                                                                       | XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX (AWS Secret Token)                         |
+| albIngressController.kube2iam                                              | pass kube2iam arn to securely pass AWS credentials into alb ingress controller pod                                                       | arn:aws:iam::XXXXXXXXXX:role:instance-profile/k8s-alb-controller                    |
 | albIngressController.clusterName                                           | EKS Cluster where aws resources should be created                                                                                        | illumidesk                                                                          |
 | albIngressController.clusterVPC                                            | Cluster VPC ID alb ingress controller uses to create aws resources                                                                       | vpc-XXX                                                                             |
 | albIngressController.awsRegion                                             | aws region where your cluster is located                                                                                                 | us-east-1                                                                           |
@@ -144,7 +119,7 @@ The following tables lists the configurable parameters of the chart and their de
 | graderSetupService.graderSetupImage                                        | Grader Setup Service Image Name                                                                                                          | illumidesk/grader-setup-app:latest                                                  |
 | graderSetupService.postgresNBGraderHost                                    | Provide Host Postgres Server                                                                                                             | illumidesk.XXXXXXXXXXXX.us-east-1.rds.amazonaws.com                                 |
 | graderSetupService.postgresNBGraderUser                                    | Provide Postgres User                                                                                                                    | postgres                                                                            |
-| graderSetupService.postgresNBGraderPassword                                | Provide Postgres Password                                                                                                                | None                                                                                |
+| graderSetupService.postgresNBGraderPassword                                | Provide Postgres Password                                                                                                                | None                                                                               |
 
 ## Validate the Helm Chart
 

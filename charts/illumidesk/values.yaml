@@ -56,7 +56,7 @@ jupyterhub:
       enabled: true
     # Required proxy's secret token. Should be created before installing services with the helm chart.
     # You can create a secure 32 character token from your terminal with: openssl rand -hex 32
-    secretToken: ''
+    secretToken: 'example'
     # Configuration of the proxy-public service
     # https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#proxy-service
     service:
@@ -142,11 +142,29 @@ albIngressController:
   # won't have sufficient priviledges to create the ALB.
   # ref: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
   enableIRSA: false
+  # You must create kube2iam arn with your IAM credentials in order to provide them to the alb ingress controller container
+  # ref: https://github.com/jtblin/kube2iam
+  kube2iam: ''
+  # Specify the name of the cluster created in eks
+  clusterName: ''
+  #Specify the vpc-id of the vpc that corresponds to your cluster VPC
+  clusterVPC: vpc-XXXXXXX
+  #Specify the aws region that your cluster is deployed to
+  awsRegion: ''
 
 
 albIngress:
   # Enables or disables the aws-alb-ingress-controller
   enabled: false
+  # The sub-domain that is used with the illumidesk.com address. For example, 'test.illumidesk.com' would create the
+  # test.illumidesk.com host name for the ingress resource.
+  host: test.illumidesk.com
+  # These ingress annotations are used so that the ALB Ingress Controller can autodiscover and group ingress resources.
+  # Note: Navigate to readme Configuration table for list of Alb Ingress Controller Annotations
+  # ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.1/examples/echo_server/#deploy-ingress-for-echoserver
+  ingress:
+    annotations: {}
+  
 
 ## External DNS Service
 ## ref: https://github.com/bitnami/charts/tree/master/bitnami/external-dns
@@ -168,6 +186,12 @@ nginxIngressController:
   # is set up with AWS annotations by default. It also specifies the use of the "nlb"
   # load balancer type.
   enabled: false
+  # provide the VPC cidr for the eks cluster
+  # ref: https://docs.aws.amazon.com/vpc/latest/userguide/working-with-vpcs.html
+  vpcCIDR: 192.168.0.0/16
+  # provide certificate ARN from AWS ACM
+  # ref: https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html
+  certificateArn: ''
 
 ## Ingress resource
 ##
@@ -175,7 +199,7 @@ nginxIngress:
   # Enables or disables the ingress resource. By default, the ingress resource root path
   # is associated to the proxy-public endpoing from the JupyterHub public facing service endpoint.
   enabled: false
-  # The sub-domain that is used with the illumidesk.com address. For example, 'test' would create the
+  # The sub-domain that is used with the illumidesk.com address. For example, 'test.illumidesk.com' would create the
   # test.illumidesk.com host name for the ingress resource.
   host: 'test.illumidesk.com'
 
@@ -184,6 +208,10 @@ nginxIngress:
 ##
 allowNFS:
   enabled: false
+  # Domain for the NFS Server
+  server: ''
+  # specify mount path
+  path: /
 
 ## Keycloak service (used for Authentication)
 ##
@@ -192,6 +220,23 @@ keyCloak:
   # JupyterHub authenticator is not using Keycloak with the GenericOAuthenticator
   # class.
   enabled: false
+  # provide database schema for keycloak
+  db_schema: public
+  # provide database user with access to keycloak schema objects
+  db_user: keycloak
+  # provide keycloak database name. This may require you to create the database name in your database instance
+  db_database: keycloak
+  # provide database domain name
+  db_addr: ''
+  # provide name of database vendor
+  db_vendor: POSTGRES
+  # database password
+  db_password: 
+  # admin user name for keycloak service
+  keycloak_user: admin
+  # password for keycloak service
+  keycloak_password: admin
+  
 
 ## Grader setup service
 ##
