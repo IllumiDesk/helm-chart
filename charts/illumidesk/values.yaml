@@ -147,9 +147,9 @@ albIngressController:
   kube2iam: ''
   # Specify the name of the cluster created in eks
   clusterName: ''
-  #Specify the vpc-id of the vpc that corresponds to your cluster VPC
+  # Specify the vpc-id of the vpc that corresponds to your cluster VPC
   clusterVPC: vpc-XXXXXXX
-  #Specify the aws region that your cluster is deployed to
+  # Specify the aws region that your cluster is deployed to
   awsRegion: ''
 
 albIngress:
