@@ -19,6 +19,46 @@ rbac:
 ## ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
 ##
 jupyterhub:
+  custom:
+    #Authentication types include LTI13, LTI11, SAML
+    auth_type: 'LTI13'
+    # Release name
+    release: 'illumidesk-test'
+    # database option is internal or external
+    database_type: 'internal'
+    # database username 
+    database_user: 'postgres'
+    # database password
+    database_password: 'postgres123'
+    # database port
+    database_port: 5432
+    # database name
+    database: 'illumidesk'
+    # if database type is set to external, set the db host  
+    external_database_host: ''
+
+    # LTI 1.3 settings
+    # pass Client ID     
+    lti13_client_id: '158020000000000105'
+
+    #LTI URL
+    lti_url: 'illumidesk.instructure.com'
+
+    # LTI 1.1 Settings
+    lti11_consumer_key: 'ild_test_consumer_key'
+
+    lti11_shared_secret: 'ild_test_shared_secret'
+
+    # SAML
+    saml_xpath_username_location: '//saml:Attribute[@FriendlyName="Name"]/saml:AttributeValue/text()'
+    saml_metadata_filepath: '/srv/jupyterhub/illumidesk-metadata.xml'
+    saml_acs_endpoint_url: 'http://localhost:8000/hub/login'
+    saml_time_format_string: '%Y-%m-%dT%H:%M:%SZ'
+    saml_timezone: 'UTC'
+    saml_nameid_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
+
+
+    
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
@@ -31,10 +71,139 @@ jupyterhub:
       type: postgres
     # Extra configuration options
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-extraconfig
+    extraEnv:
+      LTI13_PRIVATE_KEY: '/srv/jupyterhub/rsa_private.key'
     extraConfig:
       # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
       logoConfig: |
         c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
+      illumideskAuthConfig: |
+        import os
+        import z2jh
+        from illumidesk.authenticators.authenticator import setup_course_hook
+        
+        # Set Required Environment Variables
+        os.environ['ILLUMIDESK_MNT_ROOT'] = '/illumidesk-courses'
+        os.environ['JUPYTERHUB_API_URL'] = 'http://hub:8081/hub/api'
+        os.environ['JUPYTERHUB_API_TOKEN'] = os.system("openssl rand -hex 32")
+        
+        # Get Custom auth type Auth Type
+        custom_auth_type = z2jh.get_config('custom.auth_type')
+        
+        if custom_auth_type == 'LTI13':
+          c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI13Authenticator'
+          lti13_url = z2jh.get_config('custom.lti_url')
+          
+          c.LTI13Authenticator.endpoint = 'https://{}/api/lti/security/jwks'.format(lti13_url)
+          c.LTI13Authenticator.client_id = z2jh.get_config('custom.lti13_client_id')
+          c.LTI13Authenticator.authorize_url = 'https://{}/api/lti/authorize_redirect'.format(lti13_url)
+          c.LTI13Authenticator.token_url = 'https://{}/login/oauth2/token'.format(lti13_url)
+          c.JupyterHub.extra_handlers = [
+              (r'/lti13/config$', 'illumidesk.lti13.handlers.LTI13ConfigHandler'),
+              (r'/lti13/jwks$', 'illumidesk.lti13.handlers.LTI13JWKSHandler'),
+            ]
+        elif custom_auth_type == 'LTI11':
+          c.JupyterHub.authent=icator_class = 'illumidesk.authenticators.authenticator.LTI11Authenticator'
+          c.LTIAuthenticator.consumers = {
+              z2jh.get_config('custom.lti11_consumer_key')
+              or 'ild_test_consumer_key': z2jh.get_config('custom.lti11_shared_secret')
+              or 'ild_test_shared_secret'
+          }
+        elif custom_auth_type == 'SAML':
+          
+          # SAML authenticator class
+          c.JupyterHub.authenticator_class = 'samlauthenticator.SAMLAuthenticator'
+          # Refrain from creating system users
+          c.JupyterHub.create_system_users = False
+          
+          # Fetch the user's location from a specific location
+          c.JupyterHub.xpath_username_location = z2jh.get_config('custom.saml_xpath_username_location') or '//saml:Attribute[@FriendlyName="Name"]/saml:AttributeValue/text()'
+          # Metadata file example downloaded from the Auth0 application
+          c.SAMLAuthenticator.metadata_filepath = z2jh.get_config('custom.saml_metadata_filepath') or '/srv/jupyterhub/illumidesk-metadata.xml'
+          # ACS endpoint (login URL)
+          c.SAMLAuthenticator.acs_endpoint_url = z2jh.get_config('custom.saml_acs_endpoint_url') or 'http://localhost:8000/hub/login'
+          # Update time stamp format if it doesn't match the following format:
+          # %Y-%M-%dT%H:%M:%SZ
+          # 2021-01-21T00:38:36.092Z 
+          c.SAMLAuthenticator.time_format_string = z2jh.get_config('custom.saml_time_format_string') or '%Y-%m-%dT%H:%M:%SZ'
+          # Looks like we can't get the timezone from the previous string - we need to set it
+          c.SAMLAuthenticator.idp_timezone = z2jh.get_config('custom.saml_timezone') or 'UTC'
+          # Update the nameid format
+          c.SAMLAuthenticator.nameid_format =  z2jh.get_config('custom.saml_nameid_format') or 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
+        
+        # Assigned to the post authentication hook
+        c.Authenticator.post_auth_hook = setup_course_hook
+        
+        def userdata_hook(spawner, auth_state):
+            if not auth_state:
+                raise ValueError('auth_state not enabled.')
+            spawner.log.debug('auth_state_hook set with %s role' % auth_state['user_role'])
+            user_role = auth_state['user_role']
+            # set spawner environment
+            spawner.environment['USER_ROLE'] = user_role
+            spawner.log.debug('Assigned USER_ROLE env var to %s' % spawner.environment['USER_ROLE'])
+        c.Spawner.auth_state_hook = userdata_hook
+      
+      illumideskDatabaseConfig: |
+        import z2jh
+        import os
+
+        database_type = z2jh.get_config('custom.database_type')
+
+        # Set host name based on internal or external database
+        if database_type == 'internal':
+          release = z2jh.get_config('custom.release')
+          database_host = '{}-postgresql.{}.svc.cluster.local'.format(release,release)
+          os.environ['POSTGRES_JUPYTERHUB_HOST'] = database_host
+          os.environ['POSTGRES_NBGRADER_HOST'] = database_host
+        elif database_type == 'external': 
+          os.environ['POSTGRES_JUPYTERHUB_HOST'] = z2jh.get_config('custom.external_database_host')
+          os.environ['POSTGRES_NBGRADER_HOST'] = z2jh.get_config('custom.external_database_host')
+        
+        # Set nbgrader user and password
+        os.environ['POSTGRES_NBGRADER_USER'] = z2jh.get_config('custom.database_user')
+        os.environ['POSTGRES_NBGRADER_PASSWORD'] = z2jh.get_config('custom.database_password')
+
+        # set jupyterhub DB
+        c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+          user=z2jh.get_config('custom.database_user'),
+          password=z2jh.get_config('custom.database_password'),
+          host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
+          port=z2jh.get_config('custom.database_port'),
+          db=z2jh.get_config('custom.database'),
+        )
+      illumideskSecurity: |
+        c.JupyterHub.tornado_settings = {
+          "headers": {"Content-Security-Policy": "frame-ancestors 'self' *"},
+          "cookie_options": {"SameSite": "None", "Secure": True},
+        }
+      privateKey: |
+        import os
+        import z2jh
+        from os import chmod
+        from Crypto.PublicKey import RSA
+        key_path = os.environ.get('LTI13_PRIVATE_KEY') or '/srv/jupyterhub/rsa_private.key'
+        key = RSA.generate(2048)
+        with open(key_path, 'wb') as content_file:
+          content_file.write(key.exportKey('PEM'))
+        chmod(key_path, 0o600)
+
+      illumideskServices: |
+        import requests
+        import os
+        import z2jh
+        c.JupyterHub.services.append({
+          'name': 'announcement',
+          'admin': True,
+          'url': 'http://0.0.0.0:8889',
+          'command': ["python3", "/etc/jupyterhub-services/announcement.py", "--port", "8889", "--api-prefix", "/services/announcement"],
+          'api_token': os.environ.get("JUPYTERHUB_API_TOKEN") })
+        # load extra grader services launched from grader-setup service
+        services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(z2jh.get_config('release')))
+        services_resp = services_resp.json()
+        c.JupyterHub.load_groups.update(services_resp['groups'])
+        c.JupyterHub.services.extend(services_resp['services'])
+
     # The JupyterHub docker image
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-image
     image:
@@ -71,6 +240,7 @@ jupyterhub:
     # Single user server extra environment variables
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#singleuser-extraenv
     extraEnv:
+      ORGANIZATION_NAME: 
       # If yes, Instructs the startup script to change the $NB_USER home directory owner and group to the
       # current value of $NB_UID and $NB_GID.
       CHOWN_HOME: 'yes'
@@ -96,13 +266,13 @@ jupyterhub:
 ##
 postgresql:
   # Enables or disables an in cluster postgres
-  enabled: false
+  enabled: true
   # Provide Postgresql username
   postgresqlUsername: postgres
   # Provide Postgresql password if username is not defined, the default username will have this password
-  postgresqlPostgresPassword: ''
+  postgresqlPostgresPassword: 'postgres123'
   # Provide Postgresql password
-  postgresqlPassword: ''
+  postgresqlPassword: 'postgres123'
   # Provide in cluster database name
   postgresqlDatabase: 'illumidesk'
 
