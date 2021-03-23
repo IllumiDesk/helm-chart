@@ -184,31 +184,6 @@ allowExternalDNS:
   # ref: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
   enableIRSA: false
 
-## Ingress Nginx controller
-## ref: https://github.com/kubernetes/ingress-nginx
-##
-nginxIngressController:
-  # Enables or disables the nginx-ingress controller. The nginx-ingress contoller
-  # is set up with AWS annotations by default. It also specifies the use of the "nlb"
-  # load balancer type.
-  enabled: false
-  # provide the VPC cidr for the eks cluster
-  # ref: https://docs.aws.amazon.com/vpc/latest/userguide/working-with-vpcs.html
-  vpcCIDR: 192.168.0.0/16
-  # provide certificate ARN from AWS ACM
-  # ref: https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html
-  certificateArn: ''
-
-## Ingress resource
-##
-nginxIngress:
-  # Enables or disables the ingress resource. By default, the ingress resource root path
-  # is associated to the proxy-public endpoing from the JupyterHub public facing service endpoint.
-  enabled: false
-  # The sub-domain that is used with the illumidesk.com address. For example, 'test.illumidesk.com' would create the
-  # test.illumidesk.com host name for the ingress resource.
-  host: 'test.illumidesk.com'
-
 ## NFS service used to persist files for personal workspaces and to provide a shared file
 ## system used for the grader's exchange directory (release/fetch/submit folders).
 ##
