@@ -219,30 +219,6 @@ allowNFS:
   # specify mount path
   path: /
 
-## Keycloak service (used for Authentication)
-##
-keyCloak:
-  # Enables or disables the keycloak service. If disabled, then ensure the
-  # JupyterHub authenticator is not using Keycloak with the GenericOAuthenticator
-  # class.
-  enabled: false
-  # provide database schema for keycloak
-  db_schema: public
-  # provide database user with access to keycloak schema objects
-  db_user: keycloak
-  # provide keycloak database name. This may require you to create the database name in your database instance
-  db_database: keycloak
-  # provide database domain name
-  db_addr: ''
-  # provide name of database vendor
-  db_vendor: POSTGRES
-  # database password
-  db_password: ''
-  # admin user name for keycloak service
-  keycloak_user: admin
-  # password for keycloak service
-  keycloak_password: admin
-
 ## Grader setup service
 ##
 graderSetupService:
