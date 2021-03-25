@@ -109,28 +109,7 @@ jupyterhub:
               or 'ild_test_consumer_key': z2jh.get_config('custom.lti11_shared_secret')
               or 'ild_test_shared_secret'
           }
-        elif custom_auth_type == 'SAML':
-          
-          # SAML authenticator class
-          c.JupyterHub.authenticator_class = 'samlauthenticator.SAMLAuthenticator'
-          # Refrain from creating system users
-          c.JupyterHub.create_system_users = False
-          
-          # Fetch the user's location from a specific location
-          c.JupyterHub.xpath_username_location = z2jh.get_config('custom.saml_xpath_username_location') or '//saml:Attribute[@FriendlyName="Name"]/saml:AttributeValue/text()'
-          # Metadata file example downloaded from the Auth0 application
-          c.SAMLAuthenticator.metadata_filepath = z2jh.get_config('custom.saml_metadata_filepath') or '/srv/jupyterhub/illumidesk-metadata.xml'
-          # ACS endpoint (login URL)
-          c.SAMLAuthenticator.acs_endpoint_url = z2jh.get_config('custom.saml_acs_endpoint_url') or 'http://localhost:8000/hub/login'
-          # Update time stamp format if it doesn't match the following format:
-          # %Y-%M-%dT%H:%M:%SZ
-          # 2021-01-21T00:38:36.092Z 
-          c.SAMLAuthenticator.time_format_string = z2jh.get_config('custom.saml_time_format_string') or '%Y-%m-%dT%H:%M:%SZ'
-          # Looks like we can't get the timezone from the previous string - we need to set it
-          c.SAMLAuthenticator.idp_timezone = z2jh.get_config('custom.saml_timezone') or 'UTC'
-          # Update the nameid format
-          c.SAMLAuthenticator.nameid_format =  z2jh.get_config('custom.saml_nameid_format') or 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
-        
+
         # Assigned to the post authentication hook
         c.Authenticator.post_auth_hook = setup_course_hook
         
@@ -354,31 +333,6 @@ allowExternalDNS:
   # ref: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
   enableIRSA: false
 
-## Ingress Nginx controller
-## ref: https://github.com/kubernetes/ingress-nginx
-##
-nginxIngressController:
-  # Enables or disables the nginx-ingress controller. The nginx-ingress contoller
-  # is set up with AWS annotations by default. It also specifies the use of the "nlb"
-  # load balancer type.
-  enabled: false
-  # provide the VPC cidr for the eks cluster
-  # ref: https://docs.aws.amazon.com/vpc/latest/userguide/working-with-vpcs.html
-  vpcCIDR: 192.168.0.0/16
-  # provide certificate ARN from AWS ACM
-  # ref: https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html
-  certificateArn: ''
-
-## Ingress resource
-##
-nginxIngress:
-  # Enables or disables the ingress resource. By default, the ingress resource root path
-  # is associated to the proxy-public endpoing from the JupyterHub public facing service endpoint.
-  enabled: false
-  # The sub-domain that is used with the illumidesk.com address. For example, 'test.illumidesk.com' would create the
-  # test.illumidesk.com host name for the ingress resource.
-  host: 'test.illumidesk.com'
-
 ## NFS service used to persist files for personal workspaces and to provide a shared file
 ## system used for the grader's exchange directory (release/fetch/submit folders).
 ##
@@ -388,30 +342,6 @@ allowNFS:
   server: ''
   # specify mount path
   path: /
-
-## Keycloak service (used for Authentication)
-##
-keyCloak:
-  # Enables or disables the keycloak service. If disabled, then ensure the
-  # JupyterHub authenticator is not using Keycloak with the GenericOAuthenticator
-  # class.
-  enabled: false
-  # provide database schema for keycloak
-  db_schema: public
-  # provide database user with access to keycloak schema objects
-  db_user: keycloak
-  # provide keycloak database name. This may require you to create the database name in your database instance
-  db_database: keycloak
-  # provide database domain name
-  db_addr: ''
-  # provide name of database vendor
-  db_vendor: POSTGRES
-  # database password
-  db_password: ''
-  # admin user name for keycloak service
-  keycloak_user: admin
-  # password for keycloak service
-  keycloak_password: admin
 
 ## Grader setup service
 ##
