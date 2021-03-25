@@ -95,3 +95,51 @@ These steps help emulate the existing GitHub Action that runs the `ct lint` comm
 - Name the running container as `ct`.
 - (Optional) Install all sub-chart dependencies with `ct`.
 - Run the `ct lint` command as it runs with the GitHub action specification.
+
+#### Commits and merges
+
+When squashing and merging to the `main` branch, use the following format to provide consistent updates to the `CHANGELOG.md` file:
+
+    <Commit Type>(scope): <Merge Description>
+
+- `Merge Description` should initiate with a capital letter, as it provides the changelog with a standard sentence structure.
+
+- `Scope` is used to define what is being updated. Our current scopes include:
+
+1. core
+3. grader
+4. workspace
+
+- `Commit Types` are listed below:
+
+| Commit Type | Commit Format |
+| --- | --- |
+| Chores | `chore` |
+| Documentation | `docs` |
+| Features | `feat` |
+| Fixes | `fix` |
+| Refactoring | `refactor` |
+
+Use the `BREAKING CHANGE` in the commit's footer if a release has a breaking change.
+
+Examples:
+
+- Commit a new feature:
+
+    ```
+    feat(workspace): Publish static notebooks with live widgets
+    ```
+
+- Commit a bug fix:
+
+    ```
+    fix(core): Allow students to open submitted assignments from grades section
+    ```
+
+- Commit a version with a breaking change:
+
+    ```
+    feat(core): Deprecate observer role from group memberships
+
+    BREAKING CHANGE: `extends` key in config file is now used for extending other config files
+    ```
