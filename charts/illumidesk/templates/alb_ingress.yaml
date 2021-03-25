@@ -15,6 +15,7 @@ spec:
   rules:
   - host: {{ .Values.albIngress.host }}
     http:
+      paths:
       - path: /*
         backend:
           serviceName: proxy-public
