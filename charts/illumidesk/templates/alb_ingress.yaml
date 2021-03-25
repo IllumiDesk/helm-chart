@@ -15,11 +15,6 @@ spec:
   rules:
   - host: {{ .Values.albIngress.host }}
     http:
-      paths:
-      - path: /*
-        backend:
-          serviceName: ssl-redirect
-          servicePort: use-annotation
       - path: /*
         backend:
           serviceName: proxy-public
