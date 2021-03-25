@@ -104,12 +104,6 @@ When squashing and merging to the `main` branch, use the following format to pro
 
 - `Merge Description` should initiate with a capital letter, as it provides the changelog with a standard sentence structure.
 
-- `Scope` is used to define what is being updated. Our current scopes include:
-
-1. core
-3. grader
-4. workspace
-
 - `Commit Types` are listed below:
 
 | Commit Type | Commit Format |
@@ -127,19 +121,19 @@ Examples:
 - Commit a new feature:
 
     ```
-    feat(workspace): Publish static notebooks with live widgets
+    feat: Adds external database option
     ```
 
 - Commit a bug fix:
 
     ```
-    fix(core): Allow students to open submitted assignments from grades section
+    fix: Updates template to enable ingress resource when enabled
     ```
 
 - Commit a version with a breaking change:
 
     ```
-    feat(core): Deprecate observer role from group memberships
+    feat: Deprecate network file system (NFS) options
 
-    BREAKING CHANGE: `extends` key in config file is now used for extending other config files
+    BREAKING CHANGE: `nfs.enabled` key is no longer valid
     ```
