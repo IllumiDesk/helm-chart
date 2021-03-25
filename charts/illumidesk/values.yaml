@@ -37,6 +37,10 @@ jupyterhub:
     # if database type is set to external, set the db host  
     external_database_host: ''
 
+    #jupyterhub configs
+    # jhub api token
+    jhub_api_token: 527d4500a39d07aa6bb4fd9b12a89515a58f184172fe20bef899103d34f7933e
+
     # LTI 1.3 settings
     # pass Client ID     
     lti13_client_id: '158020000000000105'
@@ -56,9 +60,7 @@ jupyterhub:
     saml_time_format_string: '%Y-%m-%dT%H:%M:%SZ'
     saml_timezone: 'UTC'
     saml_nameid_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'
-
-
-    
+  
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
@@ -85,7 +87,7 @@ jupyterhub:
         # Set Required Environment Variables
         os.environ['ILLUMIDESK_MNT_ROOT'] = '/illumidesk-courses'
         os.environ['JUPYTERHUB_API_URL'] = 'http://hub:8081/hub/api'
-        os.environ['JUPYTERHUB_API_TOKEN'] = os.system("openssl rand -hex 32")
+        os.environ['JUPYTERHUB_API_TOKEN'] = z2jh.get_config('custom.jhub_api_token')
         
         # Get Custom auth type Auth Type
         custom_auth_type = z2jh.get_config('custom.auth_type')
@@ -178,7 +180,7 @@ jupyterhub:
           'command': ["python3", "/etc/jupyterhub-services/announcement.py", "--port", "8889", "--api-prefix", "/services/announcement"],
           'api_token': os.environ.get("JUPYTERHUB_API_TOKEN") })
         # load extra grader services launched from grader-setup service
-        services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(z2jh.get_config('release')))
+        services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(z2jh.get_config('custom.release')))
         services_resp = services_resp.json()
         c.JupyterHub.load_groups.update(services_resp['groups'])
         c.JupyterHub.services.extend(services_resp['services'])
