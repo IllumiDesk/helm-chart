@@ -18,6 +18,10 @@ spec:
       paths:
       - path: /*
         backend:
+          serviceName: ssl-redirect
+          servicePort: use-annotation
+      - path: /*
+        backend:
           serviceName: proxy-public
           servicePort: 80
 {{ end }}
