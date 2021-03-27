@@ -20,8 +20,8 @@ rbac:
 ##
 jupyterhub:
   custom:
-    #Authentication types include LTI13, LTI11, SAML
-    auth_type: 'LTI11'
+    #Authentication types include LTI13, LTI11, AUTH0
+    auth_type: 'LTI13'
     # Release name
     release: 'illumidesk-test'
     # database option is internal or external
@@ -52,6 +52,9 @@ jupyterhub:
     lti11_consumer_key: 'ild_test_consumer_key'
 
     lti11_shared_secret: 'ild_test_shared_secret'
+
+    # Generic Oauth Settings
+    #
   
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
@@ -74,8 +77,11 @@ jupyterhub:
       illumideskAuthConfig: |
         import os
         import z2jh
-        
+        from oauthenticator.generic import GenericOAuthenticator
         from illumidesk.authenticators.authenticator import setup_course_hook
+
+        # set log
+        c.Application.log_level = 'DEBUG'
         
         # Set Required Environment Variables
         os.environ['ILLUMIDESK_MNT_ROOT'] = '/illumidesk-courses'
@@ -112,15 +118,42 @@ jupyterhub:
             ]
         
         elif custom_auth_type == 'LTI11':
-          c.JupyterHub.authent=icator_class = 'illumidesk.authenticators.authenticator.LTI11Authenticator'
+          c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI11Authenticator'
           
           os.environ['LTI_CONSUMER_KEY'] = z2jh.get_config('custom.lti11_consumer_key')
           os.environ['LTI_SHARED_SECRET'] = z2jh.get_config('custom.lti11_shared_secret')
+
+          print('Consumer Key {}'.format(os.environ['LTI_CONSUMER_KEY']))
+          print('Shared Key {}'.format(os.environ['LTI_SHARED_SECRET']))
           c.LTIAuthenticator.consumers = {
               z2jh.get_config('custom.lti11_consumer_key')
               or 'ild_test_consumer_key': z2jh.get_config('custom.lti11_shared_secret')
               or 'ild_test_shared_secret'
           }
+        elif custom_auth_type == 'AUTH0':
+          # Set the authenticator
+          c.JupyterHub.authenticator_class = GenericOAuthenticator
+
+          # Verify TLS certificates.
+          os.environ['OAUTH2_TLS_VERIFY'] = 'True'
+          if os.environ.get('OAUTH2_TLS_VERIFY') == 'True':
+              c.OAuthenticator.tls_verify = True
+          else:
+              c.OAuthenticator.tls_verify = False
+
+        # OAuthenticator settings for AUTH0
+        c.OAuthenticator.client_id = os.environ.get('OIDC_CLIENT_ID') or 'illumidesk-hub'
+        c.OAuthenticator.client_secret = os.environ.get('OIDC_CLIENT_SECRET')
+        c.OAuthenticator.oauth_callback_url = os.environ.get('OIDC_CALLBACK_URL') or 'http://127.0.0.1/hub/oauth_callback'
+        c.OAuthenticator.authorize_url = os.environ.get('OIDC_AUTHORIZE_URL') or f'http://127.0.0.1/auth/realms/illumidesk-realm/protocol/openid-connect/auth'
+        c.OAuthenticator.token_url = os.environ.get('OIDC_TOKEN_URL') or f'http://127.0.0.1/auth/realms/illumidesk-realm/protocol/openid-connect/token'
+        c.GenericOAuthenticator.userdata_url = os.environ.get('OAUTH2_USERDATA_URL') or 'http://localhost:8080/auth/realms/illumidesk-realm/protocol/openid-connect/userinfo'
+
+        # clarify scopes
+        c.GenericOAuthenticator.scope = ['openid','name','profile','email']
+        
+        # User name key returned by user
+        c.GenericOAuthenticator.username_key = 'name'
         
         
 
