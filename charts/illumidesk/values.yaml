@@ -112,7 +112,7 @@ jupyterhub:
             ]
         
         elif custom_auth_type == 'LTI11':
-          c.JupyterHub.authent=icator_class = 'illumidesk.authenticators.authenticator.LTI11Authenticator'
+          c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI11Authenticator'
           
           os.environ['LTI_CONSUMER_KEY'] = z2jh.get_config('custom.lti11_consumer_key')
           os.environ['LTI_SHARED_SECRET'] = z2jh.get_config('custom.lti11_shared_secret')
@@ -172,6 +172,7 @@ jupyterhub:
         nbgrader_db_port = os.environ.get('POSTGRES_NBGRADER_PORT')
         database_name = '{}-illumidesk-test'.format(os.environ.get('ORGANIZATION_NAME'))
 
+        # URI Test
         print('Connection URI',f'postgresql://{nbgrader_db_user}:{nbgrader_db_password}@{nbgrader_db_host}:{nbgrader_db_port}/{database_name}')
         
         print('printing postgres nbgrader host', os.environ.get('POSTGRES_NBGRADER_HOST'))
