@@ -190,7 +190,7 @@ jupyterhub:
       # DockerHub (docker.io).
       name: illumidesk/jupyterhub
       # The JupyterHub image tag
-      tag: "536c"
+      tag: "latest"
       # Whether or not to always pull the image from the registry.
       pullPolicy: Always
     # Shuts down the end-user server (pod) when the user logs out.
@@ -351,7 +351,7 @@ graderSetupService:
   # DockerHub is required (defaults to docker.io) the include the registy identifier
   # before the image name. For example:
   # k8s.gcr.io/<org-name>/<image-name:tag-name>
-  graderSetupImage: illumidesk/grader-setup-service:536b
+  graderSetupImage: illumidesk/grader-setup-service:latest
   # The docker image for the shared grader notebook. If a registry other than
   # DockerHub is required (defaults to docker.io) the include the registy identifier
   # before the image name. For example:
