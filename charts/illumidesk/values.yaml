@@ -23,19 +23,6 @@ jupyterhub:
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
     config:
-      # Custom Authenticator to use generic Oauth2.0 with Jupyterhub
-      GenericOAuthenticator:
-        # Callback URL to return to the user after autohrization
-        oauth_callback_url: ''
-        # Authenticaton url to initiate oauth
-        authorize_url: ''
-        # The url that retrieves an access token at the completion of oauth
-        token_url: ''
-        # The url for retrieves user data with a completed access token
-        userdata_url: ''
-      JupyterHub:
-        # Provide Authenticator class ta
-        authenticator_class: generic-oauth
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-db
@@ -111,10 +98,10 @@ jupyterhub:
           # OAuthenticator settings for AUTH0
           c.OAuthenticator.client_id = os.environ.get('OIDC_CLIENT_ID') or 'illumidesk-hub'
           c.OAuthenticator.client_secret = os.environ.get('OIDC_CLIENT_SECRET')
-          c.OAuthenticator.oauth_callback_url = os.environ.get('OIDC_CALLBACK_URL') or 'http://127.0.0.1/hub/oauth_callback'
-          c.OAuthenticator.authorize_url = os.environ.get('OIDC_AUTHORIZE_URL') or f'http://127.0.0.1/auth/realms/illumidesk-realm/protocol/openid-connect/auth'
-          c.OAuthenticator.token_url = os.environ.get('OIDC_TOKEN_URL') or f'http://127.0.0.1/auth/realms/illumidesk-realm/protocol/openid-connect/token'
-          c.GenericOAuthenticator.userdata_url = os.environ.get('OIDC_USERDATA_URL') or 'http://localhost:8080/auth/realms/illumidesk-realm/protocol/openid-connect/userinfo'
+          c.OAuthenticator.oauth_callback_url = os.environ.get('OIDC_CALLBACK_URL')
+          c.OAuthenticator.authorize_url = os.environ.get('OIDC_AUTHORIZE_URL') or 'https://auth.illumidesk.com/authorize'
+          c.OAuthenticator.token_url = os.environ.get('OIDC_TOKEN_URL') or 'https://auth.illumidesk.com/oauth/token'
+          c.GenericOAuthenticator.userdata_url = os.environ.get('OIDC_USERDATA_URL') or 'https://auth.illumidesk.com/userinfo'
           c.GenericOAuthenticator.userdata_method = 'GET'
           # clarify scopes
           c.GenericOAuthenticator.scope = ['openid','email','profile']
