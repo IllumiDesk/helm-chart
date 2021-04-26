@@ -179,7 +179,7 @@ jupyterhub:
       # The JupyterHub image tag
       tag: "latest"
       # Whether or not to always pull the image from the registry.
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
     # Shuts down the end-user server (pod) when the user logs out.
     shutdownOnLogout: true
   # Settings for the JupyterHub proxy service. The proxy service is used to route users to their
@@ -224,7 +224,7 @@ jupyterhub:
       tag: latest
       # Specify whether or not to alwasy pull the singleuser image. This is useful for when the singleuser
       # image is updated using the same image tag, for example, the latest alias.
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
 
 ## Postgres setup
 ## ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql

@@ -1,0 +1,90 @@
+imageCredentials:
+  registry: https://index.docker.io/v1/
+  username: illumideskops
+  password: vD9hD1qQ6fJ5lF8j
+  email: hello@illumidesk.com
+albIngress:
+  enabled: true
+  host: actionable-duck-2515.illumidesk.com
+  ingress:
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:860100747351:certificate/b6649826-1c12-4527-b82b-36968791b482
+      alb.ingress.kubernetes.io/group.name: production
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/subnets: subnet-0b35bbcc0d27d3cc3,subnet-08db919444424a786,subnet-02cdc1947ed5208d3,subnet-06406c02e59f80faa
+      alb.ingress.kubernetes.io/tags: Environment=prod,Team=Prod
+      alb.ingress.kubernetes.io/target-type: ip
+      kubernetes.io/ingress.class: alb
+allowNFS:
+  enabled: true
+  path: /
+  server: fs-0726eaad.efs.us-west-2.amazonaws.com
+graderSetupService:
+  enabled: true
+  graderImage: illumidesk/grader-notebook:latest
+  graderSetupImage: illumidesk/grader-setup-app:latest
+  postgresNBGraderHost: illumidesk-oregon.cluster-c6brxuc4b5sv.us-west-2.rds.amazonaws.com
+  postgresNBGraderPassword: lA2lH0bE6hN8hE9y
+  postgresNBGraderUser: postgres
+jupyterhub:
+  imagePullSecrets:
+    - name:  image-pull-secret
+  debug:
+    enabled: true
+  deploymentStrategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+    type: RollingUpdate
+  hub:
+    Jupyterhub: null
+    extraEnv:
+      CUSTOM_AUTH_TYPE: LTI11
+      ILLUMIDESK_MNT_ROOT: /illumidesk-courses
+      JUPYTERHUB_API_TOKEN: dbd8cc4866eff335ab70ebd8337827663c1ab7319b7eb3c3453a9ad20002a0a0
+      JUPYTERHUB_API_URL: http://hub:8081/hub/api
+      JUPYTERHUB_CRYPT_KEY: 58bba882a3defb4bcdf879b5eb2ea48e567d0ca8dfc11953bd37f9ab54c19d5a
+      LTI_CONSUMER_KEY: ild_test_consumer_key
+      LTI_SHARED_SECRET: ild_test_shared_secret
+      ORGANIZATION_NAME: actionable-duck-2515
+      POSTGRES_JUPYTERHUB_DB: illumidesk
+      POSTGRES_JUPYTERHUB_HOST: illumidesk-oregon.cluster-c6brxuc4b5sv.us-west-2.rds.amazonaws.com
+      POSTGRES_JUPYTERHUB_PASSWORD: lA2lH0bE6hN8hE9y
+      POSTGRES_JUPYTERHUB_PORT: "5432"
+      POSTGRES_JUPYTERHUB_USER: postgres
+      POSTGRES_NBGRADER_HOST: illumidesk-oregon.cluster-c6brxuc4b5sv.us-west-2.rds.amazonaws.com
+      POSTGRES_NBGRADER_PASSWORD: lA2lH0bE6hN8hE9y
+      POSTGRES_NBGRADER_USER: postgres
+    image:
+      name: illumidesk/jupyterhub
+      pullPolicy: Always
+      tag: latest
+    shutdownOnLogout: true
+  proxy:
+    secretToken: cde97ffdfca6a5d97daea038b1dcd70a02677f4d5b5eabd3da0d6c247e60c0f2
+  singleuser:
+    defaultUrl: /tree
+    image:
+      name: illumidesk/illumidesk-notebook
+      pullPolicy: Always
+      tag: latest
+    memory:
+      gurantee: 1G
+      limit: 1G
+    storage:
+      extraVolumeMounts:
+      - mountPath: /srv/nbgrader/exchange
+        name: home
+        subPath: actionable-duck-2515/exchange/
+      static:
+        pvcName: shared-pvc-actionable-duck-2515
+        subPath: actionable-duck-2515/home/{username}
+      type: static
+nginxIngress:
+  enabled: false
+postgresql:
+  enabled: false
+  postgresqlDatabase: illumidesk
+  postgresqlPassword: lA2lH0bE6hN8hE9y
+  postgresqlPostgresPassword: lA2lH0bE6hN8hE9y
+  postgresqlUsername: postgres
