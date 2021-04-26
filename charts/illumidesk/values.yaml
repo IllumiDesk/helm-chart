@@ -15,6 +15,14 @@ rbac:
   # Enables or disables
   enabled: true
 
+## Creates Service account for the image registry  for authentication
+##
+imageCredentials:
+  enabled: false
+  registry: https://index.docker.io/v1/
+  username: illumideskops
+  email: hello@illumidesk.com
+
 ## JupyterHub configuration
 ## ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
 ##

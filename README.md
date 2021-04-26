@@ -120,6 +120,11 @@ The following tables lists the configurable parameters of the chart and their de
 | graderSetupService.postgresNBGraderHost                                    | Provide Host Postgres Server                                                                                                             | illumidesk.XXXXXXXXXXXX.us-east-1.rds.amazonaws.com                                 |
 | graderSetupService.postgresNBGraderUser                                    | Provide Postgres User                                                                                                                    | postgres                                                                            |
 | graderSetupService.postgresNBGraderPassword                                | Provide Postgres Password                                                                                                                | None                                                                               |
+imageCredentials.enabled |	allows for authenticated image pulls | 	FALSE
+imageCredentials.registry	| Domain for image registry	| https://index.docker.io/v1/
+imageCredentials.username	| User name for image registry	| illumideskops
+imageCredentials.password	| password for image registry	| None
+imageCredentials.email	| email linked to the service account for image registry	| None                                                                                  |
 
 ## Validate the Helm Chart
 
