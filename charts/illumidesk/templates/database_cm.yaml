@@ -1,0 +1,16 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-cm
+  namespace: {{ .Release.Namespace }}
+data:
+{{ if .Values.postgresql.enabled }}
+  database_host: {{ .Release.Name }}-postgresql.{{ .Release.Name }}.svc.cluster.local
+{{ else }}
+  database_host: .Values.externaldb.host
+{{ end }}
+  database: .Values.externalDatabase.database
+  database_user: .Values.externalDatabase.username
+  database_password: .Values.externalDatabase.password
+  database_port: .Values.externalDatabase.port
