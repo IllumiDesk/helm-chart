@@ -70,8 +70,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 8000
-      targetPort: 8000
+    - port: 8002
+      targetPort: 8002
       protocol: TCP
   selector:
     component: grader-setup-service
@@ -103,7 +103,7 @@ spec:
           image: {{ .Values.graderSetupService.graderSetupImage }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 8000
+            - containerPort: 8002
           env:
             - name: GRADER_IMAGE_NAME
               value: {{ .Values.graderSetupService.graderImage }}
@@ -115,6 +115,11 @@ spec:
               value: {{ .Values.graderSetupService.postgresNBGraderPassword | default "illumidesk" }}
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
+            - name: PORT
+              value: "8002"
+              # empty string for more logging
+            - name: GIN_MODE
+              value: ""
             - name: ILLUMIDESK_NB_EXCHANGE_MNT_ROOT
               value: '/illumidesk-nb-exchange'
             - name: NAMESPACE
