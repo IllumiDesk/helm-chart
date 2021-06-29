@@ -26,7 +26,7 @@ rules:
      - list
      - update
      - watch
-     - patcn
+     - patch
      - delete
   - apiGroups:
       - "apps"
@@ -70,8 +70,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 8002
-      targetPort: 8002
+    - port: 8000
+      targetPort: 8000
       protocol: TCP
   selector:
     component: grader-setup-service
@@ -103,7 +103,7 @@ spec:
           image: {{ .Values.graderSetupService.graderSetupImage }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 8002
+            - containerPort: 8000
           env:
             - name: GRADER_IMAGE_NAME
               value: {{ .Values.graderSetupService.graderImage }}
@@ -116,13 +116,15 @@ spec:
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
             - name: PORT
-              value: "8002"
+              value: "8000"
               # empty string for more logging
             - name: GIN_MODE
               value: ""
             - name: ILLUMIDESK_NB_EXCHANGE_MNT_ROOT
               value: '/illumidesk-nb-exchange'
             - name: NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: ILLUMIDESK_K8S_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: GRADER_PVC
               value: grader-pvc-{{ .Release.Name }}
