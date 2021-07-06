@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   volumeName: grader-pv-{{ .Release.Name }}
-  storageClassName: ""
+  storageClassName: "local-storage"
   accessModes:
     - ReadWriteMany
   resources:

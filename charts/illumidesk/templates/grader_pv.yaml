@@ -3,16 +3,29 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: grader-pv-{{ .Release.Name }}
+  labels:
+    type: local
 spec:
   capacity:
     storage: 20Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: ""
-  nfs:
-    server: {{ .Values.allowNFS.server }}
-    path: {{ .Values.allowNFS.path }}
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:
+    path: "/illumidesk-courses"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - illumidesk-oregon-control-plane
+
+  # nfs:
+  #   server: {{ .Values.allowNFS.server }}
+  #   path: {{ .Values.allowNFS.path }}
 
 {{ end }}

@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   volumeName: shared-pv-{{ .Release.Name }}
-  storageClassName: ""
+  storageClassName: "local-storage"
   accessModes:
     - ReadWriteMany
   resources:
