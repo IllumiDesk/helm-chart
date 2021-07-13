@@ -98,7 +98,6 @@ jupyterhub:
         elif custom_auth_type == 'DUMB':
           c.JupyterHub.authenticator_class = 'illumideskdummyauthenticator.authenticator.IllumiDeskDummyAuthenticator'
           c.Authenticator.enable_auth_state = True
-          
         elif custom_auth_type == 'AUTH0':
           # Set the authenticator
           c.JupyterHub.authenticator_class = GenericOAuthenticator
