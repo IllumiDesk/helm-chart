@@ -6,7 +6,7 @@ metadata:
 {{ if eq .Values.allowNFS.type "local" }}
   labels:
     type: local
-{{ end }}    type: local
+{{ end }}
 spec:
   capacity:
     storage: 20Gi
@@ -32,8 +32,4 @@ spec:
     server: {{ .Values.allowNFS.server }}
     path: {{ .Values.allowNFS.path }}
 {{ end }}
-  # nfs:
-  #   server: {{ .Values.allowNFS.server }}
-  #   path: {{ .Values.allowNFS.path }}
-
 {{ end }}
