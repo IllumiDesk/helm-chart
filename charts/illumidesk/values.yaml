@@ -71,10 +71,13 @@ jupyterhub:
 
         import os
         from illumidesk.authenticators.authenticator import setup_course_hook
+        from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
         from oauthenticator.generic import GenericOAuthenticator
 
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
 
+        c.JupyterHub.hub_connect_ip = 'hub'
+        
         if custom_auth_type == 'LTI13':
           c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI13Authenticator'
           c.LTI13Authenticator.endpoint = os.environ.get('LTI13_ENDPOINT') or 'https://illumidesk.instructure.com/api/lti/security/jwks'
@@ -92,6 +95,10 @@ jupyterhub:
               or 'ild_test_consumer_key': os.environ.get('LTI_SHARED_SECRET')
               or 'ild_test_shared_secret'
           }
+        elif custom_auth_type == 'DUMB':
+          c.JupyterHub.authenticator_class = 'illumideskdummyauthenticator.authenticator.IllumiDeskDummyAuthenticator'
+          c.Authenticator.enable_auth_state = True
+          
         elif custom_auth_type == 'AUTH0':
           # Set the authenticator
           c.JupyterHub.authenticator_class = GenericOAuthenticator
@@ -177,6 +184,7 @@ jupyterhub:
           services_resp = services_resp.json()
           c.JupyterHub.load_groups.update(services_resp['groups'])
           c.JupyterHub.services.extend(services_resp['services'])
+
 
     # The JupyterHub docker image
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-image

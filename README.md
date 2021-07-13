@@ -21,6 +21,47 @@ This setup pulls images defined in the `illumidesk/values.yaml` file from `Docke
 - [helm >= v3](https://github.com/kubernetes/helm)
 - [Kubectl >= 1.17](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
+## Testing Locally
+
+  1. Install Kind
+  2. Create a directory called `illumidesk-nb-exchange`
+  3. Inside that directory create a sub directory called `illumidesk-courses`
+  4. Create a cluster with the following YAML config
+```yml
+      kind: Cluster
+      apiVersion: kind.x-k8s.io/v1alpha4
+      nodes:
+      - role: control-plane
+        extraMounts:
+        - hostPath: ./illumidesk-nb-exchange
+          containerPath: "/illumidesk-nb-exchange"
+        - hostPath: ./illumidesk-nb-exchange/illumidesk-courses
+          containerPath: "/illumidesk-courses"
+  ```
+  5. Run the following command to create the cluster
+     *  `kind create cluster --name {cluster name} --config test-cluster.yaml ` 
+  6. Load images as needed into local Kind cluster
+     *  `kind load docker-image illumidesk/grader-notebook:712 --name {cluster name}`
+  7. Create namespace in kubernetes
+     * `kubectl create namespace {}` 
+  8. If testing locally, fetch pull request and cd into root directory, **helm-chart**
+  9. To Deploy: 
+     * `helm upgrade --install {name} charts/illumidesk/ -n {namespace} -f bar-us-west-2-config_go_grader.yaml --debug --dry-run`  
+     * NOTE: `name` and `namespace` should match  
+     * NOTE: remove `--dry-run` flag to run deploy illumidesk stack
+  10. Port forward with 
+     * `kubectl port-forward svc/proxy-public  -n {namespace} 8000:80`
+
+  **Troubleshooting**
+
+    * Get logs
+      * `kubectl logs {pod} -n {namespace}`
+    * Exec into pod
+      * `kubectl exec -it {pod} -n {namespace} -- /bin/bash`
+    * If helm chart is hanging, it is likely beacuse you need to load the docker image locally
+      * `kubectl get pods -n {namespace}`
+        * NOTE: if the `hook-image-puller` is in `init` status, log the pod and see if there are images that the cluster cannot pull
+
 ## Installing the chart
 
 Create _**config.yaml**_ file and update it with your setup.
