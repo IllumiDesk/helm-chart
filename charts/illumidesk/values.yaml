@@ -77,7 +77,6 @@ jupyterhub:
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
 
         c.JupyterHub.hub_connect_ip = 'hub'
-        
         if custom_auth_type == 'LTI13':
           c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI13Authenticator'
           c.LTI13Authenticator.endpoint = os.environ.get('LTI13_ENDPOINT') or 'https://illumidesk.instructure.com/api/lti/security/jwks'

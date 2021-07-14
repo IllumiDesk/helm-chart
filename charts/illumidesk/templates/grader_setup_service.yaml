@@ -121,7 +121,6 @@ spec:
             - name: GIN_MODE
               value: ""
             - name: JUPYTERHUB_API_URL
-            #  value: http://hub:8081/hub/api
               value: http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api
             - name: DEBUG
               value: "true"
