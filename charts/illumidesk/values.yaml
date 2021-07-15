@@ -340,6 +340,8 @@ allowNFS:
   enabled: false
   # Domain for the NFS Server
   server: ''
+  # Specifies local vs network file system
+  type: 'local'
   # specify mount path
   path: /
 
