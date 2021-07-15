@@ -11,10 +11,8 @@ This setup pulls images defined in the `illumidesk/values.yaml` file from `Docke
 ```bash
   helm repo add illumidesk https://illumidesk.github.io/helm-chart/
   helm repo update
-  helm upgrade --install $RELEASE illumidesk --namespace $NAMESPACE --values example-config/values.yaml
+  helm upgrade --install $RELEASE illumidesk/illumidesk --version $SEMVER --namespace $NAMESPACE --values example-config/values.yaml --debug
 ```
-
-![Load Balancer Example](https://illumidesk-storage.s3-us-west-2.amazonaws.com/TLDR.gif)
 
 ## Prerequsites
 
@@ -41,7 +39,8 @@ Create _**config.yaml**_ file and update it with your setup.
   NAMESPACE=illumidesk
   helm upgrade \
     --install $RELEASE \
-    illumidesk \
+    illumidesk/illumidesk \
+    --version 3.2.0
     --namespace $NAMESPACE \
     --values my-custom-config.yaml
 ```
@@ -50,7 +49,7 @@ Create _**config.yaml**_ file and update it with your setup.
 
 ```bash
 kubernetes create namespace test
-helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX ../helm-chart/charts/illumidesk/ -n test
+helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX illumidesk/illumidesk --version 3.2.0 -n test
 ```
 
 ## Uninstall the Chart
@@ -97,12 +96,8 @@ The following tables lists the configurable parameters of the chart and their de
 | allowExternalDNS.serviceAccount.annotations.eks.amazonaws.com/role-arn     | Assuming 'enableIRSA:true' pass the role arn for the external dns                                                                        | FALSE                                                                               |
 | allowNFS.enabled                                                           | Enables creation of NFS pv and pvc                                                                                                       | arn:aws:iam::XXXXXXXXXX:role/eks-irsa-external-dns                                  |
 | allowNFS.server                                                            | NFS Server URL or IP                                                                                                                     | fs-XXXXXXXX.efs.us-east-1.amazonaws.com (Network File System DNS or IP)             |
+allowNFS.type	                                                               | `local` for local testing or `efs` for aws                                                                                               |  	`local`																						
 | allowNFS.path                                                              | Configure NFS base path                                                                                                                  | /                                                                                   |
-| nginxIngressController.enabled                                             | Allows creation of nginx ingress controller                                                                                              | FALSE                                                                               |
-| nginxIngressController.certificateArn                                      | Certificate arn managaged by aws                                                                                                         | arn:aws:acm:us-east-1:XXXXXXXXXXXX:certificate/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
-| nginxIngressController.vpcCIDR                                             | CIDR of your cluster vpc                                                                                                                 | XXX.XXX.XXX/XX                                                                      |
-| nginxIngress.enabled                                                       | Enable creating of nginx ingress resource                                                                                                | FALSE                                                                               |
-| nginxIngress.host                                                          | Host name configured by ingress resource that uses nginx                                                                                 | xxxxx.illumidesk.com                                                                |
 | postgresql.enabled                                                         | Enables creation of postgresql manifests                                                                                                 | FALSE                                                                               |
 | postgresql.postgresqlUsername                                              | Username for postgres                                                                                                                    | postgres                                                                            |
 | postgresql.postgresqlPostgresPassword                                      | Postgresql admin password                                                                                                                |                                                                                     |
