@@ -26,7 +26,7 @@ rules:
      - list
      - update
      - watch
-     - patcn
+     - patch
      - delete
   - apiGroups:
       - "apps"
