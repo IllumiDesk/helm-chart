@@ -42,7 +42,11 @@ jupyterhub:
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-extraconfig
     extraEnv:
       # Select Authentication Type: LTI11, LTI13, AUTH0
-      CUSTOM_AUTH_TYPE: AUTH0
+      CUSTOM_AUTH_TYPE: 
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: CUSTOM_AUTH_TYPE
       # Provide Organization Name that matches Namespace
       ORGANIZATION_NAME: illumidesk
       JUPYTERHUB_API_URL: http://hub:8081/hub/api
@@ -351,6 +355,10 @@ allowNFS:
 allowLocal:
   # enables local file system
   enabled: false
+
+## Cofnigure Hub Settings 
+hubSettings:
+  customAuthType: "DUMB"
 
 ## Grader setup service
 ##
