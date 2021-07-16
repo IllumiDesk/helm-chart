@@ -1,18 +1,35 @@
-{{ if .Values.allowNFS.enabled }}
+{{ if or (.Values.allowNFS.enabled) (.Values.allowLocal.enabled) }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: grader-pv-{{ .Release.Name }}
+{{ if .Values.allowLocal.enabled }}
+  labels:
+    type: local
+{{ end }}
 spec:
   capacity:
     storage: 20Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
+{{ if .Values.allowLocal.enabled }}
+  storageClassName: local-storage
+  local:
+    path: "/illumidesk-courses"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - illumidesk-oregon-control-plane
+{{ else if .Values.allowNFS.enabled }}
   storageClassName: ""
   nfs:
     server: {{ .Values.allowNFS.server }}
     path: {{ .Values.allowNFS.path }}
-
+{{ end }}
 {{ end }}

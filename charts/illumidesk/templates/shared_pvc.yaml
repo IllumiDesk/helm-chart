@@ -1,5 +1,4 @@
-
-{{ if .Values.allowNFS.enabled }}
+{{ if or (.Values.allowNFS.enabled) (.Values.allowLocal.enabled) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -7,7 +6,11 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   volumeName: shared-pv-{{ .Release.Name }}
+{{ if .Values.allowLocal.enabled }}
+  storageClassName: "local-storage"
+{{ else if .Values.allowNFS.enabled }}
   storageClassName: ""
+{{ end }}
   accessModes:
     - ReadWriteMany
   resources:
