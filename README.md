@@ -11,15 +11,54 @@ This setup pulls images defined in the `illumidesk/values.yaml` file from `Docke
 ```bash
   helm repo add illumidesk https://illumidesk.github.io/helm-chart/
   helm repo update
-  helm upgrade --install $RELEASE illumidesk --namespace $NAMESPACE --values example-config/values.yaml
+  helm upgrade --install $RELEASE illumidesk/illumidesk --version $SEMVER --namespace $NAMESPACE --values example-config/values.yaml --debug
 ```
-
-![Load Balancer Example](https://illumidesk-storage.s3-us-west-2.amazonaws.com/TLDR.gif)
 
 ## Prerequsites
 
 - [helm >= v3](https://github.com/kubernetes/helm)
 - [Kubectl >= 1.17](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+## Testing Locally
+
+  1. Install Kind
+  2. Create a directory called `illumidesk-nb-exchange`
+  3. Inside that directory create a sub directory called `illumidesk-courses`
+  4. Create a cluster with the following YAML config
+```yml
+      kind: Cluster
+      apiVersion: kind.x-k8s.io/v1alpha4
+      nodes:
+      - role: control-plane
+        extraMounts:
+        - hostPath: ./illumidesk-nb-exchange
+          containerPath: "/illumidesk-nb-exchange"
+        - hostPath: ./illumidesk-nb-exchange/illumidesk-courses
+          containerPath: "/illumidesk-courses"
+  ```
+  5. Run the following command to create the cluster
+     *  `kind create cluster --name {cluster name} --config test-cluster.yaml ` 
+  6. Load images as needed into local Kind cluster
+     *  `kind load docker-image illumidesk/grader-notebook:712 --name {cluster name}`
+  7. Create namespace in kubernetes
+     * `kubectl create namespace {}` 
+  8. If testing locally, fetch pull request and cd into root directory, **helm-chart**
+  9. To Deploy: 
+     * `helm upgrade --install {name} charts/illumidesk/ -n {namespace} -f bar-us-west-2-config_go_grader.yaml --debug --dry-run`  
+     * NOTE: `name` and `namespace` should match  
+     * NOTE: remove `--dry-run` flag to run deploy illumidesk stack
+  10. Port forward with 
+     * `kubectl port-forward svc/proxy-public  -n {namespace} 8000:80`
+
+  **Troubleshooting**
+
+    * Get logs
+      * `kubectl logs {pod} -n {namespace}`
+    * Exec into pod
+      * `kubectl exec -it {pod} -n {namespace} -- /bin/bash`
+    * If helm chart is hanging, it is likely beacuse you need to load the docker image locally
+      * `kubectl get pods -n {namespace}`
+        * NOTE: if the `hook-image-puller` is in `init` status, log the pod and see if there are images that the cluster cannot pull
 
 ## Installing the chart
 
@@ -41,7 +80,8 @@ Create _**config.yaml**_ file and update it with your setup.
   NAMESPACE=illumidesk
   helm upgrade \
     --install $RELEASE \
-    illumidesk \
+    illumidesk/illumidesk \
+    --version 3.2.0
     --namespace $NAMESPACE \
     --values my-custom-config.yaml
 ```
@@ -50,7 +90,7 @@ Create _**config.yaml**_ file and update it with your setup.
 
 ```bash
 kubernetes create namespace test
-helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX ../helm-chart/charts/illumidesk/ -n test
+helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX illumidesk/illumidesk --version 3.2.0 -n test
 ```
 
 ## Uninstall the Chart
@@ -98,11 +138,7 @@ The following tables lists the configurable parameters of the chart and their de
 | allowNFS.enabled                                                           | Enables creation of NFS pv and pvc                                                                                                       | arn:aws:iam::XXXXXXXXXX:role/eks-irsa-external-dns                                  |
 | allowNFS.server                                                            | NFS Server URL or IP                                                                                                                     | fs-XXXXXXXX.efs.us-east-1.amazonaws.com (Network File System DNS or IP)             |
 | allowNFS.path                                                              | Configure NFS base path                                                                                                                  | /                                                                                   |
-| nginxIngressController.enabled                                             | Allows creation of nginx ingress controller                                                                                              | FALSE                                                                               |
-| nginxIngressController.certificateArn                                      | Certificate arn managaged by aws                                                                                                         | arn:aws:acm:us-east-1:XXXXXXXXXXXX:certificate/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX |
-| nginxIngressController.vpcCIDR                                             | CIDR of your cluster vpc                                                                                                                 | XXX.XXX.XXX/XX                                                                      |
-| nginxIngress.enabled                                                       | Enable creating of nginx ingress resource                                                                                                | FALSE                                                                               |
-| nginxIngress.host                                                          | Host name configured by ingress resource that uses nginx                                                                                 | xxxxx.illumidesk.com                                                                |
+| allowLocal.enabled	                                                       | `local` for local testing or `efs` for aws                                                                                               |  	`local`																						
 | postgresql.enabled                                                         | Enables creation of postgresql manifests                                                                                                 | FALSE                                                                               |
 | postgresql.postgresqlUsername                                              | Username for postgres                                                                                                                    | postgres                                                                            |
 | postgresql.postgresqlPostgresPassword                                      | Postgresql admin password                                                                                                                |                                                                                     |
@@ -120,6 +156,11 @@ The following tables lists the configurable parameters of the chart and their de
 | graderSetupService.postgresNBGraderHost                                    | Provide Host Postgres Server                                                                                                             | illumidesk.XXXXXXXXXXXX.us-east-1.rds.amazonaws.com                                 |
 | graderSetupService.postgresNBGraderUser                                    | Provide Postgres User                                                                                                                    | postgres                                                                            |
 | graderSetupService.postgresNBGraderPassword                                | Provide Postgres Password                                                                                                                | None                                                                               |
+imageCredentials.enabled |	allows for authenticated image pulls | 	FALSE
+imageCredentials.registry	| Domain for image registry	| https://index.docker.io/v1/
+imageCredentials.username	| User name for image registry	| illumideskops
+imageCredentials.password	| password for image registry	| None
+imageCredentials.email	| email linked to the service account for image registry	| None                                                                                  |
 
 ## Validate the Helm Chart
 
