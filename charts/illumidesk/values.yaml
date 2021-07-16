@@ -15,6 +15,14 @@ rbac:
   # Enables or disables
   enabled: true
 
+## Creates Service account for the image registry  for authentication
+##
+imageCredentials:
+  enabled: false
+  registry: https://index.docker.io/v1/
+  username: illumideskops
+  email: hello@illumidesk.com
+
 ## JupyterHub configuration
 ## ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
 ##
@@ -23,19 +31,6 @@ jupyterhub:
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
     config:
-      # Custom Authenticator to use generic Oauth2.0 with Jupyterhub
-      GenericOAuthenticator:
-        # Callback URL to return to the user after autohrization
-        oauth_callback_url: ''
-        # Authenticaton url to initiate oauth
-        authorize_url: ''
-        # The url that retrieves an access token at the completion of oauth
-        token_url: ''
-        # The url for retrieves user data with a completed access token
-        userdata_url: ''
-      JupyterHub:
-        # Provide Authenticator class ta
-        authenticator_class: generic-oauth
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-db
@@ -76,10 +71,12 @@ jupyterhub:
 
         import os
         from illumidesk.authenticators.authenticator import setup_course_hook
+        from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
         from oauthenticator.generic import GenericOAuthenticator
 
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
 
+        c.JupyterHub.hub_connect_ip = 'hub'
         if custom_auth_type == 'LTI13':
           c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI13Authenticator'
           c.LTI13Authenticator.endpoint = os.environ.get('LTI13_ENDPOINT') or 'https://illumidesk.instructure.com/api/lti/security/jwks'
@@ -97,6 +94,9 @@ jupyterhub:
               or 'ild_test_consumer_key': os.environ.get('LTI_SHARED_SECRET')
               or 'ild_test_shared_secret'
           }
+        elif custom_auth_type == 'DUMB':
+          c.JupyterHub.authenticator_class = 'illumideskdummyauthenticator.authenticator.IllumiDeskDummyAuthenticator'
+          c.Authenticator.enable_auth_state = True
         elif custom_auth_type == 'AUTH0':
           # Set the authenticator
           c.JupyterHub.authenticator_class = GenericOAuthenticator
@@ -111,10 +111,10 @@ jupyterhub:
           # OAuthenticator settings for AUTH0
           c.OAuthenticator.client_id = os.environ.get('OIDC_CLIENT_ID') or 'illumidesk-hub'
           c.OAuthenticator.client_secret = os.environ.get('OIDC_CLIENT_SECRET')
-          c.OAuthenticator.oauth_callback_url = os.environ.get('OIDC_CALLBACK_URL') or 'http://127.0.0.1/hub/oauth_callback'
-          c.OAuthenticator.authorize_url = os.environ.get('OIDC_AUTHORIZE_URL') or f'http://127.0.0.1/auth/realms/illumidesk-realm/protocol/openid-connect/auth'
-          c.OAuthenticator.token_url = os.environ.get('OIDC_TOKEN_URL') or f'http://127.0.0.1/auth/realms/illumidesk-realm/protocol/openid-connect/token'
-          c.GenericOAuthenticator.userdata_url = os.environ.get('OIDC_USERDATA_URL') or 'http://localhost:8080/auth/realms/illumidesk-realm/protocol/openid-connect/userinfo'
+          c.OAuthenticator.oauth_callback_url = os.environ.get('OIDC_CALLBACK_URL')
+          c.OAuthenticator.authorize_url = os.environ.get('OIDC_AUTHORIZE_URL') or 'https://auth.illumidesk.com/authorize'
+          c.OAuthenticator.token_url = os.environ.get('OIDC_TOKEN_URL') or 'https://auth.illumidesk.com/oauth/token'
+          c.GenericOAuthenticator.userdata_url = os.environ.get('OIDC_USERDATA_URL') or 'https://auth.illumidesk.com/userinfo'
           c.GenericOAuthenticator.userdata_method = 'GET'
           # clarify scopes
           c.GenericOAuthenticator.scope = ['openid','email','profile']
@@ -183,6 +183,7 @@ jupyterhub:
           c.JupyterHub.load_groups.update(services_resp['groups'])
           c.JupyterHub.services.extend(services_resp['services'])
 
+
     # The JupyterHub docker image
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-image
     image:
@@ -192,7 +193,7 @@ jupyterhub:
       # The JupyterHub image tag
       tag: "latest"
       # Whether or not to always pull the image from the registry.
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
     # Shuts down the end-user server (pod) when the user logs out.
     shutdownOnLogout: true
   # Settings for the JupyterHub proxy service. The proxy service is used to route users to their
@@ -237,7 +238,7 @@ jupyterhub:
       tag: latest
       # Specify whether or not to alwasy pull the singleuser image. This is useful for when the singleuser
       # image is updated using the same image tag, for example, the latest alias.
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
 
 ## Postgres setup
 ## ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
@@ -339,6 +340,8 @@ allowNFS:
   enabled: false
   # Domain for the NFS Server
   server: ''
+  # Specifies local vs network file system
+  type: 'local'
   # specify mount path
   path: /
 

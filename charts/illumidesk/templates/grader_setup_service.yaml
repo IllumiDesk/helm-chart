@@ -26,7 +26,7 @@ rules:
      - list
      - update
      - watch
-     - patcn
+     - patch
      - delete
   - apiGroups:
       - "apps"
@@ -115,6 +115,19 @@ spec:
               value: {{ .Values.graderSetupService.postgresNBGraderPassword | default "illumidesk" }}
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
+            - name: PORT
+              value: "8000"
+              # empty string for more logging
+            - name: GIN_MODE
+              value: ""
+            - name: JUPYTERHUB_API_URL
+              value: http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api
+            - name: DEBUG
+              value: "true"
+            - name: ILLUMIDESK_NB_EXCHANGE_MNT_ROOT
+              value: '/illumidesk-nb-exchange'
+            - name: NAMESPACE
+              value: {{ .Release.Namespace }}
             - name: ILLUMIDESK_K8S_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: GRADER_PVC
