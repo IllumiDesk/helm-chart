@@ -30,6 +30,7 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
+
     config:
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
@@ -48,12 +49,34 @@ jupyterhub:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: CUSTOM_AUTH_TYPE
       # Provide Organization Name that matches Namespace
-      ORGANIZATION_NAME: illumidesk
-      JUPYTERHUB_API_URL: http://hub:8081/hub/api
+      ORGANIZATION_NAME:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: ORGANIZATION_NAME
+      # Jupyterhub API URL
+      JUPYTERHUB_API_URL: 
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: JUPYTERHUB_API_URL
       # Mount Root
-      ILLUMIDESK_MNT_ROOT: '/illumidesk-courses'
-      OIDC_AUTHORIZE_URL: "https://auth.illumidesk.com/authorize"
-      OIDC_TOKEN_URL: "https://auth.illumidesk.com/oauth/token"
+      ILLUMIDESK_MNT_ROOT:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: ILLUMIDESK_MNT_ROOT
+      # OIDC Authorize URL
+      OIDC_AUTHORIZE_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: OIDC_AUTHORIZE_URL
+      OIDC_TOKEN_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: OIDC_TOKEN_URL
       OIDC_USERDATA_URL: "https://auth.illumidesk.com/userinfo"
       OIDC_CLIENT_ID: ""
       OIDC_CLIENT_SECRET: ""
@@ -356,10 +379,6 @@ allowLocal:
   # enables local file system
   enabled: false
 
-## Cofnigure Hub Settings 
-hubSettings:
-  customAuthType: "DUMB"
-
 ## Grader setup service
 ##
 graderSetupService:
@@ -374,4 +393,4 @@ graderSetupService:
   # DockerHub is required (defaults to docker.io) the include the registy identifier
   # before the image name. For example:
   # k8s.gcr.io/<org-name>/<image-name:tag-name>
-  graderImage: illumidesk/grader-notebook:latest
+  graderImage: illumidesk/grader-notebook:latest 

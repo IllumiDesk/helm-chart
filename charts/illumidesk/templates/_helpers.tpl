@@ -86,13 +86,4 @@ Return the Database encrypted password
 {{- end -}}
 
 
-{{- define "illumidesk.authType" -}}
-{{- if .Values.hubSettings.customAuthType }}
-{{- else -}}
-    {{ .Values.hubSettings.customAuthType | quote }}
-{{- end -}}
-    {{- printf "DUMB" }}
-{{- end }}
 
-
-{{ template "illumidesk.authType" . }}

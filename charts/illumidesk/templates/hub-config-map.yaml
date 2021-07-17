@@ -4,5 +4,11 @@ metadata:
   name: hub-illumidesk-cm
   namespace: {{ .Release.Namespace }}
 data:
-  CUSTOM_AUTH_TYPE: {{ template "illumidesk.authType" . }}
-
+  CUSTOM_AUTH_TYPE: {{ .Values.customAuthType | default "DUMB" }}
+  JUPYTERHUB_API_URL: "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api"
+  ORGANIZATION_NAME: {{ .Release.Namespace }}
+  ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
+  OIDC_AUTHORIZE_URL: {{ .Values.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote }}
+  OIDC_TOKEN_URL: {{ .Values.oidcTokenUrl | default "https://auth.illumidesk.com/authorize" | quote }}
+  OIDC_USERDATA_URL: {{ .Values.oidcUserData | default "https://auth.illumidesk.com/userinfo" | quote }}
+      
