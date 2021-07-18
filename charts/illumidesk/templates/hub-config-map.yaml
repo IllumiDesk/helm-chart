@@ -4,11 +4,18 @@ metadata:
   name: hub-illumidesk-cm
   namespace: {{ .Release.Namespace }}
 data:
-  CUSTOM_AUTH_TYPE: {{ .Values.customAuthType | default "DUMB" }}
-  JUPYTERHUB_API_URL: "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api"
+  CUSTOM_AUTH_TYPE: {{ .Values.customAuthType | default "DUMB" | quote }}
+  JUPYTERHUB_API_URL: {{ "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api" | quote }}
   ORGANIZATION_NAME: {{ .Release.Namespace }}
-  ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
-  OIDC_AUTHORIZE_URL: {{ .Values.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote }}
-  OIDC_TOKEN_URL: {{ .Values.oidcTokenUrl | default "https://auth.illumidesk.com/authorize" | quote }}
+  OIDC_AUTHORIZE_URL: {{ .Values.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote  }}
+  OIDC_TOKEN_URL: {{ .Values.oidcTokenUrl | default "https://auth.illumidesk.com/authorize"  | quote }}
   OIDC_USERDATA_URL: {{ .Values.oidcUserData | default "https://auth.illumidesk.com/userinfo" | quote }}
-      
+  OIDC_CLIENT_ID: {{ .Values.oidcClientId | default "127000008"  | quote }}
+  OIDC_CLIENT_SECRET: {{ .Values.oidcClientSecret | default "127000008" | quote  }}
+  OIDC_CALLBACK_URL: {{ .Values.oidcCallbackUrl | default "httpL//localhost:8000" | quote  }}
+  LTI_CONSUMER_KEY: {{ .Values.ltiConsumerKey | default "lti_11_consumer_key" | quote  }}
+  LTI_SHARED_SECRET: {{ .Values.ltiSharedSecret | default "lti_11_shared_secret" | quote  }}
+  LTI13_CLIENT_ID: {{ .Values.lti13ClientId | default "127000008" | quote }}
+  LTI13_ENDPOINT: {{ .Values.lti13Endpoint | default "https://illumidesk.instructure.com/api/lti/security/jwks"  | quote }}
+  LTI13_AUTHORIZE_URL: {{ .Values.lti13AuthorizeUrl | default "https://illumidesk.instructure.com/api/lti/authorize_redirect"  | quote }}
+  LTI13_TOKEN_URL: {{ .Values.lti13TokenUrl | default "https://illumidesk.instructure.com/login/oauth2/token"  | quote }}

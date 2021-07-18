@@ -30,7 +30,6 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
-
     config:
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
@@ -43,7 +42,7 @@ jupyterhub:
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-extraconfig
     extraEnv:
       # Select Authentication Type: LTI11, LTI13, AUTH0
-      CUSTOM_AUTH_TYPE: 
+      CUSTOM_AUTH_TYPE:
         valueFrom:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
@@ -55,17 +54,13 @@ jupyterhub:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: ORGANIZATION_NAME
       # Jupyterhub API URL
-      JUPYTERHUB_API_URL: 
+      JUPYTERHUB_API_URL:
         valueFrom:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: JUPYTERHUB_API_URL
       # Mount Root
-      ILLUMIDESK_MNT_ROOT:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: ILLUMIDESK_MNT_ROOT
+      ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
       # OIDC Authorize URL
       OIDC_AUTHORIZE_URL:
         valueFrom:
@@ -77,17 +72,57 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: OIDC_TOKEN_URL
-      OIDC_USERDATA_URL: "https://auth.illumidesk.com/userinfo"
-      OIDC_CLIENT_ID: ""
-      OIDC_CLIENT_SECRET: ""
-      OIDC_CALLBACK_URL: ""
-      LTI_CONSUMER_KEY: lti_11_consumer_key
-      LTI_SHARED_SECRET: lti_11_shared_secret
-      LTI13_PRIVATE_KEY: '/srv/jupyterhub/rsa_private.key'
-      LTI13_CLIENT_ID: ""
-      LTI13_ENDPOINT: https://illumidesk.instructure.com/api/lti/security/jwks
-      LTI13_AUTHORIZE_URL: https://illumidesk.instructure.com/api/lti/authorize_redirect
-      LTI13_TOKEN_URL: https://illumidesk.instructure.com/login/oauth2/token
+      OIDC_USERDATA_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: OIDC_USERDATA_URL
+      OIDC_CLIENT_ID:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: OIDC_CLIENT_ID
+      OIDC_CLIENT_SECRET:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: OIDC_CLIENT_SECRET
+      OIDC_CALLBACK_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: OIDC_CALLBACK_URL
+      LTI_CONSUMER_KEY:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: LTI_CONSUMER_KEY
+      LTI_SHARED_SECRET:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: LTI_SHARED_SECRET
+      LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
+      LTI13_CLIENT_ID:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: LTI13_CLIENT_ID
+      LTI13_ENDPOINT:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: LTI13_ENDPOINT
+      LTI13_AUTHORIZE_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: LTI13_AUTHORIZE_URL
+      LTI13_TOKEN_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: LTI13_TOKEN_URL
       POSTGRES_JUPYTERHUB_PORT: '5432'
     extraConfig:
       # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
