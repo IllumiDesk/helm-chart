@@ -1,0 +1,106 @@
+imageCredentials:
+  enabled: true
+  registry: https://index.docker.io/v1/
+  username: illumideskops
+  password: vD9hD1qQ6fJ5lF8j
+  email: hello@illumidesk.com
+jupyterhub:
+  imagePullSecrets:
+    - name:  image-pull-secret
+  debug:
+    enabled: true
+  proxy:
+    secretToken: cde97ffdfca6a5d97daea038b1dcd70a02677f4d5b5eabd3da0d6c247e60c0f2
+  singleuser:
+    memory:
+      limit: 1G
+      gurantee: 1G
+    storage:
+      type: "static"
+      static:
+        pvcName: "shared-pvc-test-cloud"
+        subPath: 'test-cloud/home/{username}'
+      extraVolumeMounts:
+        - name: home
+          mountPath: /srv/nbgrader/exchange
+          subPath: 'test-cloud/exchange/'
+    defaultUrl: "/tree"
+    image:
+      name: illumidesk/flatiron-notebook
+      tag: "11102020"
+      pullPolicy: Always
+  deploymentStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  hub:
+    Jupyterhub:
+    image:
+      name: illumidesk/jupyterhub
+      tag: "k8s-auth.4"
+      pullPolicy: Always
+    shutdownOnLogout: true
+    extraConfig:
+      addAdminUsers: |
+        c.JupyterHub.admin_access = True
+        c.JupyterHub.admin_users = ["abhilashnair1994", "greg", "abhi"]
+      illumideskServices: |
+        import requests
+        import os 
+        c.JupyterHub.services.append({
+          'name': 'announcement',
+          'admin': True,
+          'url': 'http://0.0.0.0:8889',
+          'command': ["python3", "/etc/jupyterhub-services/announcement.py", "--port", "8889", "--api-prefix", "/services/announcement"],
+          'api_token': 'a0e0c3e8ef678ea3bad91d5206e14a268f286c2fc4507c6c5402f9ab7074f721'})
+        # load extra grader services launched from grader-setup service
+        services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(os.environ.get('ORGANIZATION_NAME')))
+        services_resp = services_resp.json()
+        c.JupyterHub.load_groups.update(services_resp['groups'])
+        c.JupyterHub.services.extend(services_resp['services'])
+
+    extraEnv:
+      JUPYTERHUB_API_TOKEN: "a0e0c3e8ef678ea3bad91d5206e14a268f286c2fc4507c6c5402f9ab7074f721"
+      JUPYTERHUB_CRYPT_KEY: "58bba882a3defb4bcdf879b5eb2ea48e567d0ca8dfc11953bd37f9ab54c19d5a"
+      POSTGRES_NBGRADER_PASSWORD: "lA2lH0bE6hN8hE9y"
+      POSTGRES_JUPYTERHUB_PASSWORD: "lA2lH0bE6hN8hE9y"
+albIngress:
+  enabled: true
+  host: test-cloud.illumidesk.com
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/subnets: subnet-0b35bbcc0d27d3cc3,subnet-08db919444424a786,subnet-02cdc1947ed5208d3,subnet-06406c02e59f80faa
+      alb.ingress.kubernetes.io/tags: Environment=prod,Team=Prod
+      alb.ingress.kubernetes.io/group.name: production-oregon
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:860100747351:certificate/b6649826-1c12-4527-b82b-36968791b482
+
+hubSettings:
+  enabled: true
+  customAuthType: "DUMB"
+
+allowLocal:
+  enabled: false
+
+allowNFS:
+  enabled: true
+  server: fs-0726eaad.efs.us-west-2.amazonaws.com
+  path: '/'
+
+postgresql:
+  enabled: true
+  postgresqlUsername: postgres
+  postgresqlPostgresPassword: lA2lH0bE6hN8hE9y
+  postgresqlPassword: lA2lH0bE6hN8hE9y
+  postgresqlDatabase: illumidesk
+
+graderSetupService:
+  enabled: true
+  graderImage: illumidesk/grader-notebook:712641
+  graderSetupImage: illumidesk/grader-setup-service:revert.3
+  # postgresNBGraderUser: postgres
+  postgresNBGraderPassword: lA2lH0bE6hN8hE9y
+  # postgresNBGraderHost: test-cloud-postgresql.test-cloud.svc.cluster.local
