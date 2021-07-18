@@ -107,10 +107,17 @@ spec:
           env:
             - name: GRADER_IMAGE_NAME
               value: {{ .Values.graderSetupService.graderImage }}
+              
             - name: POSTGRES_NBGRADER_HOST
-              value: {{ .Values.graderSetupService.postgresNBGraderHost }}
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: POSTGRES_NBGRADER_HOST
             - name: POSTGRES_NBGRADER_USER
-              value: {{ .Values.graderSetupService.postgresNBGraderUser | default "postgres" }}
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: POSTGRES_NBGRADER_USER
             - name: POSTGRES_NBGRADER_PASSWORD
               value: {{ .Values.graderSetupService.postgresNBGraderPassword | default "illumidesk" }}
             - name: ILLUMIDESK_MNT_ROOT
@@ -121,7 +128,10 @@ spec:
             - name: GIN_MODE
               value: ""
             - name: JUPYTERHUB_API_URL
-              value: http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: JUPYTERHUB_API_URL
             - name: DEBUG
               value: "true"
             - name: ILLUMIDESK_NB_EXCHANGE_MNT_ROOT
