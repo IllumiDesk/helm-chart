@@ -26,7 +26,7 @@ data:
   POSTGRES_NBGRADER_HOST:  {{ .Values.illumideskSettings.postgresHost | quote }}
   POSTGRES_JUPYTERHUB_HOST: {{ .Values.illumideskSettings.postgresHost | quote }}
 {{ else }} 
-  POSTGRES_NBGRADER_HOST: "{.Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
+  POSTGRES_NBGRADER_HOST: "{{.Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
   POSTGRES_JUPYTERHUB_HOST: "{{ .Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
 {{ end }}
   POSTGRES_JUPYTERHUB_DB: {{ .Values.illumideskSettings.postgresDB | default "illumidesk" | quote }}
