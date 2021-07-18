@@ -97,11 +97,6 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: LTI_CONSUMER_KEY
-      LTI_SHARED_SECRET:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: LTI_SHARED_SECRET
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       LTI13_CLIENT_ID:
         valueFrom:
@@ -185,7 +180,7 @@ jupyterhub:
               or 'ild_test_consumer_key': os.environ.get('LTI_SHARED_SECRET')
               or 'ild_test_shared_secret'
           }
-        elif custom_auth_type == 'DUMB':
+        elif custom_auth_type == 'DUMMY':
           c.JupyterHub.authenticator_class = 'illumideskdummyauthenticator.authenticator.IllumiDeskDummyAuthenticator'
           c.Authenticator.enable_auth_state = True
         elif custom_auth_type == 'AUTH0':
