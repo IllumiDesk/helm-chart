@@ -34,7 +34,7 @@ Return the Database hostname
 */}}
 {{- define "database.host" -}}
 {{- if .Values.postgresql.enabled }}
-{{- printf "%s-%s.%s.%s" .Release.Name "postgresql" .Release.Namespace "svc.cluster.local" -}}
+{{- printf "%s-%s.%s.%s" .Release.Namespace "postgresql" .Release.Namespace "svc.cluster.local" -}}
 {{- else if .Values.externaldb.enabled }}
 {{- printf "%s" .Values.externaldb.host -}}
 {{- end -}}
@@ -84,3 +84,6 @@ Return the Database encrypted password
     {{- .Values.externalDatabase.password | b64enc | quote -}}
 {{- end -}}
 {{- end -}}
+
+
+

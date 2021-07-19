@@ -1,0 +1,34 @@
+{{ if .Values.illumideskSettings.enabled }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hub-illumidesk-cm
+  namespace: {{ .Release.Namespace }}
+data:
+  CUSTOM_AUTH_TYPE: {{ .Values.illumideskSettings.customAuthType | default "DUMMY" | quote }}
+  JUPYTERHUB_API_URL: {{ "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api" | quote }}
+  ORGANIZATION_NAME: {{ .Release.Namespace }}
+  OIDC_AUTHORIZE_URL: {{ .Values.illumideskSettings.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote  }}
+  OIDC_TOKEN_URL: {{ .Values.illumideskSettings.oidcTokenUrl | default "https://auth.illumidesk.com/authorize"  | quote }}
+  OIDC_USERDATA_URL: {{ .Values.illumideskSettings.oidcUserData | default "https://auth.illumidesk.com/userinfo" | quote }}
+  OIDC_CLIENT_ID: {{ .Values.illumideskSettings.oidcClientId | default "127000000008"  | quote }}
+  OIDC_CLIENT_SECRET: {{ .Values.illumideskSettings.oidcClientSecret | default "127000008" | quote  }}
+  OIDC_CALLBACK_URL: {{ .Values.illumideskSettings.oidcCallbackUrl | default "http://localhost:8000/hub/oauth_callback" | quote  }}
+  LTI_CONSUMER_KEY: {{ .Values.illumideskSettings.ltiConsumerKey | default "lti_11_consumer_key" | quote  }}
+  LTI13_CLIENT_ID: {{ .Values.illumideskSettings.lti13ClientId | default "127000008" | quote }}
+  LTI13_ENDPOINT: {{ .Values.illumideskSettings.lti13Endpoint | default "https://illumidesk.instructure.com/api/lti/security/jwks"  | quote }}
+  LTI13_AUTHORIZE_URL: {{ .Values.illumideskSettings.lti13AuthorizeUrl | default "https://illumidesk.instructure.com/api/lti/authorize_redirect"  | quote }}
+  LTI13_TOKEN_URL: {{ .Values.illumideskSettings.lti13TokenUrl | default "https://illumidesk.instructure.com/login/oauth2/token"  | quote }}
+  POSTGRES_NBGRADER_USER: {{ .Values.illumideskSettings.postgresUser | default "postgres" | quote }}  
+  POSTGRES_JUPYTERHUB_USER: {{ .Values.illumideskSettings.postgresUser | default "postgres" | quote }}  
+{{ if hasKey .Values.illumideskSettings "postgresHost" }}
+  POSTGRES_NBGRADER_HOST:  {{ .Values.illumideskSettings.postgresHost | quote }}
+  POSTGRES_JUPYTERHUB_HOST: {{ .Values.illumideskSettings.postgresHost | quote }}
+{{ else }} 
+  POSTGRES_NBGRADER_HOST: "{{.Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
+  POSTGRES_JUPYTERHUB_HOST: "{{ .Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
+{{ end }}
+  POSTGRES_JUPYTERHUB_DB: {{ .Values.illumideskSettings.postgresDB | default "illumidesk" | quote }}
+  POSTGRES_JUPYTERHUB_PORT: {{ .Values.illumideskSettings.postgresPort | default "5432" | quote }}
+
+{{ end }}
