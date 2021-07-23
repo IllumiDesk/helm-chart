@@ -46,7 +46,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: hub-illumidesk-secret
-              key: POSTGRES_NBGRADER_PASSWORD
+              key: NBGRADER_PASSWORD
         ports:
         - containerPort:  5432
         volumeMounts:

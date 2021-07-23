@@ -118,11 +118,11 @@ spec:
                 configMapKeyRef:
                   name: hub-illumidesk-cm
                   key: POSTGRES_NBGRADER_USER
-            - name: POSTGRES_NBGRADER_PASSWORD
+            - name: NBGRADER_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: hub-illumidesk-secret      # The ConfigMap this value comes from.
-                  key: POSTGRES_NBGRADER_PASSWORD
+                  key: NBGRADER_PASSWORD
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
             - name: PORT

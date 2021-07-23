@@ -106,7 +106,7 @@ helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX illumidesk/illumi
 > Note: Please follow instructions to setup [external dns]('https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.1/examples/echo_server/#setup-external-dns-to-manage-dns-automatically'), if you plan to use this resource
 
 > Note: Please follow reference guides in the values.yaml in order to properly configure the resource during a deployment
-
+> NOTE: `POSTGRES_NBGRADER_PASSWORD` will not work using the custom configuration `illumideskSettings.postgesGraderPassword`. You will have to specify the envar under keu `Jupyterhub.hub.extraEnvar.POSTGRES_NBGRADER_PASSWORD` in your custom config.
 The following tables lists the configurable parameters of the chart and their default values.
 
 | Parameter                                                                  | Description                                                                                                                              | Default                                                                             |
