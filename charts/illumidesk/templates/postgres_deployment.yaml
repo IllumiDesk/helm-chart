@@ -1,0 +1,74 @@
+{{ if .Values.postgresql.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  postgres-{{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app:  postgres-{{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: postgres-{{ .Release.Namespace }}
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  postgres-{{ .Release.Namespace }}
+    spec:
+      containers:
+      - name:  postgres
+        image:  postgres:10.4
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: hub-illumidesk-cm
+              key: POSTGRES_JUPYTERHUB_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: hub-illumidesk-cm
+              key: POSTGRES_NBGRADER_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: hub-illumidesk-secret
+              key: POSTGRES_NBGRADER_PASSWORD
+        ports:
+        - containerPort:  5432
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim-{{ .Release.Namespace }}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-{{ .Release.Namespace }}
+  labels:
+    app: postgres-{{ .Release.Namespace }}
+spec:
+  type: ClusterIP
+  ports:
+   - port: 5432
+  selector:
+   app: postgres-{{ .Release.Namespace }}
+
+{{ end }}

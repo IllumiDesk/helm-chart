@@ -38,10 +38,24 @@ jupyterhub:
       # Database type
       # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-db-type
       type: postgres
+    extraVolumes:
+      - name: hub-illumidesk-secret
+        secret:
+          secretName: hub-illumidesk-secret
+      - name: hub-illumidesk-cm
+        configMap:
+          name: hub-illumidesk-cm
+    extraVolumeMounts:
+      - name: hub-illumidesk-cm
+        mountPath: /config
+        readOnly: true
+      - name: hub-illumidesk-secret
+        mountPath: /secrets
+        readOnly: true 
     # Extra configuration options
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-extraconfig
     extraEnv:
-      # Select Authentication Type: LTI11, LTI13, AUTH0
+      #Select Authentication Type: LTI11, LTI13, AUTH0
       CUSTOM_AUTH_TYPE:
         valueFrom:
           configMapKeyRef:
@@ -59,8 +73,6 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: JUPYTERHUB_API_URL
-      # Mount Root
-      ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
       # OIDC Authorize URL
       OIDC_AUTHORIZE_URL:
         valueFrom:
@@ -97,7 +109,6 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: LTI_CONSUMER_KEY
-      LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       LTI13_CLIENT_ID:
         valueFrom:
           configMapKeyRef:
@@ -128,6 +139,11 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_NBGRADER_HOST
+      # POSTGRES_NBGRADER_PASSWORD:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: hub-illumidesk-secret      # The ConfigMap this value comes from.
+      #       key: POSTGRES_NBGRADER_PASSWORD
       POSTGRES_JUPYTERHUB_HOST:
         valueFrom:
           configMapKeyRef:
@@ -148,7 +164,51 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_JUPYTERHUB_DB
+      POSTGRES_JUPYTERHUB_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: hub-illumidesk-secret      # The ConfigMap this value comes from.
+            key: POSTGRES_JUPYTERHUB_PASSWORD
+      JUPYTERHUB_CRYPT_KEY:
+        valueFrom:
+          secretKeyRef:
+            name: hub-illumidesk-secret      # The ConfigMap this value comes from.
+            key: JUPYTERHUB_CRYPT_KEY
+      JUPYTERHUB_API_TOKEN:
+        valueFrom:
+          secretKeyRef:
+            name: hub-illumidesk-secret      # The ConfigMap this value comes from.
+            key: JUPYTERHUB_API_TOKEN
+      LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
+      # Mount Root
+      ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
     extraConfig:
+      illumideskHubConfig: |
+        import subprocess
+        import z2jh
+        postgres_nbgrader_password = z2jh.get_config('custom.POSTGRES_NBGRADER_PASSWORD')
+        print("from z2jh", postgres_nbgrader_password)
+        # def get_secret_value(key, default="never-explicitly-set"):
+        #   """Load value from the user managed k8s Secret or the default k8s Secret
+        #   given a key."""
+          
+        #   for source in ("config", "secrets"):
+        #     path = f"/usr/local/etc/jupyterhub/{source}/{key}"
+        #     print("does it exists?",os.path.exists(path))
+        #     if os.path.exists(path):
+        #         result = subprocess.run(["cat", path])
+        #         print(result.stdout)
+        #         print(result.stderr)
+        #         with open(path) as f:
+
+        #             return f.read()
+        #   if default != "never-explicitly-set":
+        #       return default
+        #   raise Exception(f"{key} not found in either k8s Secret!")
+        # test = get_secret_value("custom.postgresGraderPassword", None)
+        # print("I got this from the file",test)
+        os.environ["POSTGRES_NBGRADER_PASSWORD"] = postgres_nbgrader_password
+        print("from z2jh", os.environ.get('POSTGRES_NBGRADER_PASSWORD'))
       # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
       logoConfig: |
         c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
@@ -161,7 +221,7 @@ jupyterhub:
         from oauthenticator.generic import GenericOAuthenticator
 
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
-
+        print(custom_auth_type)
         c.JupyterHub.hub_connect_ip = 'hub'
         if custom_auth_type == 'LTI13':
           c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI13Authenticator'
@@ -223,7 +283,12 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-
+        print("Hi here is the POSTGRES_JUPYTERHUB_USER: ", os.environ.get('POSTGRES_JUPYTERHUB_USER'))
+        print("Hi here is the POSTGRES_JUPYTERHUB_PASSWORD: ", os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'))
+        print("Hi here is the POSTGRES_JUPYTERHUB_HOST: ", os.environ.get('POSTGRES_JUPYTERHUB_HOST'))
+        print("Hi here is the POSTGRES_JUPYTERHUB_PORT: ", os.environ.get('POSTGRES_JUPYTERHUB_PORT'))
+        print("Hi here is the POSTGRES_JUPYTERHUB_DB: ", os.environ.get('POSTGRES_JUPYTERHUB_DB'))
+        
         c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
           user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
           password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
@@ -256,18 +321,12 @@ jupyterhub:
         import os
         import z2jh
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
-        if custom_auth_type != 'AUTH0':
-          c.JupyterHub.services.append({
-            'name': 'announcement',
-            'admin': True,
-            'url': 'http://0.0.0.0:8889',
-            'command': ["python3", "/etc/jupyterhub-services/announcement.py", "--port", "8889", "--api-prefix", "/services/announcement"],
-            'api_token': os.environ.get("JUPYTERHUB_API_TOKEN") })
-          # load extra grader services launched from grader-setup service
-          services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(os.environ.get('ORGANIZATION_NAME')))
-          services_resp = services_resp.json()
-          c.JupyterHub.load_groups.update(services_resp['groups'])
-          c.JupyterHub.services.extend(services_resp['services'])
+        org_name = os.environ.get('ORGANIZATION_NAME')
+        # load extra grader services launched from grader-setup service
+        services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(org_name))
+        services_resp = services_resp.json()
+        c.JupyterHub.load_groups.update(services_resp['groups'])
+        c.JupyterHub.services.extend(services_resp['services'])
 
 
     # The JupyterHub docker image
@@ -441,6 +500,12 @@ allowLocal:
 
 illumideskSettings:
   enabled: true
+  # customAuthType: "DUMMY"
+  postgresGraderUser: "postgres"
+  postgresHubUser: "postgres"
+
+  postgresHubPassword: "lA2lH0bE6hN8hE9y"
+  postgresGraderPassword: "lA2lH0bE6hN8hE9y"
 ## Grader setup service
 ##
 graderSetupService:
