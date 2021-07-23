@@ -188,25 +188,25 @@ jupyterhub:
         import z2jh
         postgres_nbgrader_password = z2jh.get_config('custom.POSTGRES_NBGRADER_PASSWORD')
         print("from z2jh", postgres_nbgrader_password)
-        # def get_secret_value(key, default="never-explicitly-set"):
-        #   """Load value from the user managed k8s Secret or the default k8s Secret
-        #   given a key."""
+        def get_secret_value(key, default="never-explicitly-set"):
+          """Load value from the user managed k8s Secret or the default k8s Secret
+          given a key."""
           
-        #   for source in ("config", "secrets"):
-        #     path = f"/usr/local/etc/jupyterhub/{source}/{key}"
-        #     print("does it exists?",os.path.exists(path))
-        #     if os.path.exists(path):
-        #         result = subprocess.run(["cat", path])
-        #         print(result.stdout)
-        #         print(result.stderr)
-        #         with open(path) as f:
+          for source in ("config", "secrets"):
+            path = f"~/{source}/{key}"
+            print("does it exists?",os.path.exists(path))
+            if os.path.exists(path):
+                result = subprocess.run(["cat", path])
+                print(result.stdout)
+                print(result.stderr)
+                with open(path) as f:
 
-        #             return f.read()
-        #   if default != "never-explicitly-set":
-        #       return default
-        #   raise Exception(f"{key} not found in either k8s Secret!")
-        # test = get_secret_value("custom.postgresGraderPassword", None)
-        # print("I got this from the file",test)
+                    return f.read()
+          if default != "never-explicitly-set":
+              return default
+          raise Exception(f"{key} not found in either k8s Secret!")
+        test = get_secret_value("custom.postgresGraderPassword", None)
+        print("I got this from the file",test)
         os.environ["POSTGRES_NBGRADER_PASSWORD"] = postgres_nbgrader_password
         print("from z2jh", os.environ.get('POSTGRES_NBGRADER_PASSWORD'))
       # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
