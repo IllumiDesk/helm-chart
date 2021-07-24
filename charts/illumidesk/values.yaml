@@ -275,7 +275,7 @@ jupyterhub:
     image:
       # The JupyterHub image namespace. If the docker registry should be specified if using something other than
       # DockerHub (docker.io).
-      name: illumidesk/jupyterhub
+      name: "illumidesk/k8s-hubs"
       # The JupyterHub image tag
       tag: "latest"
       # Whether or not to always pull the image from the registry.
