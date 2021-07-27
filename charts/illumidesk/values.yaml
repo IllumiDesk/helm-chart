@@ -307,7 +307,7 @@ jupyterhub:
     # Default Memory Limits and Gurantees
     memory:
       # Max Memory that can be allocated
-      limit: 1Gi
+      limit: 1G
     # Default container command inherited from the jupyter/docker-stacks base image.
     # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/start-singleuser.sh
     cmd: start-singleuser.sh
