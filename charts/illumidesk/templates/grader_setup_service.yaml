@@ -102,9 +102,6 @@ spec:
         - name: grader-setup-container
           image: {{ .Values.graderSetupService.graderSetupImage }}
           resources:
-            requests:
-              cpu: {{ .Values.graderSetupService.graderCPU | default "0.5" }}
-              memory: {{ .Values.graderSetupService.graderMEM | default "1Gi" }}
             limits:
               cpu: {{ .Values.graderSetupService.graderCPU | default "0.5" }}
               memory: {{ .Values.graderSetupService.graderMEM | default "1Gi" }}
