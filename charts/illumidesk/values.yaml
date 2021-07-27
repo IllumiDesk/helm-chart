@@ -300,6 +300,18 @@ jupyterhub:
       type: ClusterIP
   # Single user server
   singleuser:
+    # Default CPU Limits and Gurantees
+    cpu:
+      # Guranteed CPU allocation
+      guarantee: 0.5
+      # Max CPU that can be allocated
+      limit: 0.5
+    # Default Memory Limits and Gurantees
+    memory:
+      # Guranteed Memory allocation
+      guarantee: 1Gi
+      # Max Memory that can be allocated
+      limit: 1Gi
     # Default container command inherited from the jupyter/docker-stacks base image.
     # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/start-singleuser.sh
     cmd: start-singleuser.sh
@@ -455,4 +467,4 @@ graderSetupService:
   # DockerHub is required (defaults to docker.io) the include the registy identifier
   # before the image name. For example:
   # k8s.gcr.io/<org-name>/<image-name:tag-name>
-  graderImage: illumidesk/grader-notebook:latest
+  graderSpawnerImage: illumidesk/grader-notebook:latest
