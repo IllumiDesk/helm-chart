@@ -102,9 +102,12 @@ spec:
         - name: grader-setup-container
           image: {{ .Values.graderSetupService.graderSetupImage }}
           resources:
+            requests:
+              cpu: {{ .Values.graderSetupService.graderCPUGurantee | default "" | quote }}
+              memory: {{ .Values.graderSetupService.graderMEMGurantee | default "" | quote }}
             limits:
-              cpu: {{ .Values.graderSetupService.graderCPU | default "0.5" }}
-              memory: {{ .Values.graderSetupService.graderMEM | default "1Gi" }}
+              cpu: {{ .Values.graderSetupService.graderCPULimit | default "0.5" | quote }}
+              memory: {{ .Values.graderSetupService.graderMEMLimit | default "1Gi" | quote }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
