@@ -458,12 +458,10 @@ graderSetupService:
   graderImage: illumidesk/grader-notebook:latest
   # Grader Setup Service Resource configuration
   # Gurantee's allocated CPU for the grader setup service pod
-  graderCPUGurantee: "1.0"
-  # Provides upperbound for CPU that can be allocated to a grader setup service pod 
-  graderCPULimit: ""
+  graderCpuGurantee: "1.0"
+  # Provides upperbound for CPU that can be allocated to a grader setup service pod
+  graderCpuLimit: ""
   # Gurantee's allocated memory for the grader setup service pod
-  graderMEMGurantee: "2Gi"
-  # Provides upperbound for memory that can be allocated to a grader setup service pod 
-  graderMEMLimit: ""
-
-
+  graderMemGuarantee: "2Gi"
+  # Provides upperbound for memory that can be allocated to a grader setup service pod
+  graderMemLimit: ""

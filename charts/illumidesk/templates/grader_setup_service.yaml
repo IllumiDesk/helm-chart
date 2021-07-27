@@ -103,11 +103,11 @@ spec:
           image: {{ .Values.graderSetupService.graderSetupImage }}
           resources:
             requests:
-              cpu: {{ .Values.graderSetupService.graderCPUGurantee | default "" | quote }}
-              memory: {{ .Values.graderSetupService.graderMEMGurantee | default "" | quote }}
+              cpu: {{ .Values.graderSetupService.graderCpuGuarantee | default "" | quote }}
+              memory: {{ .Values.graderSetupService.graderMemGuarantee | default "" | quote }}
             limits:
-              cpu: {{ .Values.graderSetupService.graderCPULimit | default "0.5" | quote }}
-              memory: {{ .Values.graderSetupService.graderMEMLimit | default "1Gi" | quote }}
+              cpu: {{ .Values.graderSetupService.graderCpuLimit | default "0.5" | quote }}
+              memory: {{ .Values.graderSetupService.graderMemLimit | default "1Gi" | quote }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
