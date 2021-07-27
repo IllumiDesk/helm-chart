@@ -30,6 +30,11 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
+    # Jupyterhub resources regarding requests for CPU and memory
+    resources:
+      requests:
+        cpu: "0.5"
+        memory: "1Gi"
     config:
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
