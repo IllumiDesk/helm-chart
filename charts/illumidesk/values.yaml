@@ -302,14 +302,10 @@ jupyterhub:
   singleuser:
     # Default CPU Limits and Gurantees
     cpu:
-      # Guranteed CPU allocation
-      guarantee: 0.5
       # Max CPU that can be allocated
       limit: 0.5
     # Default Memory Limits and Gurantees
     memory:
-      # Guranteed Memory allocation
-      guarantee: 1Gi
       # Max Memory that can be allocated
       limit: 1Gi
     # Default container command inherited from the jupyter/docker-stacks base image.
