@@ -103,11 +103,11 @@ spec:
           image: {{ .Values.graderSetupService.graderSetupImage }}
           resources:
             requests:
-              cpu: {{ .Values.graderSetupService.graderCPU | default "0.2" }}
-              memory: {{ .Values.graderSetupService.graderMEM | default "200Mi" }}
+              cpu: {{ .Values.graderSetupService.graderCPU | default "0.5" }}
+              memory: {{ .Values.graderSetupService.graderMEM | default "1Gi" }}
             limits:
-              cpu: {{ .Values.graderSetupService.graderCPU | default "0.2" }}
-              memory: {{ .Values.graderSetupService.graderMEM | default "200Mi" }}
+              cpu: {{ .Values.graderSetupService.graderCPU | default "0.5" }}
+              memory: {{ .Values.graderSetupService.graderMEM | default "1Gi" }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
@@ -115,9 +115,9 @@ spec:
             - name: GRADER_IMAGE_NAME
               value: {{ .Values.graderSetupService.graderSpawnerImage | default "illumidesk/grader-notebook:latest" }}
             - name: GRADER_CPU
-              value: {{ .Values.graderSetupService.graderSpawnerCPU | default "0.2" | quote }}
+              value: {{ .Values.graderSetupService.graderSpawnerCPU | default "0.5" | quote }}
             - name: GRADER_MEM
-              value: {{ .Values.graderSetupService.graderSpawnerMem | default "1Gi" | quote}}
+              value: {{ .Values.graderSetupService.graderSpawnerMEM | default "1Gi" | quote}}
             - name: GRADER_STORAGE
               value: {{ .Values.graderSetupService.graderSpawnerStorage | default "1G" | quote }}
             - name: POSTGRES_NBGRADER_HOST
