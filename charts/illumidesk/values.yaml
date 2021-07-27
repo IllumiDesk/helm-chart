@@ -464,3 +464,12 @@ graderSetupService:
   # before the image name. For example:
   # k8s.gcr.io/<org-name>/<image-name:tag-name>
   graderImage: illumidesk/grader-notebook:latest
+  # Grader Setup Service Resource configuration
+  # Gurantee's allocated CPU for the grader setup service pod
+  graderCpuGurantee: "1.0"
+  # Provides upperbound for CPU that can be allocated to a grader setup service pod
+  graderCpuLimit: ""
+  # Gurantee's allocated memory for the grader setup service pod
+  graderMemGuarantee: "2Gi"
+  # Provides upperbound for memory that can be allocated to a grader setup service pod
+  graderMemLimit: ""
