@@ -106,7 +106,7 @@ spec:
               cpu: {{ .Values.graderSetupService.graderCpuGuarantee | default "" | quote }}
               memory: {{ .Values.graderSetupService.graderMemGuarantee | default "" | quote }}
             limits:
-              cpu: {{ .Values.graderSetupService.graderCpuLimit | default "0.5" | quote }}
+              cpu: {{ .Values.graderSetupService.graderCpuLimit | default "1000m" | quote }}
               memory: {{ .Values.graderSetupService.graderMemLimit | default "1Gi" | quote }}
           imagePullPolicy: Always
           ports:
