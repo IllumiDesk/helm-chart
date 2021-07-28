@@ -38,9 +38,9 @@ jupyterhub:
         # memory that is allocated to the hub
         memory: "400Mi"
       limits:
-        #Max CPU that is allocated to the hub
+        # Max CPU that is allocated to the hub
         cpu: "400m"
-        #Max memory that is allocated to the hub
+        # Max memory that is allocated to the hub
         memory: "800Mi"
     config:
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
