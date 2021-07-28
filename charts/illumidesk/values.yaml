@@ -33,8 +33,10 @@ jupyterhub:
     # Jupyterhub resources regarding requests for CPU and memory
     resources:
       requests:
-        cpu: "0.5"
-        memory: "1Gi"
+        # CPU that is allocated to the hub
+        cpu: "200m"
+        # memory that is allocated to the hub
+        memory: "400Mi"
     config:
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
@@ -312,7 +314,7 @@ jupyterhub:
     # Default Memory Limits and Gurantees
     memory:
       # Max Memory that can be allocated
-      limit: 1Gi
+      limit: 1G
     # Default container command inherited from the jupyter/docker-stacks base image.
     # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/start-singleuser.sh
     cmd: start-singleuser.sh
@@ -468,4 +470,13 @@ graderSetupService:
   # DockerHub is required (defaults to docker.io) the include the registy identifier
   # before the image name. For example:
   # k8s.gcr.io/<org-name>/<image-name:tag-name>
-  graderSpawnerImage: illumidesk/grader-notebook:latest
+  graderImage: illumidesk/grader-notebook:latest
+  # Grader Setup Service Resource configuration
+  # Gurantee's allocated CPU for the grader setup service pod
+  graderCpuGurantee: "1.0"
+  # Provides upperbound for CPU that can be allocated to a grader setup service pod
+  graderCpuLimit: ""
+  # Gurantee's allocated memory for the grader setup service pod
+  graderMemGuarantee: "2Gi"
+  # Provides upperbound for memory that can be allocated to a grader setup service pod
+  graderMemLimit: ""
