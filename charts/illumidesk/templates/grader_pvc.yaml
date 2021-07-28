@@ -15,5 +15,5 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: {{ .Values.graderSetupService.storageRequests | default "20Gi" | quote }}
+      storage: {{ .Values.graderSetupService.storageRequests | default "200Mi" | quote }}
 {{ end }}
