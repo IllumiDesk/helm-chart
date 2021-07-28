@@ -114,10 +114,14 @@ spec:
           env:
             - name: GRADER_IMAGE_NAME
               value: {{ .Values.graderSetupService.graderSpawnerImage | default "illumidesk/grader-notebook:latest" }}
-            - name: GRADER_CPU
-              value: {{ .Values.graderSetupService.graderSpawnerCpu | default "200m" | quote }}
-            - name: GRADER_MEM
-              value: {{ .Values.graderSetupService.graderSpawnerMem | default "400Mi" | quote}}
+            - name: GRADER_REQUESTS_CPU
+              value: {{ .Values.graderSetupService.graderSpawnerCpuGuarantee | default "200m" | quote }}
+            - name: GRADER_LIMITS_CPU
+              value: {{ .Values.graderSetupService.graderSpawnerCpuLimit | default "400m" | quote }}
+            - name: GRADER_REQUESTS_MEM
+              value: {{ .Values.graderSetupService.graderSpawnerMemGuarantee | default "400Mi" | quote}}
+            - name: GRADER_LIMITS_MEM
+              value: {{ .Values.graderSetupService.graderSpawnerMemLimit | default "800Mi" | quote}}
             - name: GRADER_STORAGE
               value: {{ .Values.graderSetupService.graderSpawnerStorage | default "500Mi" | quote }}
             - name: POSTGRES_NBGRADER_HOST
