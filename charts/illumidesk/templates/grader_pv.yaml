@@ -9,7 +9,7 @@ metadata:
 {{ end }}
 spec:
   capacity:
-    storage: 20Gi
+    storage: {{ .Values.graderSetupService.storageCapacity | default "1Gi" | quote }}
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany

@@ -30,6 +30,18 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
+    # Jupyterhub resources regarding requests for CPU and memory
+    resources:
+      requests:
+        # CPU that is allocated to the hub
+        cpu: "200m"
+        # memory that is allocated to the hub
+        memory: "400Mi"
+      limits:
+        # Max CPU that is allocated to the hub
+        cpu: "400m"
+        # Max memory that is allocated to the hub
+        memory: "800Mi"
     config:
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
@@ -316,7 +328,7 @@ jupyterhub:
     image:
       # The JupyterHub image namespace. If the docker registry should be specified if using something other than
       # DockerHub (docker.io).
-      name: illumidesk/jupyterhub
+      name: "illumidesk/k8s-hub"
       # The JupyterHub image tag
       tag: "latest"
       # Whether or not to always pull the image from the registry.
@@ -341,6 +353,14 @@ jupyterhub:
       type: ClusterIP
   # Single user server
   singleuser:
+    # Default CPU Limits and Gurantees
+    cpu:
+      # Max CPU that can be allocated
+      limit: 0.5
+    # Default Memory Limits and Gurantees
+    memory:
+      # Max Memory that can be allocated
+      limit: 1G
     # Default container command inherited from the jupyter/docker-stacks base image.
     # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/start-singleuser.sh
     cmd: start-singleuser.sh
@@ -503,3 +523,12 @@ graderSetupService:
   # before the image name. For example:
   # k8s.gcr.io/<org-name>/<image-name:tag-name>
   graderImage: illumidesk/grader-notebook:latest
+  # Grader Setup Service Resource configuration
+  # Gurantee's allocated CPU for the grader setup service pod
+  graderCpuGurantee: "1.0"
+  # Provides upperbound for CPU that can be allocated to a grader setup service pod
+  graderCpuLimit: ""
+  # Gurantee's allocated memory for the grader setup service pod
+  graderMemGuarantee: "2Gi"
+  # Provides upperbound for memory that can be allocated to a grader setup service pod
+  graderMemLimit: ""

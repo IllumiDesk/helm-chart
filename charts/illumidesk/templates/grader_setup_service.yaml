@@ -101,13 +101,29 @@ spec:
       containers:
         - name: grader-setup-container
           image: {{ .Values.graderSetupService.graderSetupImage }}
-          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: {{ .Values.graderSetupService.graderCpuGuarantee | default "200m" | quote  }}
+              memory: {{ .Values.graderSetupService.graderMemGuarantee | default "400Mi" | quote }}
+            limits:
+              cpu: {{ .Values.graderSetupService.graderCpuLimit | default "400m" | quote }}
+              memory: {{ .Values.graderSetupService.graderMemLimit | default "800Mi" | quote }}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           env:
             - name: GRADER_IMAGE_NAME
-              value: {{ .Values.graderSetupService.graderImage }}
-              
+              value: {{ .Values.graderSetupService.graderSpawnerImage | default "illumidesk/grader-notebook:latest" }}
+            - name: GRADER_REQUESTS_CPU
+              value: {{ .Values.graderSetupService.graderSpawnerCpuGuarantee | default "200m" | quote }}
+            - name: GRADER_LIMITS_CPU
+              value: {{ .Values.graderSetupService.graderSpawnerCpuLimit | default "400m" | quote }}
+            - name: GRADER_REQUESTS_MEM
+              value: {{ .Values.graderSetupService.graderSpawnerMemGuarantee | default "400Mi" | quote}}
+            - name: GRADER_LIMITS_MEM
+              value: {{ .Values.graderSetupService.graderSpawnerMemLimit | default "800Mi" | quote}}
+            - name: GRADER_STORAGE
+              value: {{ .Values.graderSetupService.graderSpawnerStorage | default "500Mi" | quote }}
             - name: POSTGRES_NBGRADER_HOST
               valueFrom:
                 configMapKeyRef:
