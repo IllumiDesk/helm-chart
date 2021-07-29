@@ -151,11 +151,6 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_NBGRADER_HOST
-      NBGRADER_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: hub-illumidesk-secret      # The ConfigMap this value comes from.
-            key: NBGRADER_PASSWORD
       POSTGRES_JUPYTERHUB_HOST:
         valueFrom:
           configMapKeyRef:
@@ -179,30 +174,22 @@ jupyterhub:
       POSTGRES_JUPYTERHUB_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: hub-illumidesk-secret      # The ConfigMap this value comes from.
+            name: hub-illumidesk-secret      # The Secret this value comes from.
             key: POSTGRES_JUPYTERHUB_PASSWORD
       JUPYTERHUB_CRYPT_KEY:
         valueFrom:
           secretKeyRef:
-            name: hub-illumidesk-secret      # The ConfigMap this value comes from.
+            name: hub-illumidesk-secret      # The Secret this value comes from.
             key: JUPYTERHUB_CRYPT_KEY
       JUPYTERHUB_API_TOKEN:
         valueFrom:
           secretKeyRef:
-            name: hub-illumidesk-secret      # The ConfigMap this value comes from.
+            name: hub-illumidesk-secret      # The Secret this value comes from.
             key: JUPYTERHUB_API_TOKEN
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       # Mount Root
       ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
-      POSTGRES_NBGRADER_PASSWORD: "postgres"
     extraConfig:
-      illumideskHubConfig: |
-        import subprocess
-        import os
-        postgres_nbgrader_password = os.environ.get('NBGRADER_PASSWORD')
-        print("from secret", postgres_nbgrader_password)
-
-        # os.environ["POSTGRES_NBGRADER_PASSWORD"] = postgres_nbgrader_password
       # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
       logoConfig: |
         c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
@@ -215,7 +202,6 @@ jupyterhub:
         from oauthenticator.generic import GenericOAuthenticator
 
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
-        print(custom_auth_type)
         c.JupyterHub.hub_connect_ip = 'hub'
         if custom_auth_type == 'LTI13':
           c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI13Authenticator'
@@ -277,11 +263,6 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-        print("Hi here is the POSTGRES_JUPYTERHUB_USER: ", os.environ.get('POSTGRES_JUPYTERHUB_USER'))
-        print("Hi here is the POSTGRES_JUPYTERHUB_PASSWORD: ", os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'))
-        print("Hi here is the POSTGRES_JUPYTERHUB_HOST: ", os.environ.get('POSTGRES_JUPYTERHUB_HOST'))
-        print("Hi here is the POSTGRES_JUPYTERHUB_PORT: ", os.environ.get('POSTGRES_JUPYTERHUB_PORT'))
-        print("Hi here is the POSTGRES_JUPYTERHUB_DB: ", os.environ.get('POSTGRES_JUPYTERHUB_DB'))
         
         c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
           user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
@@ -387,53 +368,17 @@ jupyterhub:
       # image is updated using the same image tag, for example, the latest alias.
       pullPolicy: IfNotPresent
 
-## Postgres setup
-## ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
-##
-postgresql:
-  # Enables or disables an in cluster postgres
-  enabled: false
-  # Provide Postgresql username
-  postgresqlUsername: postgres
-  # Provide Postgresql password if username is not defined, the default username will have this password
-  postgresqlPostgresPassword: 'postgres123'
-  # Provide Postgresql password
-  postgresqlPassword: 'postgres123'
-  # Provide in cluster database name
-  postgresqlDatabase: 'illumidesk'
-
 ## DatadogHQ Agent
 ## https://github.com/DataDog/helm-charts/tree/master/charts/datadog
 ##
 datadog:
   # Enables or disables the Datadog agent
   enabled: false
-  # Datadog's configuration settings
-  datadog:
-    # API key for the DatadogHQ account
-    apiKey: ''
-    # Customer's site
-    site: ''
-    # The Kubernetes cluster name
-    clusterName: ''
-    # Logs configuration
-    logs:
-      # Enables or disables log collection
-      enabled: true
-      # If true, collects all logs from running containers.
-      containerCollectAll: true
-    # Datadog's cluster agent which acts as a proxy between Datadog's API and
-    # node-based agents.
-    # ref: https://docs.datadoghq.com/agent/cluster_agent/
-    clusterAgent:
-      # Enables or disables the cluster agent
-      enabled: true
-      token: ''
-      # Metrics enables autoscaling workloads based off of Datadog metrics
-      # ref: https://docs.datadoghq.com/agent/cluster_agent/external_metrics/
-      metricsProvider:
-        # Enables or disables external metrics with Datadog.
-        enabled: true
+  # API Key created for your Datadog instance
+  # ref: https://docs.datadoghq.com/account_management/api-app-keys/
+  apiKey:
+  # Create Random Token using base64encoding and pass it here for the cluster agent
+  clusterAgentToken:
 
 ## Application Load Balancer (ALB) ingress controller
 ## ref: https://github.com/kubernetes-sigs/aws-load-balancer-controller
@@ -505,9 +450,8 @@ illumideskSettings:
   # customAuthType: "DUMMY"
   postgresGraderUser: "postgres"
   postgresHubUser: "postgres"
-
   postgresHubPassword: "lA2lH0bE6hN8hE9y"
-  postgresGraderPassword: "lA2lH0bE6hN8hE9y"
+
 ## Grader setup service
 ##
 graderSetupService:
