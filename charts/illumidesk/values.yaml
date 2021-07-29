@@ -30,6 +30,18 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
+    # Jupyterhub resources regarding requests for CPU and memory
+    resources:
+      requests:
+        # CPU that is allocated to the hub
+        cpu: "200m"
+        # memory that is allocated to the hub
+        memory: "400Mi"
+      limits:
+        # Max CPU that is allocated to the hub
+        cpu: "400m"
+        # Max memory that is allocated to the hub
+        memory: "800Mi"
     config:
     # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
     # require additional PVC configuration settings.
@@ -275,7 +287,7 @@ jupyterhub:
     image:
       # The JupyterHub image namespace. If the docker registry should be specified if using something other than
       # DockerHub (docker.io).
-      name: "illumidesk/k8s-hubs"
+      name: "illumidesk/k8s-hub"
       # The JupyterHub image tag
       tag: "latest"
       # Whether or not to always pull the image from the registry.
@@ -302,16 +314,12 @@ jupyterhub:
   singleuser:
     # Default CPU Limits and Gurantees
     cpu:
-      # Guranteed CPU allocation
-      guarantee: 0.2
       # Max CPU that can be allocated
-      limit: 0.2
+      limit: 0.5
     # Default Memory Limits and Gurantees
     memory:
-      # Guranteed Memory allocation
-      guarantee: 200Mi
       # Max Memory that can be allocated
-      limit: 200Mi
+      limit: 1G
     # Default container command inherited from the jupyter/docker-stacks base image.
     # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/start-singleuser.sh
     cmd: start-singleuser.sh
@@ -359,32 +367,11 @@ postgresql:
 datadog:
   # Enables or disables the Datadog agent
   enabled: false
-  # Datadog's configuration settings
-  datadog:
-    # API key for the DatadogHQ account
-    apiKey: ''
-    # Customer's site
-    site: ''
-    # The Kubernetes cluster name
-    clusterName: ''
-    # Logs configuration
-    logs:
-      # Enables or disables log collection
-      enabled: true
-      # If true, collects all logs from running containers.
-      containerCollectAll: true
-    # Datadog's cluster agent which acts as a proxy between Datadog's API and
-    # node-based agents.
-    # ref: https://docs.datadoghq.com/agent/cluster_agent/
-    clusterAgent:
-      # Enables or disables the cluster agent
-      enabled: true
-      token: ''
-      # Metrics enables autoscaling workloads based off of Datadog metrics
-      # ref: https://docs.datadoghq.com/agent/cluster_agent/external_metrics/
-      metricsProvider:
-        # Enables or disables external metrics with Datadog.
-        enabled: true
+  # API Key created for your Datadog instance
+  # ref: https://docs.datadoghq.com/account_management/api-app-keys/
+  apiKey:
+  # Create Random Token using base64encoding and pass it here for the cluster agent
+  clusterAgentToken:
 
 ## Application Load Balancer (ALB) ingress controller
 ## ref: https://github.com/kubernetes-sigs/aws-load-balancer-controller
@@ -467,4 +454,13 @@ graderSetupService:
   # DockerHub is required (defaults to docker.io) the include the registy identifier
   # before the image name. For example:
   # k8s.gcr.io/<org-name>/<image-name:tag-name>
-  graderSpawnerImage: illumidesk/grader-notebook:latest
+  graderImage: illumidesk/grader-notebook:latest
+  # Grader Setup Service Resource configuration
+  # Gurantee's allocated CPU for the grader setup service pod
+  graderCpuGurantee: "1.0"
+  # Provides upperbound for CPU that can be allocated to a grader setup service pod
+  graderCpuLimit: ""
+  # Gurantee's allocated memory for the grader setup service pod
+  graderMemGuarantee: "2Gi"
+  # Provides upperbound for memory that can be allocated to a grader setup service pod
+  graderMemLimit: ""

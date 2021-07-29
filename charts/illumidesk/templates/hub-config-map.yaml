@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   CUSTOM_AUTH_TYPE: {{ .Values.illumideskSettings.customAuthType | default "DUMMY" | quote }}
-  JUPYTERHUB_API_URL: {{ "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api" | quote }}
+  JUPYTERHUB_API_URL: "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api"
   ORGANIZATION_NAME: {{ .Release.Namespace }}
   OIDC_AUTHORIZE_URL: {{ .Values.illumideskSettings.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote  }}
   OIDC_TOKEN_URL: {{ .Values.illumideskSettings.oidcTokenUrl | default "https://auth.illumidesk.com/authorize"  | quote }}

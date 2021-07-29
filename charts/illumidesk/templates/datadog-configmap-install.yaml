@@ -1,0 +1,17 @@
+{{ if .Values.datadog.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datadog-agent-installinfo
+  namespace: {{ .Values.datadog.namespace | default "kube-system" | quote }}
+  labels: {}
+  annotations:
+    checksum/install_info: 22b8b7e0a7d3253452aedb7615f5e649c4c08a662ad1ffe80ac5eff42d2d7bde
+data:
+  install_info: |
+    ---
+    install_method:
+      tool: kubernetes sample manifests
+      tool_version: kubernetes sample manifests
+      installer_version: kubernetes sample manifests
+{{ end }}

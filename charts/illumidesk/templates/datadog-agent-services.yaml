@@ -1,0 +1,17 @@
+{{ if .Values.datadog.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: datadog-agent-cluster-agent
+  namespace: {{ .Values.datadog.namespace | default "kube-system" | quote }}
+  labels: {}
+spec:
+  type: ClusterIP
+  selector:
+    app: datadog-agent-cluster-agent
+  ports:
+  - port: 5005
+    name: agentport
+    protocol: TCP
+
+{{ end }}
