@@ -372,6 +372,8 @@ datadog:
   apiKey:
   # Create Random Token using base64encoding and pass it here for the cluster agent
   clusterAgentToken:
+  # Namespace to deploy datadog resources current namespace is kube-system
+  namespace: kube-system
 
 ## Application Load Balancer (ALB) ingress controller
 ## ref: https://github.com/kubernetes-sigs/aws-load-balancer-controller
