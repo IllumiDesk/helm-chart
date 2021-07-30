@@ -458,9 +458,47 @@ allowLocal:
   # enables local file system
   enabled: false
 
-
+## IllumiDesk settings associated to values set in the ConfigMap
+## If disabled, the ConfigMap manifest is not created and all variables will
+## disregard defaults defined with this chart and will have default values that
+## are defined within the code base.
+##
 illumideskSettings:
+  # Enables or disables the illumidesk settings options
   enabled: true
+  # The custom authentication type. Should be one of DUMMY, LTI11, LTI13, or AUTH0.
+  custom_auth_type: ""
+  # Internal JupyterHub API URL
+  jupyterhub_api_url: ""
+  # OIDC authorization URL
+  oidc_authorize_url: ""
+  # OIDC token URL
+  oidc_token_url: ""
+  # OIDC userdata URL
+  oidc_userdata_url: ""
+  # OIDC client id
+  oidc_client_id: ""
+  # OIDC client secret
+  oidc_client_secret: ""
+  # OIDC callback URL
+  oidc_callback_url: ""
+  # LTI v1.1 consumer key
+  lti_consumer_key: ""
+  # LTI v1.3 client id
+  lti13_client_id: ""
+  # LTI v1.3 endpoint URL
+  lti13_endpoint: ""
+  # LTI v1.3 authorization URL
+  lti13_authorization_url: ""
+  # LTI v1.3 token URL
+  lti13_token_url: ""
+  # Postgres host endpoint. If set, both the nbgrader database and the JupyterHub database
+  # will use this Postgres host.
+  postgresHost: ""
+  # Postgres nbgrader username
+  postgres_nbgrader_user: ""
+  # Postgres JupyterHub username
+  postgres_jupyterhub_user: ""
 ## Grader setup service
 ##
 graderSetupService:
