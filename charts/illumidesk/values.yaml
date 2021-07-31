@@ -368,18 +368,6 @@ jupyterhub:
       # image is updated using the same image tag, for example, the latest alias.
       pullPolicy: IfNotPresent
 
-## DatadogHQ Agent
-## https://github.com/DataDog/helm-charts/tree/master/charts/datadog
-##
-datadog:
-  # Enables or disables the Datadog agent
-  enabled: false
-  # API Key created for your Datadog instance
-  # ref: https://docs.datadoghq.com/account_management/api-app-keys/
-  apiKey:
-  # Create Random Token using base64encoding and pass it here for the cluster agent
-  clusterAgentToken:
-
 ## Application Load Balancer (ALB) ingress controller
 ## ref: https://github.com/kubernetes-sigs/aws-load-balancer-controller
 ##

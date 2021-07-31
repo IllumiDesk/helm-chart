@@ -1,4 +1,4 @@
-{{ if .Values.postgresql.enabled }}
+{{ if not (hasKey .Values.illumideskSettings "externalHost") }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
