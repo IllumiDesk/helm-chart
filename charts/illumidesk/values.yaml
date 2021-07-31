@@ -425,21 +425,54 @@ allowNFS:
   # specify mount path
   path: /
 
-## To test with a local file system, enable the following and confirm your instance has /illumidesk-nb-exchange-directory
+## To test with a local file system, enable the following and confirm your instance has /illumidesk-nb-exchange
 ## and /illumidesk-courses directory
 ##
 allowLocal:
   # enables local file system
   enabled: false
 
-
+## IllumiDesk settings associated to values set in the ConfigMap
+## If disabled, the ConfigMap manifest is not created and all variables will
+## disregard defaults defined with this chart and will have default values that
+## are defined within the code base.
+##
 illumideskSettings:
+  # Enables or disables the illumidesk settings options
   enabled: true
-  # customAuthType: "DUMMY"
+  # The custom authentication type. Should be one of DUMMY, LTI11, LTI13, or AUTH0.
+  customAuthType: "DUMMY"
+  # OIDC authorization URL
+  oidcAuthorizeUrl: ""
+  # OIDC token URL
+  oidcTokenUrl: ""
+  # OIDC userdata URL
+  oidcUserData: ""
+  # OIDC client id
+  oidcClientId: ""
+  # OIDC client secret
+  oidcClientSecret: ""
+  # OIDC callback URL
+  oidcCallbackUrl: ""
+  # LTI v1.1 consumer key
+  ltiConsumerKey: ""
+  # LTI v1.3 client id
+  lti13ClientId: ""
+  # LTI v1.3 endpoint URL
+  lti13Endpoint: ""
+  # LTI v1.3 authorization URL
+  lti13AuthorizeUrl: ""
+  # LTI v1.3 token URL
+  lti13TokenUrl: ""
+  # Postgres host endpoint. If set, both the nbgrader database and the JupyterHub database
+  # will use this Postgres host.
+  postgresHost: ""
+  # Postgres nbgrader username
   postgresGraderUser: "postgres"
+  # Postgres JupyterHub username
   postgresHubUser: "postgres"
-  postgresHubPassword: "lA2lH0bE6hN8hE9y"
-
+  # external Database Server Host Name
+  externalHost: ""
 ## Grader setup service
 ##
 graderSetupService:

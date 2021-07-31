@@ -22,7 +22,7 @@ data:
   POSTGRES_NBGRADER_USER: {{ .Values.illumideskSettings.postgresGraderUser | default "postgres" | quote }}  
   POSTGRES_JUPYTERHUB_USER: {{ .Values.illumideskSettings.postgresHubUser | default "postgres" | quote }}  
 {{ if hasKey .Values.illumideskSettings "externalHost" }}
-  POSTGRES_NBGRADER_HOST:  {{ .Values.illumideskSettings.postgresGraderHost | quote }}
+  POSTGRES_NBGRADER_HOST:  {{ .Values.illumideskSettings.externalHost | quote }}
   POSTGRES_JUPYTERHUB_HOST: {{ .Values.illumideskSettings.externalHost | quote }}
 {{ else }} 
   POSTGRES_NBGRADER_HOST: "postgres-{{.Release.Namespace }}.{{ .Release.Namespace }}.svc.cluster.local"
