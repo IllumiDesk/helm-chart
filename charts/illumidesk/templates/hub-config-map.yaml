@@ -10,7 +10,7 @@ data:
   ORGANIZATION_NAME: {{ .Release.Namespace }}
   OIDC_AUTHORIZE_URL: {{ .Values.illumideskSettings.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote  }}
   OIDC_TOKEN_URL: {{ .Values.illumideskSettings.oidcTokenUrl | default "https://auth.illumidesk.com/authorize"  | quote }}
-  OIDC_USERDATA_URL: {{ .Values.illumideskSettings.oidcUserData | default "https://auth.illumidesk.com/userinfo" | quote }}
+  OIDC_USERDATA_URL: {{ .Values.illumideskSettings.oidcUserDataUrl | default "https://auth.illumidesk.com/userinfo" | quote }}
   OIDC_CLIENT_ID: {{ .Values.illumideskSettings.oidcClientId | default "127000000008"  | quote }}
   OIDC_CLIENT_SECRET: {{ .Values.illumideskSettings.oidcClientSecret | default "127000008" | quote  }}
   OIDC_CALLBACK_URL: {{ .Values.illumideskSettings.oidcCallbackUrl | default "http://localhost:8000/hub/oauth_callback" | quote  }}
