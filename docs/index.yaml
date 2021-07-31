@@ -3,7 +3,7 @@ entries:
   illumidesk:
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.6169999-04:00"
+    created: "2021-07-30T22:54:48.1994111-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -12,7 +12,7 @@ entries:
       repository: https://jupyterhub.github.io/helm-chart/
       version: 1.1.1
     description: An extention of the JupyterHub chart with additional IllumiDesk resources
-    digest: bae6c4346ddf9313d864d491c1fb78183ad43dd01a237ec799e745119f97913e
+    digest: 47f21a31c6fa5cd7562203198eeefef428f66d0fbcde705952ac7c7891013585
     icon: https://configs.illumidesk.com/images/illumidesk-80.png
     maintainers:
     - email: hello@illumidesk.com
@@ -23,7 +23,7 @@ entries:
     version: 5.5.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.6131401-04:00"
+    created: "2021-07-30T22:54:48.1958182-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -51,7 +51,7 @@ entries:
     version: 5.4.2
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.6028562-04:00"
+    created: "2021-07-30T22:54:48.1854083-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -79,7 +79,7 @@ entries:
     version: 5.4.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5948753-04:00"
+    created: "2021-07-30T22:54:48.1753903-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -107,7 +107,7 @@ entries:
     version: 5.4.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.584137-04:00"
+    created: "2021-07-30T22:54:48.1662441-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -135,7 +135,7 @@ entries:
     version: 5.3.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5728436-04:00"
+    created: "2021-07-30T22:54:48.1557099-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -163,7 +163,7 @@ entries:
     version: 5.3.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5642581-04:00"
+    created: "2021-07-30T22:54:48.1459477-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -191,7 +191,7 @@ entries:
     version: 5.2.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5529378-04:00"
+    created: "2021-07-30T22:54:48.1360156-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -219,7 +219,7 @@ entries:
     version: 5.1.2
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.54284-04:00"
+    created: "2021-07-30T22:54:48.1260053-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -247,7 +247,7 @@ entries:
     version: 5.1.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5345012-04:00"
+    created: "2021-07-30T22:54:48.1153021-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -275,7 +275,7 @@ entries:
     version: 5.1.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5244146-04:00"
+    created: "2021-07-30T22:54:48.106633-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -303,7 +303,7 @@ entries:
     version: 5.0.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5157064-04:00"
+    created: "2021-07-30T22:54:48.097294-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -331,7 +331,7 @@ entries:
     version: 4.0.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.5056723-04:00"
+    created: "2021-07-30T22:54:48.0882125-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -359,7 +359,7 @@ entries:
     version: 3.5.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4975918-04:00"
+    created: "2021-07-30T22:54:48.0789039-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -387,7 +387,7 @@ entries:
     version: 3.4.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4886043-04:00"
+    created: "2021-07-30T22:54:48.0702992-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -415,7 +415,7 @@ entries:
     version: 3.3.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4793562-04:00"
+    created: "2021-07-30T22:54:48.0616444-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -443,7 +443,7 @@ entries:
     version: 3.2.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4700575-04:00"
+    created: "2021-07-30T22:54:48.0528373-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -471,7 +471,7 @@ entries:
     version: 3.1.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4611719-04:00"
+    created: "2021-07-30T22:54:48.0443268-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -499,7 +499,7 @@ entries:
     version: 3.0.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4520255-04:00"
+    created: "2021-07-30T22:54:48.0347557-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -527,7 +527,7 @@ entries:
     version: 2.3.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4434873-04:00"
+    created: "2021-07-30T22:54:48.0250655-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -555,7 +555,7 @@ entries:
     version: 2.2.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.434792-04:00"
+    created: "2021-07-30T22:54:48.0149746-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -583,7 +583,7 @@ entries:
     version: 2.1.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4260171-04:00"
+    created: "2021-07-30T22:54:48.005218-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -611,7 +611,7 @@ entries:
     version: 2.0.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4177878-04:00"
+    created: "2021-07-30T22:54:47.996574-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -639,7 +639,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.4083728-04:00"
+    created: "2021-07-30T22:54:47.9881969-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -667,7 +667,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.3996344-04:00"
+    created: "2021-07-30T22:54:47.9789106-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -695,7 +695,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.3907705-04:00"
+    created: "2021-07-30T22:54:47.9702489-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -723,7 +723,7 @@ entries:
     version: 0.6.0
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.3824127-04:00"
+    created: "2021-07-30T22:54:47.9613197-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -751,7 +751,7 @@ entries:
     version: 0.5.2
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2021-07-30T22:43:02.3728465-04:00"
+    created: "2021-07-30T22:54:47.9520592-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -779,7 +779,7 @@ entries:
     version: 0.5.1
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2021-07-30T22:43:02.3635505-04:00"
+    created: "2021-07-30T22:54:47.9431799-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -807,7 +807,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-30T22:43:02.3531171-04:00"
+    created: "2021-07-30T22:54:47.9343722-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -835,7 +835,7 @@ entries:
     version: 0.4.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2021-07-30T22:43:02.3454989-04:00"
+    created: "2021-07-30T22:54:47.9251629-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -863,7 +863,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 0.10.0
-    created: "2021-07-30T22:43:02.3356726-04:00"
+    created: "2021-07-30T22:54:47.9169562-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -891,7 +891,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2021-07-30T22:43:02.3272336-04:00"
+    created: "2021-07-30T22:54:47.908843-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -919,7 +919,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2021-07-30T22:43:02.3188245-04:00"
+    created: "2021-07-30T22:54:47.901187-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -947,7 +947,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-07-30T22:43:02.3099348-04:00"
+    created: "2021-07-30T22:54:47.892735-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -974,7 +974,7 @@ entries:
     - illumidesk-0.1.0.tgz
     version: 0.1.0
   - apiVersion: v2
-    created: "2021-07-30T22:43:02.3009579-04:00"
+    created: "2021-07-30T22:54:47.8833685-04:00"
     dependencies:
     - import-values:
       - child: rbac
@@ -1000,4 +1000,4 @@ entries:
     urls:
     - illumidesk-0.0.1.tgz
     version: 0.0.1
-generated: "2021-07-30T22:43:02.2922672-04:00"
+generated: "2021-07-30T22:54:47.8738041-04:00"

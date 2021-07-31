@@ -63,11 +63,11 @@ jupyterhub:
         readOnly: true
       - name: hub-illumidesk-secret
         mountPath: /secrets
-        readOnly: true 
+        readOnly: true
     # Extra configuration options
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-extraconfig
     extraEnv:
-      #Select Authentication Type: LTI11, LTI13, AUTH0
+      # Select Authentication Type: LTI11, LTI13, AUTH0
       CUSTOM_AUTH_TYPE:
         valueFrom:
           configMapKeyRef:
@@ -263,7 +263,7 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-        
+
         c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
           user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
           password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
