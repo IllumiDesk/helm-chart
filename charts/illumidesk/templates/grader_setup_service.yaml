@@ -135,7 +135,14 @@ spec:
                   name: hub-illumidesk-cm
                   key: POSTGRES_NBGRADER_USER
             - name: POSTGRES_NBGRADER_PASSWORD
-              value: {{ .Values.graderSetupService.postgresNBGraderPassword | default "illumidesk" }}
+              valueFrom:
+                secretKeyRef:
+              {{ if .Values.externalDatabase.enabled }}
+                  name: {{ .Values.externalDatabase.existingSecret }}
+              {{ else if .Values.postgresql.enabled }}
+                  name: {{ .Values.postgresql.existingSecret }}
+              {{ end }}
+                  key: postgresql-password
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
             - name: PORT

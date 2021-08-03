@@ -19,16 +19,21 @@ data:
   LTI13_ENDPOINT: {{ .Values.illumideskSettings.lti13Endpoint | default "https://illumidesk.instructure.com/api/lti/security/jwks"  | quote }}
   LTI13_AUTHORIZE_URL: {{ .Values.illumideskSettings.lti13AuthorizeUrl | default "https://illumidesk.instructure.com/api/lti/authorize_redirect"  | quote }}
   LTI13_TOKEN_URL: {{ .Values.illumideskSettings.lti13TokenUrl | default "https://illumidesk.instructure.com/login/oauth2/token"  | quote }}
-  POSTGRES_NBGRADER_USER: {{ .Values.illumideskSettings.postgresUser | default "postgres" | quote }}  
-  POSTGRES_JUPYTERHUB_USER: {{ .Values.illumideskSettings.postgresUser | default "postgres" | quote }}  
-{{ if hasKey .Values.illumideskSettings "postgresHost" }}
-  POSTGRES_NBGRADER_HOST:  {{ .Values.illumideskSettings.postgresHost | quote }}
-  POSTGRES_JUPYTERHUB_HOST: {{ .Values.illumideskSettings.postgresHost | quote }}
-{{ else }} 
+{{ if .Values.externalDatabase.enabled }}
+  POSTGRES_NBGRADER_HOST:  {{ .Values.externalDatabase.host | quote  }}
+  POSTGRES_JUPYTERHUB_HOST: {{ .Values.externalDatabase.host | quote  }}
+  POSTGRES_JUPYTERHUB_DB: {{ .Values.externalDatabase.database | quote }}
+  POSTGRES_JUPYTERHUB_PORT: {{ .Values.externalDatabase.port | quote }}
+  POSTGRES_NBGRADER_USER: {{ .Values.externalDatabase.databaseUser | quote }}  
+  POSTGRES_JUPYTERHUB_USER: {{ .Values.externalDatabase.databaseUser | quote }}  
+{{ else if .Values.postgresql.enabled }} 
   POSTGRES_NBGRADER_HOST: "{{.Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
   POSTGRES_JUPYTERHUB_HOST: "{{ .Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
+  POSTGRES_JUPYTERHUB_DB: {{ .Values.postgresql.postgresqlDatabase | quote }}
+  POSTGRES_JUPYTERHUB_PORT: {{ .Values.postgresql.service.port | quote }}
+  POSTGRES_NBGRADER_USER: {{ .Values.postgresql.postgresqlUsername | quote }}  
+  POSTGRES_JUPYTERHUB_USER: {{ .Values.postgresql.postgresqlUsername | quote }}  
 {{ end }}
-  POSTGRES_JUPYTERHUB_DB: {{ .Values.illumideskSettings.postgresDB | default "illumidesk" | quote }}
-  POSTGRES_JUPYTERHUB_PORT: {{ .Values.illumideskSettings.postgresPort | default "5432" | quote }}
+
 
 {{ end }}

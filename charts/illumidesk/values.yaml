@@ -173,7 +173,8 @@ jupyterhub:
         from oauthenticator.generic import GenericOAuthenticator
 
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
-
+        
+        print(os.environ.get(''))
         c.JupyterHub.hub_connect_ip = 'hub'
         if custom_auth_type == 'LTI13':
           c.JupyterHub.authenticator_class = 'illumidesk.authenticators.authenticator.LTI13Authenticator'
@@ -355,11 +356,34 @@ postgresql:
   # Provide Postgresql username
   postgresqlUsername: postgres
   # Provide Postgresql password if username is not defined, the default username will have this password
-  postgresqlPostgresPassword: 'postgres123'
+  postgresqlPostgresPassword: postgres123
   # Provide Postgresql password
-  postgresqlPassword: 'postgres123'
+  postgresqlPassword: postgres123
   # Provide in cluster database name
-  postgresqlDatabase: 'illumidesk'
+  postgresqlDatabase: illumidesk
+  # Default existing secret name for postgres passwords
+  existingSecret: 'illumidesk-secret'
+  # Database Server Port
+  service:
+    port: 5432
+
+externalDatabase:
+  enabled: false
+  # Default existing secret name for external database password passwords
+  existingSecret: 'illumidesk-secret'
+  # Host name for external database
+  host: ''
+  # Provide external database name
+  database: illumidesk
+  # Database Server Port
+  port: 5432
+  # Database user
+  databaseUser: postgres
+  # Database password
+  databasePassword: postgres123
+  
+
+
 
 ## DatadogHQ Agent
 ## https://github.com/DataDog/helm-charts/tree/master/charts/datadog
