@@ -107,7 +107,16 @@ helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX illumidesk/illumi
 
 > Note: Please follow reference guides in the values.yaml in order to properly configure the resource during a deployment
 
-The following tables lists the configurable parameters of the chart and their default values.
+> NOTE: The following envars must be set:
+  *  `Jupyterhub.hub.extraEnvar.POSTGRES_NBGRADER_PASSWORD` 
+  *  `Jupyterhub.hub.extraEnvar.POSTGRES_JUPYTERHUB_PASSWORD` 
+  *  `Jupyterhub.hub.extraEnvar.JUPYTERHUB_API_TOKEN`
+  *  `Jupyterhub.hub.extraEnvar.JUPYTERHUB_CRYPT_KEY`
+
+> NOTE: The following envars must be set depending on autentication type
+  * `Jupyterhub.hub.extraEnvar.LTI_SHARED_SECRET`
+  * `Jupyterhub.hub.extraEnvar.OIDC_CLIENT_SECRET`
+
 
 | Parameter                                                                  | Description                                                                           | Default                                                                             |
 | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -134,7 +143,7 @@ The following tables lists the configurable parameters of the chart and their de
 | allowExternalDNS.txtOwnerID                                                | Identifies externalDNS instance                                                       | illumidesk                                                                          |
 | allowLocal.enabled                                                         | Enable local file system (confirm your instance has /illumidesk-nb-exchange-directory | FALSE                                                                               |
 | and /illumidesk-courses directory)                                         | FALSE                                                                                 | arn:aws:iam::XXXXXXXXXX:role/eks-irsa-external-dns                                  |
-| allowNFS.enabled                                                           | Enables creation of NFS pv and pvc                                                    | arn:aws:iam::XXXXXXXXXX:role/eks-irsa-external-dns                                  |
+| allowNFS.enabled                                                           | Enables creation of NFS pv and pvc                                                    | FALSE                                 |
 | allowNFS.path                                                              | Configure NFS base path                                                               | /                                                                                   |
 | allowLocal.enabled                                                         | local for local testing or efs for aws                                                | local                                                                               |
 | postgresql.enabled                                                         | Enables creation of postgresql manifests                                              | FALSE                                                                               |
@@ -142,6 +151,8 @@ The following tables lists the configurable parameters of the chart and their de
 | postgresql.postgresqlPostgresPassword                                      | Postgresql admin password                                                             |                                                                                     |
 | postgresql.postgresqlPassword                                              | Postgresql password                                                                   |                                                                                     |
 | postgresql.postgresqlDatabase                                              | Postgresql Database                                                                   | illumidesk                                                                          |
+| postgresql.existingSecret                                                  | Existing Kubernetes Secret that exists in the namespace                               | illumidesk-secret                                                                   |       |
+| postgresql.service.port                                                    | Database port                                                                         |  5432                                                                               |
 | datadog.enabled                                                            | Enables datadog                                                                       | FALSE                                                                               |
 | datadog.datadog.apiKey                                                     | API Key                                                                               |                                                                                     |
 | datadog.datadog.clusterName                                                | Name of EKS cluster                                                                   |                                                                                     |
@@ -151,6 +162,13 @@ The following tables lists the configurable parameters of the chart and their de
 | datadog.datadog.clusterAgent.token                                         | API token for Cluster Agent                                                           |                                                                                     |
 | datadog.datadog.clusterName                                                | Name of EKS cluster                                                                   |                                                                                     |
 | datadog.enabled                                                            | Enables datadog                                                                       | FALSE                                                                               |
+| externalDatabase.enabled                                                   | Enables External Database                                                             | FALSE                                                                               |
+| externalDatabase.existingSecret                                            | Existing Kubernetes Secret that exists in the namespace                               | illumidesk-secret                                                                   |
+| externalDatabase.host                                                      | Host name of the external database server                                             |                                                                                     |
+| externalDatabase.database                                                  | Database name                                                                         | illumidesk                                                                          |
+| externalDatabase.port                                                      | Database port                                                                         | 5432                                                                                |
+| externalDatabase.databaseUser                                              | Database user                                                                         | postgres                                                                            |
+| externalDatabase.databasePassword                                          | Database password                                                                     | postgres123                                                                         |
 | graderSetupService.enabled                                                 | Enables Grader Setup Service                                                          | FALSE                                                                               |
 | graderSetupService.graderSpawnerImage                                      | Grader Image Name                                                                     | illumidesk/illumidesk-grader:latest                                                 |
 | graderSetupService.graderSpawnerCPU                                        | CPU Allocated for each grader                                                         | 200m                                                                                |
