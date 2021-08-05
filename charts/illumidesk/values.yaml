@@ -537,3 +537,6 @@ graderSetupService:
   graderMemGuarantee: "2Gi"
   # Provides upperbound for memory that can be allocated to a grader setup service pod
   graderMemLimit: ""
+  # Pull Policy
+  pullPolicy: IfNotPresent
+  graderSpawnerPullPolicy: IfNotPresent

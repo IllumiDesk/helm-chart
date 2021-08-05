@@ -187,7 +187,8 @@ helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX illumidesk/illumi
 | graderSetupService.graderMemLimit                                          | Provide Max Memory allocation allowed for Grader Setup Service                        |  800Mi                                                                                   |
 | graderSetupService.StorageCapacity                                         | Provide storage capacity the Grader Setup Service can use                             | 200Mi                                                                                |
 | graderSetupService.StorageRequests                                         | Provide initial storage allocated for the Grader Setup Service                        | 1Gi                                                                                |
-
+| graderSetupService.pullPolicy                                              | Image pull policy for grader setup service                                            | IfNotPresent                                                                                |
+| graderSetupService.graderSpawnerPullPolicy                                 | Image pull policy for grader notebook                                            | IfNotPresent                                                                                |
 ## Validate the Helm Chart
 
 - For nodeport you will need to use your one of your node ips and also the port you defined in your values file.

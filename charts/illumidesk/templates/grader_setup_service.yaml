@@ -108,7 +108,7 @@ spec:
             limits:
               cpu: {{ .Values.graderSetupService.graderCpuLimit | default "400m" | quote }}
               memory: {{ .Values.graderSetupService.graderMemLimit | default "800Mi" | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.graderSetupService.pullPolicy }}  
           ports:
             - containerPort: 8000
           env:
@@ -167,6 +167,8 @@ spec:
               value: grader-pvc-{{ .Release.Name }}
             - name: GRADER_SHARED_PVC
               value: shared-pvc-{{ .Release.Name }}
+            - name: GRADER_IMAGE_PULL_POLICY
+              value: {{ .Values.graderSetupService.graderSpawnerPullPolicy }}
           volumeMounts:
             - name: grader-pv-{{ .Release.Name }}
               mountPath: /illumidesk-courses
