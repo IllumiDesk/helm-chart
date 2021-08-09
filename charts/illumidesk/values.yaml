@@ -522,13 +522,29 @@ graderSetupService:
   graderImage: illumidesk/grader-notebook:latest
   # Grader Setup Service Resource configuration
   # Gurantee's allocated CPU for the grader setup service pod
-  graderCpuGurantee: "1.0"
+  graderCpuGurantee: "1000m"
   # Provides upperbound for CPU that can be allocated to a grader setup service pod
   graderCpuLimit: ""
   # Gurantee's allocated memory for the grader setup service pod
   graderMemGuarantee: "2Gi"
   # Provides upperbound for memory that can be allocated to a grader setup service pod
   graderMemLimit: ""
-  # Pull Policy
+  # Pull Policy for Grader Setup Service
   pullPolicy: IfNotPresent
+  # grader setup service Persistent Volume storage requests
+  storageRequests: "200Mi"
+  # grader setup service Persistent Volume storage capacity
+  storageCapacity: ""
+  # Pull Policy for Grader notebooks
   graderSpawnerPullPolicy: IfNotPresent
+  # Grader Spawner CPU Gurantee
+  graderSpawnerCpuGuarantee: "200m"
+  # Grader Spawner CPU Limit
+  graderSpawnerCpuLimit: "400m"
+  # Grader Spawner Memory Gurantee
+  graderSpawnerMemGuarantee: "500Mi"
+  # Grader Spawner Memory Limit
+  graderSpawnerMemLimit: ""
+  # Max Storage allocated for Grader PV and PVCss
+  graderSpawnerStorage: "2Gi"
+  
