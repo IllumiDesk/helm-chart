@@ -375,67 +375,6 @@ externalDatabase:
   # Database password
   databasePassword: postgres123
 
-## DatadogHQ Agent
-## https://github.com/DataDog/helm-charts/tree/master/charts/datadog
-##
-datadog:
-  # Enables or disables the Datadog agent
-  enabled: false
-  # Datadog's configuration settings
-  datadog:
-    # API key for the DatadogHQ account
-    apiKey: ''
-    # Customer's site
-    site: ''
-    # The Kubernetes cluster name
-    clusterName: ''
-    # Logs configuration
-    logs:
-      # Enables or disables log collection
-      enabled: true
-      # If true, collects all logs from running containers.
-      containerCollectAll: true
-    # Datadog's cluster agent which acts as a proxy between Datadog's API and
-    # node-based agents.
-    # ref: https://docs.datadoghq.com/agent/cluster_agent/
-    clusterAgent:
-      # Enables or disables the cluster agent
-      enabled: true
-      token: ''
-      # Metrics enables autoscaling workloads based off of Datadog metrics
-      # ref: https://docs.datadoghq.com/agent/cluster_agent/external_metrics/
-      metricsProvider:
-        # Enables or disables external metrics with Datadog.
-        enabled: true
-
-## Application Load Balancer (ALB) ingress controller
-## ref: https://github.com/kubernetes-sigs/aws-load-balancer-controller
-##
-albIngressController:
-  # Enables or disables the aws-alb-ingress-controller
-  enabled: false
-  # Enables or disables the IAM role for service accounts. This option must be set to true
-  # if the AWS ALB Ingress Controller is enabled, otherwise the aws-ingress-controller pod
-  # won't have sufficient priviledges to create the ALB.
-  # ref: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
-  enableIRSA: false
-  # You must create kube2iam arn with your IAM credentials in order to provide them to the alb ingress controller container
-  # ref: https://github.com/jtblin/kube2iam
-  kube2iam: ''
-  # Specify the name of the cluster created in eks
-  clusterName: ''
-  # Specify the vpc-id of the vpc that corresponds to your cluster VPC
-  clusterVPC: vpc-XXXXXXX
-  # Specify the aws region that your cluster is deployed to
-  awsRegion: ''
-
-nginxIngress:
-  #Enables or disables ingress for nginx-ingress-controller
-  enabled: false
-  # The sub-domain that is used with the illumidesk.com address. For example, 'test.illumidesk.com' would create the
-  # test.illumidesk.com host name for the ingress resource.
-  host: test.illumidesk.com
-
 albIngress:
   # Enables or disables the aws-alb-ingress-controller
   enabled: false
@@ -447,18 +386,6 @@ albIngress:
   # ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.1/examples/echo_server/#deploy-ingress-for-echoserver
   ingress:
     annotations: {}
-
-## External DNS Service
-## ref: https://github.com/bitnami/charts/tree/master/bitnami/external-dns
-##
-allowExternalDNS:
-  # Enables or disables the external dns service.
-  enabled: false
-  # Enables or disables the IAM role for service accounts. If the external dns service
-  # is enabled with AWS, then this must be set to true (enabled) so that the external-dns
-  # pod has sufficient permissions to update DNS records with Route 53.
-  # ref: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
-  enableIRSA: false
 
 ## NFS service used to persist files for personal workspaces and to provide a shared file
 ## system used for the grader's exchange directory (release/fetch/submit folders).
