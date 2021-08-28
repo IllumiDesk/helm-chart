@@ -429,6 +429,13 @@ albIngressController:
   # Specify the aws region that your cluster is deployed to
   awsRegion: ''
 
+nginxIngress:
+  #Enables or disables ingress for nginx-ingress-controller
+  enabled: false
+  # The sub-domain that is used with the illumidesk.com address. For example, 'test.illumidesk.com' would create the
+  # test.illumidesk.com host name for the ingress resource.
+  host: test.illumidesk.com
+
 albIngress:
   # Enables or disables the aws-alb-ingress-controller
   enabled: false
