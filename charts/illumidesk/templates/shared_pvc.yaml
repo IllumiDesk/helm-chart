@@ -2,10 +2,10 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: shared-pvc-{{ .Release.Name }}
+  name: shared-pvc-{{ .Release.Namespace }}
   namespace: {{ .Release.Namespace }}
 spec:
-  volumeName: shared-pv-{{ .Release.Name }}
+  volumeName: shared-pv-{{ .Release.Namespace }}
 {{ if .Values.allowLocal.enabled }}
   storageClassName: "local-storage"
 {{ else if .Values.allowNFS.enabled }}

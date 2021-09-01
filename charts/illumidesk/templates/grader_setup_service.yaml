@@ -9,10 +9,10 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: grader-setup-service-{{ .Release.Name }}
+  name: grader-setup-service-{{ .Release.Namespace }}
   labels:
     app: illumidesk
-    component: grader-setup-service-{{ .Release.Name }}
+    component: grader-setup-service-{{ .Release.Namespace }}
 rules:
   - apiGroups:
      - ""
@@ -48,14 +48,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: grader-setup-service-{{ .Release.Name }}
+  name: grader-setup-service-{{ .Release.Namespace }}
   labels:
     app: illumidesk
-    component: grader-setup-service-{{ .Release.Name }}
+    component: grader-setup-service-{{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: grader-setup-service-{{ .Release.Name }}
+  name: grader-setup-service-{{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
     name: illumidesk-account
@@ -164,24 +164,24 @@ spec:
             - name: ILLUMIDESK_K8S_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: GRADER_PVC
-              value: grader-pvc-{{ .Release.Name }}
+              value: grader-pvc-{{ .Release.Namespace }}
             - name: GRADER_SHARED_PVC
-              value: shared-pvc-{{ .Release.Name }}
+              value: shared-pvc-{{ .Release.Namespace }}
             - name: GRADER_IMAGE_PULL_POLICY
               value: {{ .Values.graderSetupService.graderSpawnerPullPolicy }}
           volumeMounts:
-            - name: grader-pv-{{ .Release.Name }}
+            - name: grader-pv-{{ .Release.Namespace }}
               mountPath: /illumidesk-courses
               subPath: illumidesk-courses
-            - name: shared-pv-{{ .Release.Name }}
+            - name: shared-pv-{{ .Release.Namespace }}
               mountPath: /illumidesk-nb-exchange
       serviceAccountName: illumidesk-account
       volumes:
         - name: shared-pv-{{.Release.Name }}
           persistentVolumeClaim:
-            claimName: shared-pvc-{{ .Release.Name }}
-        - name: grader-pv-{{ .Release.Name }}
+            claimName: shared-pvc-{{ .Release.Namespace }}
+        - name: grader-pv-{{ .Release.Namespace }}
           persistentVolumeClaim:
-            claimName: grader-pvc-{{ .Release.Name }}
+            claimName: grader-pvc-{{ .Release.Namespace }}
 
 {{ end }}
