@@ -177,7 +177,7 @@ spec:
               mountPath: /illumidesk-nb-exchange
       serviceAccountName: illumidesk-account
       volumes:
-        - name: shared-pv-{{.Release.Name }}
+        - name: shared-pv-{{.Release.Namespace }}
           persistentVolumeClaim:
             claimName: shared-pvc-{{ .Release.Namespace }}
         - name: grader-pv-{{ .Release.Namespace }}
