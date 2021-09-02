@@ -6,8 +6,6 @@ VENV_NAME?=venv
 VENV_BIN=$(shell pwd)/${VENV_NAME}/bin
 VENV_ACTIVATE=. ${VENV_BIN}/activate
 
-DOCKER_JUPYTERHUB_TAG=0.9.1
-
 PYTHON=${VENV_BIN}/python3
 
 help:
@@ -25,9 +23,6 @@ venv: ## make virtual environment and install dev requirements
 
 pip-compile: venv ## create requirements.txt using pip-compile (uses requirements.in as source)
 	$(VENV_BIN)/pip-compile images/jupyterhub/requirements.in
-
-push: pip-compile ## push jupyterhub images to dockerhub (requires login)
-	@docker push illumidesk/k8s-hub:$(DOCKER_JUPYTERHUB_TAG)
 
 clean:
 	find . -name '*.pyc' -exec rm -f {} +
