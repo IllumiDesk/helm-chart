@@ -157,17 +157,17 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_JUPYTERHUB_DB
-      ACTIVE_USER_LIMIT:
+      ACTIVE_SERVER_LIMIT:
         valueFrom:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: ACTIVE_USER_LIMIT
+            key: ACTIVE_SERVER_LIMIT
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       # Mount Root
       ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
     extraConfig:
       serverLimitConfig:
-        c.JupyterHub.active_server_limit = int(os.environ.get('ACTIVE_USER_LIMIT'))
+        c.JupyterHub.active_server_limit = int(os.environ.get('ACTIVE_SERVER_LIMIT'))
       # The logo that appears on the top right of the control panel and end-user notebooks with Jupyter Classic.
       logoConfig: |
         c.JupyterHub.logo_file = "/srv/jupyterhub/illumidesk-80.png"
@@ -422,7 +422,7 @@ illumideskSettings:
   # Enables or disables the illumidesk settings options
   enabled: true
   # active user limit
-  active_user_limit: "0"
+  active_server_limit: "0"
   # The custom authentication type. Should be one of DUMMY, LTI11, LTI13, or AUTH0.
   customAuthType: "DUMMY"
   # OIDC authorization URL
