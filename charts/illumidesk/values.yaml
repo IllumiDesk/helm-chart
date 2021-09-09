@@ -422,7 +422,7 @@ illumideskSettings:
   # Enables or disables the illumidesk settings options
   enabled: true
   # active user limit
-  active_user_limit: 250
+  active_user_limit: "250"
   # The custom authentication type. Should be one of DUMMY, LTI11, LTI13, or AUTH0.
   customAuthType: "DUMMY"
   # OIDC authorization URL
