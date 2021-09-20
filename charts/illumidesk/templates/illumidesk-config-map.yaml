@@ -19,7 +19,6 @@ data:
   LTI13_ENDPOINT: {{ .Values.illumideskSettings.lti13Endpoint | default "https://illumidesk.instructure.com/api/lti/security/jwks"  | quote }}
   LTI13_AUTHORIZE_URL: {{ .Values.illumideskSettings.lti13AuthorizeUrl | default "https://illumidesk.instructure.com/api/lti/authorize_redirect"  | quote }}
   LTI13_TOKEN_URL: {{ .Values.illumideskSettings.lti13TokenUrl | default "https://illumidesk.instructure.com/login/oauth2/token"  | quote }}
-  ACTIVE_SERVER_LIMIT: {{ .Values.illumideskSettings.active_server_limit | quote }}
 {{ if .Values.externalDatabase.enabled }}
   POSTGRES_NBGRADER_HOST:  {{ .Values.externalDatabase.host | quote  }}
   POSTGRES_JUPYTERHUB_HOST: {{ .Values.externalDatabase.host | quote  }}
