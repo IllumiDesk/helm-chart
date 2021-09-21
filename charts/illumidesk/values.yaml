@@ -30,7 +30,7 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
-    # Maximum number of concurrent servers that can be active at a time. 0 menas that no limit is enforced
+    # Maximum number of concurrent servers that can be active at a time. 0 means that no limit is enforced
     activeServerLimit: 0
     # Jupyterhub resources regarding requests for CPU and memory
     resources:
