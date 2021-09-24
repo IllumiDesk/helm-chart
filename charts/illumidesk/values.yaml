@@ -33,7 +33,7 @@ jupyterhub:
     # clone custom JupyterHub templates into a volume
     initContainers:
       - name: "git-clone-templates"
-        image: "alpine/git"
+        image: "illumidesk/alpine-git:1.0.30"
         args:
           - clone
           - --single-branch
