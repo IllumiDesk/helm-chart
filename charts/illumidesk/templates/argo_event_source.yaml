@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: autograde-event-source
+spec:
+  amqp:
+    autograde_events:
+      # amqp server url
+      url: amqp://argo-rabbitmq-service:5672
+      # jsonBody specifies that all event body payload coming from this
+      # source will be JSON
+      jsonBody: true
+      # name of the exchange.
+      exchangeName: {{ .Release.Namespace }}
+      # exchange type. more info at https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchanges
+      exchangeType: topic
+      # routing key
+      routingKey: autograde_events
+      queueDeclare:
+        name: autograde_events
+        durable: false
+        autoDelete: false
+        exclusive: true
+        noWait: false
+        # optional backoff time for connection retries.
+        # if not provided, default connection backoff time will be used.
+        connectionBackoff:
+          # duration in nanoseconds, or strings like "1s", "1m". following value is 10 seconds
+          duration: 10s
+          # how many backoffs
+          steps: 5
+          # factor to increase on each step.
+          # setting factor > 1 makes backoff exponential.
+          factor: 2
+          jitter: 0.2

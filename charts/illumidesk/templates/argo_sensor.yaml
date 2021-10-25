@@ -1,0 +1,74 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: autograde-sensor
+spec:
+  template:
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+    - name: autograding-event-dep
+      eventSourceName: autograde-event-source
+      eventName: autograde_events
+  triggers:
+    - template:
+        name: autograde-workflow-trigger
+        k8s:
+          group: argoproj.io
+          version: v1alpha1
+          resource: workflows
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: autograde-workflow-
+              spec:
+                synchronization:
+                  semaphore:
+                    configMapKeyRef:
+                      name: argo-config
+                      key: PARALLEL_AUTOGRADING
+                entrypoint: autograde-worker
+                securityContext:
+                  runAsNonRoot: true
+                  runAsUser: 10001
+                volumes:
+                  - name: shared-pv
+                    persistentVolumeClaim:
+                      claimName: shared-pvc-{{ .Release.Namespace }}
+                  - name: grader-pv
+                    persistentVolumeClaim:
+                      claimName: grader-pvc-{{ .Release.Namespace }}
+                arguments:
+                  parameters:
+                    - name: message
+                      # value will get overridden by the event payload
+                      value: ""
+                templates:
+                  - name: autograde-worker
+                    inputs:
+                      parameters:
+                        - name: message
+                    container:
+                      image: illumidesk/grader-notebook:pr-67
+                      imagePullPolicy: Always
+                      command: [async_nbgrader]
+                      args: ["process_message", "{{inputs.parameters.message}}"]
+                      env:
+                        - name: JUPYTERHUB_API_URL
+                          valueFrom:
+                            configMapKeyRef:
+                              name: hub-illumidesk-cm
+                              key: JUPYTERHUB_API_URL
+                      volumeMounts:
+                        - name: grader-pv
+                          mountPath: /home
+                          subPath: illumidesk-courses/{{ .Release.Namespace }}/home
+                        - name: shared-pv
+                          mountPath: /srv/nbgrader/exchange
+                          subPath: {{ .Release.Namespace }}/exchange
+          parameters:
+            - src:
+                dependencyName: autograding-event-dep
+              dest: spec.arguments.parameters.0.value
