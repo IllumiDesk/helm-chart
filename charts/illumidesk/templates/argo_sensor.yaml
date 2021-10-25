@@ -51,7 +51,7 @@ spec:
                       parameters:
                         - name: message
                     container:
-                      image: illumidesk/grader-notebook:pr-67
+                      image: illumidesk/grader-notebook:latest
                       imagePullPolicy: Always
                       command: [async_nbgrader]
                       args: ["process_message", "{{inputs.parameters.message}}"]
