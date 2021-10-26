@@ -3,6 +3,7 @@ chart-repos:
   - jupyterhub=https://jupyterhub.github.io/helm-chart/
   - bitnami=https://charts.bitnami.com/bitnami
   - datadoghq=https://helm.datadoghq.com
+  - argo=https://argoproj.github.io/argo-helm
 target-branch: main
 debug: true
 remote: origin
