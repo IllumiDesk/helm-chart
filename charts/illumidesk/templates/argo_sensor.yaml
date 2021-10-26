@@ -40,21 +40,13 @@ spec:
                   - name: grader-pv
                     persistentVolumeClaim:
                       claimName: grader-pvc-{{ .Release.Namespace }}
-                arguments:
-                  parameters:
-                    - name: message
-                      # value will get overridden by the event payload
-                      value: ""
                 templates:
                   - name: autograde-worker
-                    inputs:
-                      parameters:
-                        - name: message
                     container:
                       image: illumidesk/grader-notebook:latest
                       imagePullPolicy: Always
                       command: [async_nbgrader]
-                      args: ["process_message", "{{inputs.parameters.message}}"]
+                      args: ["process_message", "message"]
                       env:
                         - name: JUPYTERHUB_API_URL
                           valueFrom:
@@ -71,4 +63,4 @@ spec:
           parameters:
             - src:
                 dependencyName: autograding-event-dep
-              dest: spec.arguments.parameters.0.value
+              dest: spec.templates.0.container.args.1
