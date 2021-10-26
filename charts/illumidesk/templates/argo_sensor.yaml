@@ -34,10 +34,10 @@ spec:
                   runAsNonRoot: true
                   runAsUser: 10001
                 volumes:
-                  - name: shared-pv
+                  - name: shared-pv-{{ .Release.Namespace }}
                     persistentVolumeClaim:
                       claimName: shared-pvc-{{ .Release.Namespace }}
-                  - name: grader-pv
+                  - name: grader-pv-{{ .Release.Namespace }}
                     persistentVolumeClaim:
                       claimName: grader-pvc-{{ .Release.Namespace }}
                 templates:
@@ -54,10 +54,10 @@ spec:
                               name: hub-illumidesk-cm
                               key: JUPYTERHUB_API_URL
                       volumeMounts:
-                        - name: grader-pv
+                        - name: grader-pv-{{ .Release.Namespace }}
                           mountPath: /home
                           subPath: illumidesk-courses/{{ .Release.Namespace }}/home
-                        - name: shared-pv
+                        - name: shared-pv-{{ .Release.Namespace }}
                           mountPath: /srv/nbgrader/exchange
                           subPath: {{ .Release.Namespace }}/exchange
           parameters:
