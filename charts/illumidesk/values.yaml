@@ -506,3 +506,10 @@ graderSetupService:
   graderSpawnerMemLimit: ""
   # Max Storage allocated for Grader PV and PVCss
   graderSpawnerStorage: "2Gi"
+
+argo-events:
+  namespace:
+    valueFrom:
+      configMapKeyRef:
+        name: hub-illumidesk-cm
+        key: ORGANIZATION_NAME

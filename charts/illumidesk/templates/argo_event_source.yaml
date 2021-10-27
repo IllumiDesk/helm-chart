@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
   name: autograde-event-source
+  namespace: {{ .Release.Namespace }}
 spec:
   amqp:
     autograde_events:

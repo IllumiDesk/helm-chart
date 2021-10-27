@@ -4,6 +4,7 @@ metadata:
   labels:
     component: argo-rabbitmq
   name: argo-rabbitmq-service
+  namespace: {{ .Release.Namespace }}
 spec:
   ports:
     - name: main
@@ -21,6 +22,7 @@ metadata:
   labels:
     component: argo-rabbitmq
   name: argo-rabbitmq-controller
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   template:

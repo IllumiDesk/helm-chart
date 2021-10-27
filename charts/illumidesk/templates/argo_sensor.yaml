@@ -2,9 +2,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
   name: autograde-sensor
+  namespace: frequent-earth-2533-staging
 spec:
   template:
-    serviceAccountName: operate-workflow-sa
+    serviceAccountName: operate-workflow-sa-{{ .Release.Namespace }}
   dependencies:
     - name: autograding-event-dep
       eventSourceName: autograde-event-source
@@ -23,6 +24,7 @@ spec:
               kind: Workflow
               metadata:
                 generateName: autograde-workflow-
+                namespace: frequent-earth-2533-staging
               spec:
                 synchronization:
                   semaphore:
@@ -34,12 +36,12 @@ spec:
                   runAsNonRoot: true
                   runAsUser: 10001
                 volumes:
-                  - name: shared-pv-{{ .Release.Namespace }}
+                  - name: shared-pv-frequent-earth-2533-staging
                     persistentVolumeClaim:
-                      claimName: shared-pvc-{{ .Release.Namespace }}
-                  - name: grader-pv-{{ .Release.Namespace }}
+                      claimName: shared-pvc-frequent-earth-2533-staging
+                  - name: grader-pv-frequent-earth-2533-staging
                     persistentVolumeClaim:
-                      claimName: grader-pvc-{{ .Release.Namespace }}
+                      claimName: grader-pvc-frequent-earth-2533-staging
                 templates:
                   - name: autograde-worker
                     container:
@@ -54,12 +56,12 @@ spec:
                               name: hub-illumidesk-cm
                               key: JUPYTERHUB_API_URL
                       volumeMounts:
-                        - name: grader-pv-{{ .Release.Namespace }}
+                        - name: grader-pv-frequent-earth-2533-staging
                           mountPath: /home
-                          subPath: illumidesk-courses/{{ .Release.Namespace }}/home
-                        - name: shared-pv-{{ .Release.Namespace }}
+                          subPath: illumidesk-courses/frequent-earth-2533-staging/home
+                        - name: shared-pv-frequent-earth-2533-staging
                           mountPath: /srv/nbgrader/exchange
-                          subPath: {{ .Release.Namespace }}/exchange
+                          subPath: frequent-earth-2533-staging/exchange
           parameters:
             - src:
                 dependencyName: autograding-event-dep
