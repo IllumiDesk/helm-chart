@@ -196,6 +196,7 @@ jupyterhub:
         from illumidesk.authenticators.authenticator import setup_course_hook
         from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
         from oauthenticator.generic import GenericOAuthenticator
+        from illumidesk.authenticators.authenticator import setup_course_hook_lti11
 
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
         c.JupyterHub.hub_connect_ip = 'hub'
@@ -211,11 +212,14 @@ jupyterhub:
             ]
         elif custom_auth_type == 'LTI11':
           c.JupyterHub.authenticator_class = 'ltiauthenticator.LTIAuthenticator'
-          c.LTIAuthenticator.consumers = {
+          c.LTI11Authenticator.consumers = {
               os.environ.get('LTI_CONSUMER_KEY')
               or 'ild_test_consumer_key': os.environ.get('LTI_SHARED_SECRET')
               or 'ild_test_shared_secret'
           }
+          c.Authenticator.enable_auth_state = True
+          # Use an LTI 1.1 parameter to set the username.
+          c.LTI11Authenticator.username_key = "lis_person_contact_email_primary"
         elif custom_auth_type == 'DUMMY':
           c.JupyterHub.authenticator_class = 'illumideskdummyauthenticator.authenticator.IllumiDeskDummyAuthenticator'
           c.Authenticator.enable_auth_state = True
@@ -243,9 +247,11 @@ jupyterhub:
           # User name key returned by user
           c.GenericOAuthenticator.username_key = 'nickname'
 
-        if custom_auth_type != 'AUTH0':
+        if custom_auth_type == 'LTI13':
 
           c.Authenticator.post_auth_hook = setup_course_hook
+        elif custom_auth_type == 'LTI11':
+          c.Authenticator.post_auth_hook = setup_course_hook_lti11
 
           def userdata_hook(spawner, auth_state):
               if not auth_state:
