@@ -5,4 +5,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   nats:
-    native: {}
+    exotic:
+      url: nats://argo-events-nats.argo-events.svc:4222
+      clusterID: argo-events-stan

@@ -8,7 +8,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: operate-workflow-role-{{ .Release.Namespace }}
-  namespace: {{ .Release.Namespace }}
 rules:
   - apiGroups:
       - argoproj.io
@@ -24,7 +23,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: operate-workflow-role-binding-{{ .Release.Namespace }}
-  namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
