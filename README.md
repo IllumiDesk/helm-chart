@@ -93,6 +93,24 @@ kubernetes create namespace test
 helm upgrade --install test --set proxy.secretToken=XXXXXXXXXX illumidesk/illumidesk --version 3.2.0 -n test
 ```
 
+## Steps to setup argo on a new cluster
+
+```bash
+helm install argo argo/argo-workflows -n argo --create-namespace
+```
+
+```bash
+helm install argo-events argo/argo-events --set singleNamespace=false --set namespace=''  -n argo-events --create-namespace
+```
+
+```bash
+helm install argo-events-nats nats/nats --set cluster.enabled=true -n argo-events
+```
+
+```bash
+helm install argo-events-stan nats/stan --set stan.nats.url=nats://argo-events-nats.argo-events.svc.cluster.local:4222 --set stan.clusterID=argo-events-stan --set cluster.enabled=true -n argo-events
+```
+
 ## Uninstall the Chart
 
 ```bash
