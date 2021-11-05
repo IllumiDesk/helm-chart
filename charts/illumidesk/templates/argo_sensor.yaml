@@ -47,7 +47,7 @@ spec:
                 templates:
                   - name: autograde-worker
                     container:
-                      image: illumidesk/grader-notebook:lastest
+                      image: illumidesk/grader-notebook:latest
                       imagePullPolicy: Always
                       command: [async_nbgrader]
                       args: ["process_message", "message"]
