@@ -7,7 +7,7 @@ spec:
   amqp:
     autograde_events:
       # amqp server url
-      url: amqp://argo-rabbitmq-service:5672
+      url: amqp://argo-rabbitmq-service.{{ .Release.Namespace }}.svc.cluster.local:5672
       # jsonBody specifies that all event body payload coming from this
       # source will be JSON
       jsonBody: true

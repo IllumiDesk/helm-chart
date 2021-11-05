@@ -37,9 +37,6 @@ spec:
                       name: argo-config
                       key: PARALLEL_AUTOGRADING
                 entrypoint: autograde-worker
-                securityContext:
-                  runAsNonRoot: true
-                  runAsUser: 10001
                 volumes:
                   - name: shared-pv-{{ .Release.Namespace }}
                     persistentVolumeClaim:
@@ -50,10 +47,14 @@ spec:
                 templates:
                   - name: autograde-worker
                     container:
-                      image: illumidesk/grader-notebook:pr-68
+                      image: illumidesk/grader-notebook:lastest
                       imagePullPolicy: Always
                       command: [async_nbgrader]
                       args: ["process_message", "message"]
+                      securityContext:
+                        privileged: true
+                        runAsNonRoot: true
+                        runAsUser: 10001
                       env:
                         - name: JUPYTERHUB_API_URL
                           valueFrom:
