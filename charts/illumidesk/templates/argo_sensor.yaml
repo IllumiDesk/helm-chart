@@ -30,7 +30,7 @@ spec:
                 namespace: {{ .Release.Namespace }}
               spec:
                 ttlStrategy:
-                  secondsAfterCompletion: 1
+                  secondsAfterSuccess: 60
                 synchronization:
                   semaphore:
                     configMapKeyRef:
@@ -49,7 +49,7 @@ spec:
                     container:
                       image: illumidesk/grader-notebook:latest
                       imagePullPolicy: Always
-                      command: [async_nbgrader]
+                      command: [ild]
                       args: ["process_message", "message"]
                       securityContext:
                         privileged: true
