@@ -519,3 +519,6 @@ argo-events:
       configMapKeyRef:
         name: hub-illumidesk-cm
         key: ORGANIZATION_NAME
+
+autograding:
+  concurrency: "1"

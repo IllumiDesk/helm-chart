@@ -38,16 +38,13 @@ spec:
                       key: PARALLEL_AUTOGRADING
                 entrypoint: autograde-worker
                 volumes:
-                  - name: shared-pv-{{ .Release.Namespace }}
-                    persistentVolumeClaim:
-                      claimName: shared-pvc-{{ .Release.Namespace }}
                   - name: grader-pv-{{ .Release.Namespace }}
                     persistentVolumeClaim:
                       claimName: grader-pvc-{{ .Release.Namespace }}
                 templates:
                   - name: autograde-worker
                     container:
-                      image: illumidesk/grader-notebook:latest
+                      image: {{ .Values.graderSetupService.graderSpawnerImage | default "illumidesk/grader-notebook:latest" }}
                       imagePullPolicy: Always
                       command: [ild]
                       args: ["process_message", "message"]
@@ -65,9 +62,6 @@ spec:
                         - name: grader-pv-{{ .Release.Namespace }}
                           mountPath: /home
                           subPath: illumidesk-courses/{{ .Release.Namespace }}/home
-                        - name: shared-pv-{{ .Release.Namespace }}
-                          mountPath: /srv/nbgrader/exchange
-                          subPath: {{ .Release.Namespace }}/exchange
           parameters:
             - src:
                 dependencyName: autograding-event-dep

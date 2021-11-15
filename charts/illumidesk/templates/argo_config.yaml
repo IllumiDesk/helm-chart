@@ -4,4 +4,4 @@ metadata:
   name: argo-config
   namespace: {{ .Release.Namespace }}
 data:
-  PARALLEL_AUTOGRADING: "1"
+  PARALLEL_AUTOGRADING: "{{ .Values.autograding.concurrency | default 1 }}"
