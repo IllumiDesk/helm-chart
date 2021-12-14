@@ -9,7 +9,7 @@ spec:
 {{ if .Values.allowLocal.enabled }}
   storageClassName: "local-storage"
 {{ else if .Values.allowNFS.enabled }}
-  storageClassName: ""
+  storageClassName: "efs-sc"
 {{ end }}
   accessModes:
     - ReadWriteMany
