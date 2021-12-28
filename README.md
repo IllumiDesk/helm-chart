@@ -176,6 +176,7 @@ helm install argo-events-stan nats/stan --set stan.nats.url=nats://argo-events-n
 | graderSetupService.StorageRequests                                         | Provide initial storage allocated for the Grader Setup Service                        | 1Gi                                                                                |
 | graderSetupService.pullPolicy                                              | Image pull policy for grader setup service                                            | IfNotPresent                                                                                |
 | graderSetupService.graderSpawnerPullPolicy                                 | Image pull policy for grader notebook                                            | IfNotPresent                                                                                |
+
 ## Validate the Helm Chart
 
 - For nodeport you will need to use your one of your node ips and also the port you defined in your values file.

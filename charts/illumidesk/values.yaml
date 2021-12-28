@@ -513,12 +513,21 @@ graderSetupService:
   # Max Storage allocated for Grader PV and PVCss
   graderSpawnerStorage: "2Gi"
 
+
+## Argo events
+## ref: https://artifacthub.io/packages/helm/argo/argo-events
+##
 argo-events:
+  # Sets the namespace for the arg-events service. By default
+  # the namespace is fetched from the organization name env var.
   namespace:
     valueFrom:
       configMapKeyRef:
         name: hub-illumidesk-cm
         key: ORGANIZATION_NAME
 
+## Auto-grading options
+##
 autograding:
+  # Sets the number of concurrent auto-graders.
   concurrency: "1"
