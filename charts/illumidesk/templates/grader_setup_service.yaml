@@ -165,21 +165,14 @@ spec:
               value: {{ .Release.Namespace }}
             - name: GRADER_PVC
               value: grader-pvc-{{ .Release.Namespace }}
-            - name: GRADER_SHARED_PVC
-              value: shared-pvc-{{ .Release.Namespace }}
             - name: GRADER_IMAGE_PULL_POLICY
               value: {{ .Values.graderSetupService.graderSpawnerPullPolicy }}
           volumeMounts:
             - name: grader-pv-{{ .Release.Namespace }}
               mountPath: /illumidesk-courses
               subPath: illumidesk-courses
-            - name: shared-pv-{{ .Release.Namespace }}
-              mountPath: /illumidesk-nb-exchange
       serviceAccountName: illumidesk-account
       volumes:
-        - name: shared-pv-{{.Release.Namespace }}
-          persistentVolumeClaim:
-            claimName: shared-pvc-{{ .Release.Namespace }}
         - name: grader-pv-{{ .Release.Namespace }}
           persistentVolumeClaim:
             claimName: grader-pvc-{{ .Release.Namespace }}

@@ -425,10 +425,6 @@ allowNFS:
   enabled: false
   # Domain for the NFS Server
   server: ''
-  # Specifies local vs network file system
-  type: 'local'
-  # specify mount path
-  path: /
 
 ## To test with a local file system, enable the following and confirm your instance has /illumidesk-nb-exchange
 ## and /illumidesk-courses directory
