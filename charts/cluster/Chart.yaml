@@ -1,0 +1,8 @@
+apiVersion: v2
+name: cluster
+version: 0.0.1
+appVersion: 0.0.1
+description: Cluster Level Resources that Illumidesk May Require
+maintainers:
+  - name: IllumiDesk Team
+    email: hello@illumidesk.com

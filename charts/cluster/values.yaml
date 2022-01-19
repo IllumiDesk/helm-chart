@@ -1,0 +1,6 @@
+efsCSIDriver:
+  enabled: false
+  region: "us-west-2"
+  imageAddress: "123456789012"
+  PassARN: false 
+  roleARN: ""

@@ -178,6 +178,42 @@ helm install argo-events-stan nats/stan --set stan.nats.url=nats://argo-events-n
 | graderSetupService.pullPolicy                                              | Image pull policy for grader setup service                                            | IfNotPresent                                                                                |
 | graderSetupService.graderSpawnerPullPolicy                                 | Image pull policy for grader notebook                                            | IfNotPresent                                                                                |
 
+
+## Cluster Helm Chart
+### EFS CSI Driver
+
+  1. Navigate to the `policy folder' and create a policy for EFS
+  2. Create a policy for EFS CSI driver using the policy document
+  ```bash
+        aws iam create-policy \
+      --policy-name AmazonEKS_EFS_CSI_Driver_Policy \
+      --policy-document file://policy/iam-policy-efs-csi-driver.json
+   ```
+  3. Get the region-code and oidc-id to pass into trust policy
+  ```bash
+      aws eks describe-cluster --name {cluster} --query "cluster.identity.oidc.issuer" --output text
+  ```
+  4. Use the example `policy/trust-efs-csi-driver-policy-example.json` to create the trust policy for efs csi driver
+  ```bash
+      aws iam create-role \
+    --role-name AmazonEKS_EFS_CSI_DriverRole \
+    --assume-role-policy-document file://"policy/trust-efs-csi-driver-policy-example.json"
+   ```
+5. Attach efs csi driver IAM policy to the role created in the previous step
+
+  ```bash
+  aws iam attach-role-policy \
+    --policy-arn arn:aws:iam::{account_id}:policy/AmazonEKS_EFS_CSI_Driver_Policy \
+    --role-name AmazonEKS_EFS_CSI_DriverRole
+  ```
+
+6. Deploy Cluster level resources 
+  
+  ```bash
+    helm upgrade --install {release} illumidesk/cluster --namespace kube-system -f {cluster-stage-custom-config}.yaml --debug --dry-run
+  ```
+
+
 ## Validate the Helm Chart
 
 - For nodeport you will need to use your one of your node ips and also the port you defined in your values file.
