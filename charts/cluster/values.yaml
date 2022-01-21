@@ -4,3 +4,27 @@ efsCSIDriver:
   imageAddress: "123456789012"
   PassARN: false 
   roleARN: ""
+
+argo:
+  enabled: true
+
+argo-workflows:
+  controller:
+    name: "workflow-controller"
+
+argo-events:
+  singleNamespace: false
+
+nats:
+  cluster:
+    enabled: true
+stan:
+  cluster:
+    enabled: true
+  clusterID: argo-events-stan
+  nats:
+    url: "nats://argo-events-nats.argo-events.svc.cluster.local:4222" 
+    
+
+
+

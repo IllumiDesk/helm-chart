@@ -4,9 +4,9 @@ dependencies:
   version: 1.2.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.14.0
+  version: 10.16.1
 - name: argo-events
   repository: https://argoproj.github.io/argo-helm
   version: 1.8.0
-digest: sha256:7bff94458adb098a479ba3909bd460ab101adf1b45bb6b4b9b79c83937c2ba75
-generated: "2021-12-28T18:21:15.632332-05:00"
+digest: sha256:d3a68bc340c658302166bc0fe4ed34054a849258f415e65053cbab72b7832285
+generated: "2022-01-21T16:54:37.7687462-05:00"

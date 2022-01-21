@@ -12,7 +12,7 @@ dependencies:
       - child: rbac
         parent: rbac
   - name: postgresql
-    version: "10.14.0"
+    version: "10.16.1"
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: argo-events

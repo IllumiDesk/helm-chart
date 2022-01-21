@@ -265,14 +265,21 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-
-        c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+        print("postgres_hub_password",os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'))
+        print("db_url", 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
           user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
           password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
           host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
           port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
-          db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
-        )
+          db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),))
+
+        # c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+        #   user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
+        #   password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
+        #   host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
+        #   port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
+        #   db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
+        # )
         # Upgrade the database automatically on start
         c.JupyterHub.upgrade_db = True
 
