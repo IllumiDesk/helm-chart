@@ -111,41 +111,6 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: LTI13_TOKEN_URL
-      POSTGRES_NBGRADER_USER:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: POSTGRES_NBGRADER_USER
-      POSTGRES_NBGRADER_HOST:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: POSTGRES_NBGRADER_HOST
-      POSTGRES_JUPYTERHUB_HOST:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: POSTGRES_JUPYTERHUB_HOST
-      POSTGRES_JUPYTERHUB_USER:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: POSTGRES_JUPYTERHUB_USER
-      POSTGRES_JUPYTERHUB_PORT:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: POSTGRES_JUPYTERHUB_PORT
-      POSTGRES_JUPYTERHUB_DB:
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: POSTGRES_JUPYTERHUB_DB
-      USE_JUPYTERHUB_DB_CONFIG: 
-        valueFrom:
-          configMapKeyRef:
-            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: USE_JUPYTERHUB_DB_CONFIG
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       # Mount Root
       ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
@@ -229,18 +194,6 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-
-        if os.environ.get('USE_JUPYTERHUB_DB_CONFIG') != 'True':
-
-          c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
-            user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
-            password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
-            host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
-            port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
-            db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
-          )
-          # Upgrade the database automatically on start
-          c.JupyterHub.upgrade_db = True
 
       illumideskSecurity: |
         c.JupyterHub.tornado_settings = {
@@ -431,7 +384,6 @@ illumideskSettings:
   lti13AuthorizeUrl: ""
   # LTI v1.3 token URL
   lti13TokenUrl: ""
-  useJupyterhubDbConfig: "False"
 
 ## Grader setup service
 ##
