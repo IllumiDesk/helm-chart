@@ -30,51 +30,10 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
-    # clone custom JupyterHub templates into a volume
-    initContainers:
-      - name: "git-clone-templates"
-        image: "illumidesk/alpine-git:1.0.30"
-        args:
-          - clone
-          - --single-branch
-          - --branch=main
-          - --depth=1
-          - --
-          - https://github.com/illumidesk/jhubui.git
-          - /etc/jupyterhub/custom
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: custom-templates
-            mountPath: "/etc/jupyterhub/custom"
-    extraVolumes:
-      - name: custom-templates
-        emptyDir: {}
-    extraVolumeMounts:
-      - name: custom-templates
-        mountPath: "/etc/jupyterhub/custom"
-    # Maximum number of concurrent servers that can be active at a time. 0 means that no limit is enforced
-    activeServerLimit: 0
-    # Jupyterhub resources regarding requests for CPU and memory
-    resources:
-      requests:
-        # CPU that is allocated to the hub
-        cpu: "200m"
-        # memory that is allocated to the hub
-        memory: "400Mi"
-      limits:
-        # Max CPU that is allocated to the hub
-        cpu: "400m"
-        # Max memory that is allocated to the hub
-        memory: "800Mi"
-    config:
-    # JupyterHub's database configuration. Defaults to "postgres" since other options, such as "sqlite-pvc",
-    # require additional PVC configuration settings.
-    # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-db
-    db:
+
       # Database type
       # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-db-type
-      type: postgres
+    #  type: postgres
     # Extra configuration options
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#hub-extraconfig
     extraEnv:
@@ -182,6 +141,11 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_JUPYTERHUB_DB
+      USE_JUPYTERHUB_DB_CONFIG: 
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: USE_JUPYTERHUB_DB_CONFIG
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       # Mount Root
       ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
@@ -265,23 +229,18 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-        print("postgres_hub_password",os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'))
-        print("db_url", 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
-          user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
-          password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
-          host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
-          port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
-          db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),))
 
-        # c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
-        #   user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
-        #   password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
-        #   host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
-        #   port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
-        #   db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
-        # )
-        # Upgrade the database automatically on start
-        c.JupyterHub.upgrade_db = True
+        if os.environ.get('USE_JUPYTERHUB_DB_CONFIG') != 'True':
+
+          c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+            user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
+            password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
+            host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
+            port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
+            db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
+          )
+          # Upgrade the database automatically on start
+          c.JupyterHub.upgrade_db = True
 
       illumideskSecurity: |
         c.JupyterHub.tornado_settings = {
@@ -447,7 +406,7 @@ allowLocal:
 ##
 illumideskSettings:
   # Enables or disables the illumidesk settings options
-  enabled: true
+  enabled: false
   # The custom authentication type. Should be one of DUMMY, LTI11, LTI13, or AUTH0.
   customAuthType: "DUMMY"
   # OIDC authorization URL
@@ -472,6 +431,7 @@ illumideskSettings:
   lti13AuthorizeUrl: ""
   # LTI v1.3 token URL
   lti13TokenUrl: ""
+  useJupyterhubDbConfig: "False"
 
 ## Grader setup service
 ##

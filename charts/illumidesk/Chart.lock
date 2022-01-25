@@ -1,12 +1,12 @@
 dependencies:
 - name: jupyterhub
   repository: https://jupyterhub.github.io/helm-chart/
-  version: 1.2.0
+  version: 1.1.1
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 10.16.1
 - name: argo-events
   repository: https://argoproj.github.io/argo-helm
   version: 1.8.0
-digest: sha256:d3a68bc340c658302166bc0fe4ed34054a849258f415e65053cbab72b7832285
-generated: "2022-01-21T16:54:37.7687462-05:00"
+digest: sha256:c4b520e2d2619c7816ba8b2c85ba4bc88395ac57e81ff104a4049dd74a35a2f8
+generated: "2022-01-21T19:52:42.3127129-05:00"
