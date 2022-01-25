@@ -1,3 +1,4 @@
+{{ if .Values.argo.enabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -31,3 +32,4 @@ subjects:
   - kind: ServiceAccount
     name: operate-workflow-sa-{{ .Release.Namespace }}
     namespace: {{ .Release.Namespace }}
+{{ end }}

@@ -1,7 +1,8 @@
+{{ if .Values.argo.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: autograde-sensor
+  name: autograde
   namespace: {{ .Release.Namespace }}
 spec:
   template:
@@ -66,3 +67,4 @@ spec:
             - src:
                 dependencyName: autograding-event-dep
               dest: spec.templates.0.container.args.1
+{{ end }}

@@ -1,7 +1,10 @@
+{{ if .Values.argo.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argo-config
   namespace: {{ .Release.Namespace }}
 data:
-  PARALLEL_AUTOGRADING: "{{ .Values.autograding.concurrency | default 1 }}"
+  PARALLEL_AUTOGRADING: "{{ .Values.argo.autograding.concurrency | default 1 }}"
+
+{{ end }}

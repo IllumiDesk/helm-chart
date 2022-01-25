@@ -1,3 +1,4 @@
+{{ if .Values.argo.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
@@ -34,3 +35,4 @@ spec:
           # setting factor > 1 makes backoff exponential.
           factor: 2
           jitter: 0.2
+{{ end }}

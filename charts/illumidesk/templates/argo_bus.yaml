@@ -1,3 +1,4 @@
+{{ if .Values.argo.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: EventBus
 metadata:
@@ -6,5 +7,6 @@ metadata:
 spec:
   nats:
     exotic:
-      url: nats://argo-events-nats.argo-events.svc:4222
+      url: nats://{{ .Values.argo.natsService }}.{{ .Values.argo.natsNamespace }}.svc:4222
       clusterID: argo-events-stan
+{{ end }}

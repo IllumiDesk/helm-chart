@@ -1,7 +1,7 @@
 efsCSIDriver:
   enabled: false
   region: "us-west-2"
-  imageAddress: "123456789012"
+  imageAddress: "602401143452"
   PassARN: false 
   roleARN: ""
 
@@ -23,7 +23,9 @@ stan:
     enabled: true
   clusterID: argo-events-stan
   nats:
-    url: "nats://argo-events-nats.argo-events.svc.cluster.local:4222" 
+  ## default url: "nats://argo-events-nats.argo-events.svc.cluster.local:4222"
+    url: nats://cluster-resources-nats.kube-system.svc.cluster.local:4222 
+    
     
 
 
