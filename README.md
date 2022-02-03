@@ -212,6 +212,16 @@ helm install argo-events-stan nats/stan --set stan.nats.url=nats://argo-events-n
   ```bash
     helm upgrade --install {release} illumidesk/cluster --namespace kube-system -f {cluster-stage-custom-config}.yaml --debug --dry-run
   ```
+  
+## Configuration
+
+  | Parameter             | Description                     | Default       |
+  | --------------------- | ------------------------------- | ------------- |
+  | efsCSIDriver.enabled  | Enables EFS CSI Driver          |  false        |
+  | efsCSIDriver.region   | region to pull csi driver images          |  us-west-2        |
+  | efsCSIDriver.region   | efs csi driver image address          |  602401143452        |
+  | efsCSIDriver.passARN   | enable pass csi arn to service account manifest          |  false        |
+  | efsCSIDriver.roleARN   | pass csi arn to service account manifest          |  ""        |
 
 
 ## Validate the Helm Chart

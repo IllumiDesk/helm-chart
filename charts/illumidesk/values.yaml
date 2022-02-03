@@ -255,6 +255,7 @@ jupyterhub:
       type: ClusterIP
   # Single user server
   singleuser:
+
     # Default CPU Limits and Gurantees
     cpu:
       # Max CPU that can be allocated
@@ -269,6 +270,8 @@ jupyterhub:
     # Single user server extra environment variables
     # ref: https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html#singleuser-extraenv
     extraEnv:
+      # disables argo workflow in single user notebook
+      ARGO_ENABLED: "false"
       # If yes, Instructs the startup script to change the $NB_USER home directory owner and group to the
       # current value of $NB_UID and $NB_GID.
       CHOWN_HOME: 'yes'

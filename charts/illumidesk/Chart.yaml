@@ -15,9 +15,6 @@ dependencies:
     version: "10.16.1"
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
-  - name: argo-events
-    version: "1.8.0"
-    repository: https://argoproj.github.io/argo-helm
 maintainers:
   - name: IllumiDesk Team
     email: hello@illumidesk.com

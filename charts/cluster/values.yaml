@@ -2,31 +2,5 @@ efsCSIDriver:
   enabled: false
   region: "us-west-2"
   imageAddress: "602401143452"
-  PassARN: false 
+  PassARN: false
   roleARN: ""
-
-argo:
-  enabled: true
-
-argo-workflows:
-  controller:
-    name: "workflow-controller"
-
-argo-events:
-  singleNamespace: false
-
-nats:
-  cluster:
-    enabled: true
-stan:
-  cluster:
-    enabled: true
-  clusterID: argo-events-stan
-  nats:
-  ## default url: "nats://argo-events-nats.argo-events.svc.cluster.local:4222"
-    url: nats://cluster-resources-nats.kube-system.svc.cluster.local:4222 
-    
-    
-
-
-

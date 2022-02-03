@@ -3,19 +3,6 @@ name: cluster
 version: 0.0.1
 appVersion: 0.0.1
 description: Fes
-dependencies:
-  - name: argo-workflows
-    version: "0.9.4"
-    repository: https://argoproj.github.io/argo-helm
-  - name: argo-events
-    version: "1.10.0"
-    repository: https://argoproj.github.io/argo-helm
-  - name: nats
-    version: "0.11.0"
-    repository: https://nats-io.github.io/k8s/helm/charts/
-  - name: stan
-    version: "0.11.0"
-    repository: https://nats-io.github.io/k8s/helm/charts/
 maintainers:
   - name: IllumiDesk Team
     email: hello@illumidesk.com
