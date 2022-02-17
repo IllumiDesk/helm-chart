@@ -1,7 +1,7 @@
 apiVersion: v2
 name: cluster
-version: 0.0.2
-appVersion: 0.0.2
+version: 0.0.3
+appVersion: 0.0.3
 description: Cluster based resources that the Illumidesk stack may need
 maintainers:
   - name: IllumiDesk Team
