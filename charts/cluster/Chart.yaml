@@ -1,8 +1,8 @@
 apiVersion: v2
 name: cluster
-version: 0.0.1
-appVersion: 0.0.1
-description: Fes
+version: 0.0.2
+appVersion: 0.0.2
+description: Cluster based resources that the Illumidesk stack may need
 maintainers:
   - name: IllumiDesk Team
     email: hello@illumidesk.com

@@ -301,8 +301,6 @@ spec:
         beta.kubernetes.io/os: linux
       priorityClassName: system-node-critical
       serviceAccountName: efs-csi-node-sa
-      tolerations:
-      - operator: Exists
       volumes:
       - hostPath:
           path: /var/lib/kubelet
