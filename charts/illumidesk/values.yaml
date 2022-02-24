@@ -111,6 +111,36 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: LTI13_TOKEN_URL
+      POSTGRES_NBGRADER_USER:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: POSTGRES_NBGRADER_USER
+      POSTGRES_NBGRADER_HOST:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: POSTGRES_NBGRADER_HOST
+      POSTGRES_JUPYTERHUB_HOST:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: POSTGRES_JUPYTERHUB_HOST
+      POSTGRES_JUPYTERHUB_USER:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: POSTGRES_JUPYTERHUB_USER
+      POSTGRES_JUPYTERHUB_PORT:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: POSTGRES_JUPYTERHUB_PORT
+      POSTGRES_JUPYTERHUB_DB:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: POSTGRES_JUPYTERHUB_DB
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       # Mount Root
       ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"

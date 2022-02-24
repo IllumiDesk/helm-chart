@@ -128,7 +128,7 @@ helm install argo-events-stan nats/stan --set stan.nats.url=nats://argo-events-n
 > NOTE: The following envars must be set:
   *  `Jupyterhub.hub.extraEnvar.POSTGRES_NBGRADER_PASSWORD` 
   *  `Jupyterhub.hub.extraEnvar.POSTGRES_JUPYTERHUB_PASSWORD` 
-  *  `Jupyterhub.hub.extraEnvar.JUPYTERHUB_API_TOKEN`
+  *  `Jupyterhub.hub.extraEnvar.JUPYTERHUB_API_TOKEN` 
   *  `Jupyterhub.hub.extraEnvar.JUPYTERHUB_CRYPT_KEY`
 
 > NOTE: The following envars must be set depending on autentication type
