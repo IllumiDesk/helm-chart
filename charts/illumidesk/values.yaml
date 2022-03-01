@@ -153,7 +153,7 @@ jupyterhub:
 
         import os
         from illumidesk.authenticators.authenticator import setup_course_hook
-        from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
+        # from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
         from oauthenticator.generic import GenericOAuthenticator
         from illumidesk.authenticators.authenticator import setup_course_hook_lti11
         import urllib.parse
@@ -226,14 +226,14 @@ jupyterhub:
 
         c.Authenticator.enable_auth_state = True
 
-        nb_grader_password = urllib.parse.quote(os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'), safe="")
-        c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+        nb_grader_password = urllib.parse.quote(os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'), safe='')
+        c.JupyterHub.db_url = urllib.parse.quote('postgresql://{user}:{password}@{host}:{port}/{db}'.format(
           user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
-          password=nb_grader_password,
+          password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
           host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
           port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
           db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
-        )
+        ), safe='')
 
       illumideskSecurity: |
         c.JupyterHub.tornado_settings = {
