@@ -153,7 +153,7 @@ jupyterhub:
 
         import os
         from illumidesk.authenticators.authenticator import setup_course_hook
-        # from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
+        from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
         from oauthenticator.generic import GenericOAuthenticator
         from illumidesk.authenticators.authenticator import setup_course_hook_lti11
         import urllib.parse
@@ -225,7 +225,7 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-        postgres_password = urllib.parse.quote(os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'))
+        postgres_password = urllib.parse.quote(os.getenv('POSTGRES_JUPYTERHUB_PASSWORD'), safe='')
         c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
           user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
           password=postgres_password,
