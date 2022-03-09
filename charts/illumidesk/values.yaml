@@ -293,6 +293,13 @@ jupyterhub:
         import z2jh
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
         org_name = os.environ.get('ORGANIZATION_NAME')
+        jupyterhub_api_token = os.environ.get('JUPYTERHUB_API_TOKEN')
+        c.JupyterHub.services.append({
+          'name': 'announcement',
+          'admin': True,
+          'url': 'http://0.0.0.0:8889',
+          'command': ["python3", "/etc/jupyterhub-services/announcement.py", "--port", "8889", "--api-prefix", "/services/announcement"],
+          'api_token': jupyterhub_api_token })
         # load extra grader services launched from grader-setup service
         services_resp = requests.get('http://grader-setup-service.{}.svc.cluster.local:8000/services'.format(org_name))
         services_resp = services_resp.json()
