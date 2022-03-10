@@ -13,7 +13,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
 {{ if .Values.allowLocal.enabled }}
   storageClassName: local-storage
   local:
@@ -35,7 +35,10 @@ spec:
   storageClassName: efs-sc
   csi:
     driver: efs.csi.aws.com
+{{ if ne .Values.allowEFS.nbExchangeAccessPoint "" }}
+    volumeHandle: "{{ .Values.allowEFS.volumeHandle }}::{{ .Values.allowEFS.nbExchangeAccessPoint }}"
+{{ else}}
     volumeHandle: "{{ .Values.allowEFS.volumeHandle }}:/illumidesk-nb-exchange"
-
+{{ end }}
 {{ end }}
 {{ end }}

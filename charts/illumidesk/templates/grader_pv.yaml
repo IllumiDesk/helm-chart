@@ -13,7 +13,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
 {{ if .Values.allowLocal.enabled }}
   storageClassName: local-storage
   local:
@@ -35,8 +35,11 @@ spec:
   storageClassName: efs-sc
   csi:
     driver: efs.csi.aws.com
+{{ if ne .Values.allowEFS.illumideskCoursesAccessPoint "" }}
+    volumeHandle: "{{ .Values.allowEFS.volumeHandle }}::{{ .Values.allowEFS.illumideskCoursesAccessPoint }}"
+{{ else}}
     volumeHandle: "{{ .Values.allowEFS.volumeHandle }}:/illumidesk-courses"
-
+{{ end }}
 {{ end }}
 {{ end }}
 

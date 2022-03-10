@@ -437,6 +437,10 @@ allowEFS:
   enabled: false
   # Volume Handle for EFS
   volumeHandle: ''
+  # Pass nb Exchange Access Point. If let empty, Volume Handle will be passed with mountPath /illumidesk-nb-exchange
+  nbExchangeAccessPoint: ''
+  # Pass Illumidesk Courses Access Point. If let empty, Volume Handle will be passed with mountPath /illumidesk-courses
+  illumideskCoursesAccessPoint: ''
 
 ## To test with a local file system, enable the following and confirm your instance has /illumidesk-nb-exchange
 ## and /illumidesk-courses directory
