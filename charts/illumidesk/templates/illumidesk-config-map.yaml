@@ -8,6 +8,7 @@ data:
   CUSTOM_AUTH_TYPE: {{ .Values.illumideskSettings.customAuthType | default "DUMMY" | quote }}
   JUPYTERHUB_API_URL: "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api"
   ORGANIZATION_NAME: {{ .Release.Namespace }}
+  CAMPUS_ID: {{ .Values.illumideskSettings.campusId }}
   OIDC_AUTHORIZE_URL: {{ .Values.illumideskSettings.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote  }}
   OIDC_TOKEN_URL: {{ .Values.illumideskSettings.oidcTokenUrl | default "https://auth.illumidesk.com/authorize"  | quote }}
   OIDC_USERDATA_URL: {{ .Values.illumideskSettings.oidcUserDataUrl | default "https://auth.illumidesk.com/userinfo" | quote }}
