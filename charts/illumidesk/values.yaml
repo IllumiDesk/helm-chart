@@ -187,10 +187,19 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_JUPYTERHUB_PORT
-      POSTGRES_NBGRADER_DB_NAME: 'illumidesk_next_20220201'
+      POSTGRES_NBGRADER_DATABASE:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: POSTGRES_NBGRADER_DATABASE
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       # Mount Root
       ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
+      CAMPUS_ID:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: CAMPUS_ID
     extraConfig:
       # The logo that appears on the top right of the control panel and end-user notebook'))s with Jupyter Classic.
       logoConfig: |
@@ -201,7 +210,6 @@ jupyterhub:
         import os
         from illumidesk.authenticators.authenticator import setup_course_hook
         from illumidesk.authenticators.authenticator import setup_user_hook_auth0
-        from illumideskdummyauthenticator.authenticator import IllumiDeskDummyAuthenticator
         from oauthenticator.generic import GenericOAuthenticator
         from illumidesk.authenticators.authenticator import setup_course_hook_lti11
 
@@ -570,3 +578,5 @@ graderSetupService:
   graderSpawnerMemLimit: ""
   # Max Storage allocated for Grader PV and PVCss
   graderSpawnerStorage: "2Gi"
+  # grader pvc only
+  singlePVC: false

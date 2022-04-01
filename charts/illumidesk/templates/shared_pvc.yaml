@@ -1,3 +1,4 @@
+{{ if not .Values.graderSetupService.singlePVC }}
 {{ if or (.Values.allowNFS.enabled) (.Values.allowLocal.enabled) (.Values.allowEFS.enabled)}}
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -19,4 +20,6 @@ spec:
   resources:
     requests:
       storage: {{ .Values.graderSetupService.storageRequests | default "200Mi" | quote }}
+{{ end }}
+
 {{ end }}

@@ -134,6 +134,16 @@ spec:
                 configMapKeyRef:
                   name: hub-illumidesk-cm
                   key: POSTGRES_NBGRADER_USER
+            - name: POSTGRES_NBGRADER_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: POSTGRES_NBGRADER_DATABASE
+            - name: CAMPUS_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: CAMPUS_ID
             - name: POSTGRES_NBGRADER_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -165,21 +175,30 @@ spec:
               value: {{ .Release.Namespace }}
             - name: GRADER_PVC
               value: grader-pvc-{{ .Release.Namespace }}
+{{ if not .Values.graderSetupService.singlePVC }} 
             - name: GRADER_SHARED_PVC
               value: shared-pvc-{{ .Release.Namespace }}
+{{ end }}
             - name: GRADER_IMAGE_PULL_POLICY
               value: {{ .Values.graderSetupService.graderSpawnerPullPolicy }}
           volumeMounts:
             - name: grader-pv-{{ .Release.Namespace }}
               mountPath: /illumidesk-courses
               subPath: illumidesk-courses
+{{ if .Values.graderSetupService.singlePVC }} 
+            - name: grader-pv-{{ .Release.Namespace }}
+              mountPath: /illumidesk-nb-exchange
+{{ else }}
             - name: shared-pv-{{ .Release.Namespace }}
               mountPath: /illumidesk-nb-exchange
+{{ end }}
       serviceAccountName: illumidesk-account
       volumes:
+{{ if not .Values.graderSetupService.singlePVC }} 
         - name: shared-pv-{{.Release.Namespace }}
           persistentVolumeClaim:
             claimName: shared-pvc-{{ .Release.Namespace }}
+{{ end }}
         - name: grader-pv-{{ .Release.Namespace }}
           persistentVolumeClaim:
             claimName: grader-pvc-{{ .Release.Namespace }}

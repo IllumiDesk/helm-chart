@@ -9,6 +9,7 @@ data:
   JUPYTERHUB_API_URL: "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api"
   ORGANIZATION_NAME: {{ .Release.Namespace }}
   CAMPUS_ID: {{ .Values.illumideskSettings.campusId }}
+  POSTGRES_NBGRADER_DATABASE: {{ .Values.illumideskSettings.nbgrader_database | default "illumidesk_next_20220201" | quote }}  
   OIDC_AUTHORIZE_URL: {{ .Values.illumideskSettings.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote  }}
   OIDC_TOKEN_URL: {{ .Values.illumideskSettings.oidcTokenUrl | default "https://auth.illumidesk.com/authorize"  | quote }}
   OIDC_USERDATA_URL: {{ .Values.illumideskSettings.oidcUserDataUrl | default "https://auth.illumidesk.com/userinfo" | quote }}
@@ -26,14 +27,14 @@ data:
   POSTGRES_JUPYTERHUB_DB: {{ .Values.externalDatabase.database | quote }}
   POSTGRES_JUPYTERHUB_PORT: {{ .Values.externalDatabase.port | quote }}
   POSTGRES_NBGRADER_USER: {{ .Values.externalDatabase.databaseUser | quote }}  
-  POSTGRES_JUPYTERHUB_USER: {{ .Values.externalDatabase.databaseUser | quote }}  
+  POSTGRES_JUPYTERHUB_USER: {{ .Values.externalDatabase.databaseUser | quote }}
 {{ else if .Values.postgresql.enabled }} 
   POSTGRES_NBGRADER_HOST: "{{.Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
   POSTGRES_JUPYTERHUB_HOST: "{{ .Release.Namespace }}-postgresql.{{ .Release.Namespace }}.svc.cluster.local"
   POSTGRES_JUPYTERHUB_DB: {{ .Values.postgresql.postgresqlDatabase | quote }}
   POSTGRES_JUPYTERHUB_PORT: {{ .Values.postgresql.service.port | quote }}
   POSTGRES_NBGRADER_USER: {{ .Values.postgresql.postgresqlUsername | quote }}  
-  POSTGRES_JUPYTERHUB_USER: {{ .Values.postgresql.postgresqlUsername | quote }}  
+  POSTGRES_JUPYTERHUB_USER: {{ .Values.postgresql.postgresqlUsername | quote }}
 {{ end }}
 
 
