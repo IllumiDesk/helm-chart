@@ -129,6 +129,16 @@ spec:
                 configMapKeyRef:
                   name: hub-illumidesk-cm
                   key: POSTGRES_NBGRADER_HOST
+            - name: AWS_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: AWS_SECRET
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: AWS_REGION
             - name: POSTGRES_NBGRADER_USER
               valueFrom:
                 configMapKeyRef:
