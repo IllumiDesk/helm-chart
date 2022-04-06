@@ -9,7 +9,7 @@ data:
   JUPYTERHUB_API_URL: "http://hub.{{ .Release.Namespace }}.svc.cluster.local:8081/hub/api"
   ORGANIZATION_NAME: {{ .Release.Namespace }}
   CAMPUS_ID: {{ .Values.illumideskSettings.campusId }}
-  POSTGRES_NBGRADER_DATABASE: {{ .Values.illumideskSettings.nbgrader_database | default "illumidesk_next_20220201" | quote }}  
+  POSTGRES_NBGRADER_DATABASE: {{ .Values.illumideskSettings.nbgrader_database | default "illumidesk" | quote }}  
   OIDC_AUTHORIZE_URL: {{ .Values.illumideskSettings.oidcAuthorizeUrl | default "https://auth.illumidesk.com/authorize" | quote  }}
   OIDC_TOKEN_URL: {{ .Values.illumideskSettings.oidcTokenUrl | default "https://auth.illumidesk.com/authorize"  | quote }}
   OIDC_USERDATA_URL: {{ .Values.illumideskSettings.oidcUserDataUrl | default "https://auth.illumidesk.com/userinfo" | quote }}
