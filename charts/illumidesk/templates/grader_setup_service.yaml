@@ -5,6 +5,11 @@ kind: ServiceAccount
 metadata:
   name: illumidesk-account
   namespace: {{ .Release.Namespace }}
+{{ if ne .Values.graderSetupService.roleARN "" }}
+  annotations:
+    eks.amazonaws.com/role-arn: {{ .Values.graderSetupService.roleARN }}
+{{ end }}
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -129,6 +134,16 @@ spec:
                 configMapKeyRef:
                   name: hub-illumidesk-cm
                   key: POSTGRES_NBGRADER_HOST
+            - name: AWS_SECRET_ARN
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: AWS_SECRET_ARN
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: hub-illumidesk-cm
+                  key: AWS_REGION
             - name: POSTGRES_NBGRADER_USER
               valueFrom:
                 configMapKeyRef:
@@ -139,10 +154,12 @@ spec:
                 secretKeyRef:
               {{ if .Values.externalDatabase.enabled }}
                   name: {{ .Values.externalDatabase.existingSecret }}
+                  key: postgresql-password
               {{ else if .Values.postgresql.enabled }}
                   name: {{ .Values.postgresql.existingSecret }}
-              {{ end }}
                   key: postgresql-password
+              {{ end }}
+                  
             - name: ILLUMIDESK_MNT_ROOT
               value: '/illumidesk-courses'
             - name: PORT
