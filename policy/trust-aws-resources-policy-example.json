@@ -9,7 +9,9 @@
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringLike": {
-          "oidc.eks.region-code.amazonaws.com/id/oidc-id:sub": "system:serviceaccount:*"
+          "oidc.eks.region-code.amazonaws.com/id/oidc-id:sub": "system:serviceaccount:*:*",
+          "oidc.eks.region-code.amazonaws.com/id/oidc-id:aud": "sts.amazonaws.com"
+          
         }
       }
     }

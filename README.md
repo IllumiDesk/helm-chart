@@ -212,14 +212,43 @@ helm install argo-events-stan nats/stan --set stan.nats.url=nats://argo-events-n
   ```bash
     helm upgrade --install {release} illumidesk/cluster --namespace kube-system -f {cluster-stage-custom-config}.yaml --debug --dry-run
   ```
-  
+
+### AWS Resources(SecretsManager) IAM Steps
+
+1. Navigate to the `policy folder' and create a policy for Secrets Manager
+2. Create a policy for secretsmananger using the policy document,`iam-policy-secrets-manager.json`
+  ```
+  aws iam create-policy --policy-name AmazonEKS_SecretsManager_CSI_Driver_Policy --policy-document file://policy/iam-policy-secrets-manager.json
+  ```
+3. Get the region-code and oidc-id to pass into trust policy
+  ```bash
+      aws eks describe-cluster --name {cluster} --query "cluster.identity.oidc.issuer" --output text
+  ```
+4. Create aws resources role with appropriate trust policy
+
+aws iam create-role \
+  --role-name AmazonEKS_Resources_Role \
+  --assume-role-policy-document file://"policy/trust-aws-resources-policy-example.json"
+
+5. Attach efs csi driver IAM policy to the role created in the previous step
+
+  ```bash
+  aws iam attach-role-policy \
+    --policy-arn arn:aws:iam::{account_id}:policy/AmazonEKS_SecretsManager_CSI_Driver_Policy \
+    --role-name AmazonEKS_Resources_Role
+  ```
+
+6. Pass Role ARN to grader-setup-service service account and hub service account with the following annotation
+
+```
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::860100747351:role/AmazonEKS_Resources_Role
+```
 ## Configuration
 
   | Parameter             | Description                     | Default       |
   | --------------------- | ------------------------------- | ------------- |
   | efsCSIDriver.enabled  | Enables EFS CSI Driver          |  false        |
-  | efsCSIDriver.region   | region to pull csi driver images          |  us-west-2        |
-  | efsCSIDriver.region   | efs csi driver image address          |  602401143452        |
   | efsCSIDriver.passARN   | enable pass csi arn to service account manifest          |  false        |
   | efsCSIDriver.roleARN   | pass csi arn to service account manifest          |  ""        |
 

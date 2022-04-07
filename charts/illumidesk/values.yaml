@@ -182,11 +182,11 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_JUPYTERHUB_DB
-      AWS_SECRET:
+      AWS_SECRET_ARN:
         valueFrom:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
-            key: AWS_SECRET
+            key: AWS_SECRET_ARN
       AWS_REGION:
         valueFrom:
           configMapKeyRef:
@@ -268,8 +268,7 @@ jupyterhub:
           c.Spawner.auth_state_hook = userdata_hook
 
         c.Authenticator.enable_auth_state = True
-        aws_secret_arn = os.environ.get('AWS_SECRET')
-        print("aws_secret_arn", aws_secret_arn)
+        aws_secret_arn = os.environ.get('AWS_SECRET_ARN')
         region = os.environ.get('AWS_REGION') or 'us-west-2'
         secretmanager = SecretsManager(aws_secret_arn, region_name=region)
         if secretmanager.host == "":
@@ -284,7 +283,6 @@ jupyterhub:
               db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
             )
         else:
-            print(secretmanager.rds_connection_string)
             c.JupyterHub.db_url = secretmanager.rds_connection_string 
         # Upgrade the database automatically on start
         c.JupyterHub.upgrade_db = True
@@ -508,6 +506,8 @@ illumideskSettings:
 ## Grader setup service
 ##
 graderSetupService:
+  #Role ARN required to fetch aws resources
+  roleARN: ""
   # Enables or disables the grader setup service
   enabled: false
   # The docker image to use for the grader setup service. If a registry other than
