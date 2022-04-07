@@ -283,7 +283,7 @@ jupyterhub:
               db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
             )
         else:
-            c.JupyterHub.db_url = secretmanager.rds_connection_string 
+            c.JupyterHub.db_url = secretmanager.rds_connection_string
         # Upgrade the database automatically on start
         c.JupyterHub.upgrade_db = True
 
@@ -498,15 +498,15 @@ illumideskSettings:
   lti13AuthorizeUrl: ""
   # LTI v1.3 token URL
   lti13TokenUrl: ""
-  #AWS Secrets Manager ARN
+  # AWS Secrets Manager ARN
   awsSecretARN: ""
-  #AWS Region
+  # AWS Region
   awsRegion: "us-west-2"
 
 ## Grader setup service
 ##
 graderSetupService:
-  #Role ARN required to fetch aws resources
+  # Role ARN required to fetch aws resources
   roleARN: ""
   # Enables or disables the grader setup service
   enabled: false
