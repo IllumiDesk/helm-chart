@@ -233,7 +233,7 @@ jupyterhub:
         from illumidesk.authenticators.authenticator import setup_course_hook_lti11
         from oauthenticator.generic import GenericOAuthenticator
         from secretsmanager.secretsmanager import SecretsManager
-        
+
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
         c.JupyterHub.hub_connect_ip = 'hub'
         if custom_auth_type == 'LTI13':
