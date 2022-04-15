@@ -35,7 +35,9 @@ spec:
   storageClassName: efs-sc
   csi:
     driver: efs.csi.aws.com
-{{ if ne .Values.allowEFS.illumideskCoursesAccessPoint "" }}
+{{ if .Values.graderSetupService.singlePVC  }}
+    volumeHandle: {{ .Values.allowEFS.volumeHandle }}
+{{ else if ne .Values.allowEFS.illumideskCoursesAccessPoint "" }} 
     volumeHandle: "{{ .Values.allowEFS.volumeHandle }}::{{ .Values.allowEFS.illumideskCoursesAccessPoint }}"
 {{ else}}
     volumeHandle: "{{ .Values.allowEFS.volumeHandle }}:/illumidesk-courses"
