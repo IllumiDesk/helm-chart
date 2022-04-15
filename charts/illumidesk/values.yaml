@@ -192,6 +192,16 @@ jupyterhub:
           configMapKeyRef:
             name: hub-illumidesk-cm           # The ConfigMap this value comes from.
             key: POSTGRES_NBGRADER_DATABASE
+      AWS_SECRET_ARN:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: AWS_SECRET_ARN
+      AWS_REGION:
+        valueFrom:
+          configMapKeyRef:
+            name: hub-illumidesk-cm           # The ConfigMap this value comes from.
+            key: AWS_REGION
       LTI13_PRIVATE_KEY: "/srv/jupyterhub/rsa_private.key"
       # Mount Root
       ILLUMIDESK_MNT_ROOT: "/illumidesk-courses"
@@ -220,9 +230,10 @@ jupyterhub:
         import os
         from illumidesk.authenticators.authenticator import setup_course_hook
         from illumidesk.authenticators.authenticator import setup_user_hook_auth0
-        from oauthenticator.generic import GenericOAuthenticator
         from illumidesk.authenticators.authenticator import setup_course_hook_lti11
-
+        from oauthenticator.generic import GenericOAuthenticator
+        from secretsmanager.secretsmanager import SecretsManager
+        
         custom_auth_type = os.environ.get('CUSTOM_AUTH_TYPE')
         c.JupyterHub.hub_connect_ip = 'hub'
         if custom_auth_type == 'LTI13':
@@ -290,14 +301,22 @@ jupyterhub:
           c.Authenticator.post_auth_hook = setup_user_hook_auth0
 
         c.Authenticator.enable_auth_state = True
-        print('POSTGRES_JUPYTERHUB_PASSWORD', os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'))
-        c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
-          user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
-          password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
-          host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
-          port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
-          db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
-        )
+        aws_secret_arn = os.environ.get('AWS_SECRET_ARN')
+        region = os.environ.get('AWS_REGION') or 'us-west-2'
+        secretmanager = SecretsManager(aws_secret_arn, region_name=region)
+        if secretmanager.host == "":
+            secretmanager.host = os.environ.get('POSTGRES_JUPYTERHUB_HOST')
+
+        if aws_secret_arn == "" or aws_secret_arn is None:
+            c.JupyterHub.db_url = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+              user=os.environ.get('POSTGRES_JUPYTERHUB_USER'),
+              password=os.environ.get('POSTGRES_JUPYTERHUB_PASSWORD'),
+              host=os.environ.get('POSTGRES_JUPYTERHUB_HOST'),
+              port=os.environ.get('POSTGRES_JUPYTERHUB_PORT'),
+              db=os.environ.get('POSTGRES_JUPYTERHUB_DB'),
+            )
+        else:
+            c.JupyterHub.db_url = secretmanager.rds_connection_string
         # Upgrade the database automatically on start
         c.JupyterHub.upgrade_db = True
 
@@ -508,10 +527,16 @@ illumideskSettings:
   lti13AuthorizeUrl: ""
   # LTI v1.3 token URL
   lti13TokenUrl: ""
+  # AWS Secrets Manager ARN
+  awsSecretARN: ""
+  # AWS Region
+  awsRegion: "us-west-2"
 
 ## Grader setup service
 ##
 graderSetupService:
+  # Role ARN required to fetch aws resources
+  roleARN: ""
   # Enables or disables the grader setup service
   enabled: false
   # The docker image to use for the grader setup service. If a registry other than
