@@ -30,29 +30,6 @@ jupyterhub:
   # JupyterHub's application settings
   # ref: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
   hub:
-    # clone custom JupyterHub templates into a volume
-    initContainers:
-      - name: "git-clone-templates"
-        image: "illumidesk/alpine-git:1.0.30"
-        args:
-          - clone
-          - --single-branch
-          - --branch=main
-          - --depth=1
-          - --
-          - https://github.com/illumidesk/jhubui.git
-          - /etc/jupyterhub/custom
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: custom-templates
-            mountPath: "/etc/jupyterhub/custom"
-    extraVolumes:
-      - name: custom-templates
-        emptyDir: {}
-    extraVolumeMounts:
-      - name: custom-templates
-        mountPath: "/etc/jupyterhub/custom"
     # Maximum number of concurrent servers that can be active at a time. 0 means that no limit is enforced
     activeServerLimit: 0
     # Jupyterhub resources regarding requests for CPU and memory
